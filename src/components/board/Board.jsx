@@ -9,7 +9,11 @@ import {
   FaChessKing,
 } from "react-icons/fa6";
 
-import { canPawnMove } from "../../logic/moveValidation";
+import {
+  canBishopMove,
+  canPawnMove,
+  canRookMove,
+} from "../../logic/moveValidation";
 import { isSameColor } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -47,11 +51,31 @@ const Board = () => {
       }
 
       if (isSameColor(selectedPieceType, piece)) {
+        setSelectedPiece(null);
         return;
       }
 
+      // Pawn Move Validation
       if (selectedPieceType.toLowerCase() === "p") {
         if (!canPawnMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
+      }
+
+      // Rook Move Validation
+      if (selectedPieceType.toLowerCase() === "r") {
+        if (!canRookMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
+      }
+
+      // Bishop Move Validation
+      if (selectedPieceType.toLowerCase() === "b") {
+        if (
+          !canBishopMove(selectedPieceRow, selectedPieceCol, row, col, board)
+        ) {
           setSelectedPiece(null);
           return; // Invalid move, exit function
         }
