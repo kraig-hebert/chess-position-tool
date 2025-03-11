@@ -11,8 +11,11 @@ import {
 
 import {
   canBishopMove,
+  canKingMove,
+  canKnightMove,
   canPawnMove,
   canRookMove,
+  canQueenMove,
 } from "../../logic/moveValidation";
 import { isSameColor } from "../../logic/chessUtils";
 import "./boardStyles.css";
@@ -76,6 +79,34 @@ const Board = () => {
         if (
           !canBishopMove(selectedPieceRow, selectedPieceCol, row, col, board)
         ) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
+      }
+
+      // Knight Move Validation
+      if (selectedPieceType.toLowerCase() === "n") {
+        if (
+          !canKnightMove(selectedPieceRow, selectedPieceCol, row, col, board)
+        ) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
+      }
+
+      // Queen Move Validation
+      if (selectedPieceType.toLowerCase() === "q") {
+        if (
+          !canQueenMove(selectedPieceRow, selectedPieceCol, row, col, board)
+        ) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
+      }
+
+      // King Move Validation
+      if (selectedPieceType.toLowerCase() === "k") {
+        if (!canKingMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
           setSelectedPiece(null);
           return; // Invalid move, exit function
         }
