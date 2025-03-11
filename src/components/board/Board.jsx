@@ -8,7 +8,9 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
-import { isWhite, isSameColor } from "../../logic/chessUtils"; // Import helper functions
+
+import { canPawnMove } from "../../logic/moveValidation";
+import { isSameColor } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
 const pieceIcons = {
@@ -46,6 +48,13 @@ const Board = () => {
 
       if (isSameColor(selectedPieceType, piece)) {
         return;
+      }
+
+      if (selectedPieceType.toLowerCase() === "p") {
+        if (!canPawnMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
+          setSelectedPiece(null);
+          return; // Invalid move, exit function
+        }
       }
 
       const newBoard = board.map((row) => [...row]);
