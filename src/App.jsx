@@ -1,14 +1,13 @@
 import React from "react";
-import { useGameState } from "./context/GameStateProvider";
+
+import Board from "./components/board/Board";
+import "./appStyles.css";
 
 const App = () => {
-  const { board } = useGameState();
-
   return (
-    <div>
+    <div id="app">
       <h1>Chess Position Tool</h1>
-      <pre>{JSON.stringify(board, null, 2)}</pre>{" "}
-      {/* Temporary: Displays the board as JSON */}
+      <Board />
     </div>
   );
 };

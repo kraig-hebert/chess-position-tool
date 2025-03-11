@@ -15,9 +15,12 @@ const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
   const [board, setBoard] = useState(initialBoard());
+  const [selectedPiece, setSelectedPiece] = useState(null);
 
   return (
-    <GameStateContext.Provider value={{ board, setBoard }}>
+    <GameStateContext.Provider
+      value={{ board, setBoard, selectedPiece, setSelectedPiece }}
+    >
       {children}
     </GameStateContext.Provider>
   );
