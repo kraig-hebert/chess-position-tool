@@ -58,58 +58,59 @@ const Board = () => {
         return;
       }
 
-      // Pawn Move Validation
-      if (selectedPieceType.toLowerCase() === "p") {
-        if (!canPawnMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
-      }
+      switch (selectedPieceType.toLowerCase()) {
+        case "p":
+          if (
+            !canPawnMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
+        case "r":
+          if (
+            !canRookMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
 
-      // Rook Move Validation
-      if (selectedPieceType.toLowerCase() === "r") {
-        if (!canRookMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
-      }
+        case "b":
+          if (
+            !canBishopMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
 
-      // Bishop Move Validation
-      if (selectedPieceType.toLowerCase() === "b") {
-        if (
-          !canBishopMove(selectedPieceRow, selectedPieceCol, row, col, board)
-        ) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
-      }
+        case "n":
+          if (
+            !canKnightMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
 
-      // Knight Move Validation
-      if (selectedPieceType.toLowerCase() === "n") {
-        if (
-          !canKnightMove(selectedPieceRow, selectedPieceCol, row, col, board)
-        ) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
-      }
+        case "q":
+          if (
+            !canQueenMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
 
-      // Queen Move Validation
-      if (selectedPieceType.toLowerCase() === "q") {
-        if (
-          !canQueenMove(selectedPieceRow, selectedPieceCol, row, col, board)
-        ) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
-      }
-
-      // King Move Validation
-      if (selectedPieceType.toLowerCase() === "k") {
-        if (!canKingMove(selectedPieceRow, selectedPieceCol, row, col, board)) {
-          setSelectedPiece(null);
-          return; // Invalid move, exit function
-        }
+        case "k":
+          if (
+            !canKingMove(selectedPieceRow, selectedPieceCol, row, col, board)
+          ) {
+            setSelectedPiece(null);
+            return; // Invalid move, exit function
+          }
+          break;
       }
 
       const newBoard = board.map((row) => [...row]);
