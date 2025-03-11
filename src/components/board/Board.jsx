@@ -8,8 +8,8 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
-
-import "./boardStyles.css"; // Import the CSS file
+import { isWhite, isSameColor } from "../../logic/chessUtils"; // Import helper functions
+import "./boardStyles.css";
 
 const pieceIcons = {
   p: <FaChessPawn className="piece black" />,
@@ -33,12 +33,30 @@ const Board = () => {
     const piece = board[row][col];
 
     if (selectedPiece) {
+      const {
+        row: selectedPieceRow,
+        col: selectedPieceCol,
+        piece: selectedPieceType,
+      } = selectedPiece;
+
+      if (selectedPieceRow === row && selectedPieceCol === col) {
+        setSelectedPiece(null);
+        return;
+      }
+
+      if (isSameColor(selectedPieceType, piece)) {
+        return;
+      }
+
       const newBoard = board.map((row) => [...row]);
-      newBoard[selectedPiece.row][selectedPiece.col] = null;
-      newBoard[row][col] = selectedPiece.piece;
+      newBoard[selectedPieceRow][selectedPieceCol] = null;
+      newBoard[row][col] = selectedPieceType;
+
       setBoard(newBoard);
       setSelectedPiece(null);
-    } else if (piece) setSelectedPiece({ row, col, piece });
+    } else if (piece) {
+      setSelectedPiece({ row, col, piece });
+    }
   };
 
   return (
