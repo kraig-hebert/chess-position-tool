@@ -33,7 +33,7 @@ const Board = () => {
     const piece = board[row][col];
 
     if (selectedPiece) {
-      const newBoard = board.map((r) => [...r]);
+      const newBoard = board.map((row) => [...row]);
       newBoard[selectedPiece.row][selectedPiece.col] = null;
       newBoard[row][col] = selectedPiece.piece;
       setBoard(newBoard);
