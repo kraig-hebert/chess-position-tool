@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 import {
   FaChessPawn,
@@ -20,6 +20,8 @@ import {
 } from "../../logic/moveValidation";
 import { isSameColor } from "../../logic/chessUtils";
 import "./boardStyles.css";
+
+import PromotionModal from "../promotionModal/PromotionModal";
 
 const pieceIcons = {
   p: <FaChessPawn className="piece black" />,
@@ -48,7 +50,12 @@ const Board = () => {
     setEnPassantTarget,
   } = useGameState();
 
+  const [promotionSquare, setPromotionSquare] = useState(null);
+
   const handleSquareClick = (row, col) => {
+    // ignore clicks when modal is active
+    if (promotionSquare) return;
+
     const piece = board[row][col];
 
     if (selectedPiece) {
@@ -94,6 +101,15 @@ const Board = () => {
             const capturedPawnRow =
               selectedPieceType === "P" ? row + 1 : row - 1;
             newBoard[capturedPawnRow][col] = null; // Remove captured pawn
+          }
+
+          // ✅ Check for Pawn Promotion
+          const isWhitePromotion = selectedPieceType === "P" && row === 0;
+          const isBlackPromotion = selectedPieceType === "p" && row === 7;
+          if (isWhitePromotion || isBlackPromotion) {
+            // Replace pawn with a queen for now (later allow choice)
+            setPromotionSquare({ row, col, piece: selectedPieceType });
+            return; // Stop the move until promotion is chosen
           }
 
           newBoard[selectedPieceRow][selectedPieceCol] = null;
@@ -197,27 +213,46 @@ const Board = () => {
   };
 
   return (
-    <div className="board">
-      {board.map((row, rowIndex) =>
-        row.map((piece, colIndex) => {
-          const isDark = (rowIndex + colIndex) % 2 !== 0;
-          const isSelected =
-            selectedPiece &&
-            selectedPiece.row === rowIndex &&
-            selectedPiece.col === colIndex;
+    <div className="board-container">
+      // overlay will block clicks
+      {promotionSquare && <div className="board-overlay"></div>}
+      <div className="board">
+        {board.map((row, rowIndex) =>
+          row.map((piece, colIndex) => {
+            const isDark = (rowIndex + colIndex) % 2 !== 0;
+            const isSelected =
+              selectedPiece &&
+              selectedPiece.row === rowIndex &&
+              selectedPiece.col === colIndex;
 
-          return (
-            <div
-              key={`${rowIndex}-${colIndex}`}
-              className={`square ${isDark ? "dark" : "light"} ${
-                isSelected ? "selected" : ""
-              }`}
-              onClick={() => handleSquareClick(rowIndex, colIndex)}
-            >
-              {piece && pieceIcons[piece]}
-            </div>
-          );
-        })
+            return (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                className={`square ${isDark ? "dark" : "light"} ${
+                  isSelected ? "selected" : ""
+                }`}
+                onClick={() => handleSquareClick(rowIndex, colIndex)}
+              >
+                {piece && pieceIcons[piece]}
+              </div>
+            );
+          })
+        )}
+      </div>
+      {promotionSquare && (
+        <PromotionModal
+          onSelect={(piece) => {
+            const newBoard = board.map((row) => [...row]);
+            newBoard[promotionSquare.row][promotionSquare.col] =
+              promotionSquare.piece === "P"
+                ? piece.toUpperCase()
+                : piece.toLowerCase();
+            newBoard[selectedPiece.row][selectedPiece.col] = null;
+            setBoard(newBoard);
+            setPromotionSquare(null);
+            setSelectedPiece(null);
+          }}
+        />
       )}
     </div>
   );
