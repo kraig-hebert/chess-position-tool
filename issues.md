@@ -1,3 +1,1 @@
-- track if king of rook moves for castling
-- update code atfer chatGPT got confused.
-  - move all moves intoi canPieceMove, and split out indivusual piece actions in moveValidation functions
+- fix logic for king moving through scheck to castle

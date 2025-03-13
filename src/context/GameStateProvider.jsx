@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const initialBoard = () => [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
@@ -21,12 +21,34 @@ export const GameStateProvider = ({ children }) => {
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState({
     whiteKing: false,
+    whiteRookQueenside: false,
+    whiteRookKingside: false,
     blackKing: false,
-    whiteRookLeft: false,
-    whiteRookRight: false,
-    blackRookLeft: false,
-    blackRookRight: false,
+    blackRookKingside: false,
+    blackRookQueenside: false,
   });
+
+  const updateHasMoved = (color) => {
+    if (color === "white") {
+      setHasMoved({
+        ...hasMoved,
+        whiteKing: true,
+        whiteRookQueenside: true,
+        whiteRookKingside: true,
+      });
+    } else {
+      setHasMoved({
+        ...hasMoved,
+        blackKing: true,
+        blackRookKingside: true,
+        blackRookQueenside: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log(hasMoved);
+  }, [hasMoved]);
 
   return (
     <GameStateContext.Provider
@@ -39,6 +61,7 @@ export const GameStateProvider = ({ children }) => {
         setHasMoved,
         enPassantTarget,
         setEnPassantTarget,
+        updateHasMoved,
       }}
     >
       {children}

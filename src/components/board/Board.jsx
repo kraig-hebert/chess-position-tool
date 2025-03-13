@@ -40,6 +40,7 @@ const Board = () => {
     setHasMoved,
     enPassantTarget,
     setEnPassantTarget,
+    updateHasMoved,
   } = useGameState();
 
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -134,14 +135,31 @@ const Board = () => {
             board[selectedPieceRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
           newBoard[selectedPieceRow][castlingSide === "kingside" ? 7 : 0] =
             null; // Remove old rook position
+          updateHasMoved(color);
         }
       }
 
       // Check if this move creates an en passant opportunity
-      if (Math.abs(selectedPieceRow - row) === 2) {
+      if (
+        selectedPieceType.toLowerCase() === "p" &&
+        Math.abs(selectedPieceRow - row) === 2
+      ) {
         setEnPassantTarget({ row: (selectedPieceRow + row) / 2, col }); // Middle square is where en passant can happen
       } else {
         setEnPassantTarget(null); // Reset en passant if it's not a two-square move
+      }
+      if (selectedPieceType === "R") {
+        if (selectedPieceRow === 7 && selectedPieceCol === 0) {
+          setHasMoved({ ...hasMoved, whiteRookQueenside: true });
+        } else if (selectedPieceRow === 7 && selectedPieceCol === 7) {
+          setHasMoved({ ...hasMoved, whiteRookKingside: true });
+        }
+      } else if (selectedPieceType === "r") {
+        if (selectedPieceRow === 0 && selectedPieceCol === 0) {
+          setHasMoved({ ...hasMoved, blackRookQueenside: true });
+        } else if (selectedPieceRow === 0 && selectedPieceCol === 7) {
+          setHasMoved({ ...hasMoved, blackRookKingside: true });
+        }
       }
       setBoard(newBoard);
       setSelectedPiece(null);

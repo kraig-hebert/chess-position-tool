@@ -138,6 +138,7 @@ export const canCastle = (color, side, board, hasMoved) => {
 
   // Determine which rook and king are involved
   const kingCol = 4;
+
   const rookCol = side === "kingside" ? 7 : 0;
   const newKingCol = side === "kingside" ? 6 : 2;
   const newRookCol = side === "kingside" ? 5 : 3;
@@ -145,13 +146,13 @@ export const canCastle = (color, side, board, hasMoved) => {
   // Check if the king or rook have moved
   if (
     side === "kingside" &&
-    (hasMoved[color + "King"] || hasMoved[color + "RookRight"])
+    (hasMoved[color + "King"] || hasMoved[color + "RookKingside"])
   ) {
     return false;
   }
   if (
     side === "queenside" &&
-    (hasMoved[color + "King"] || hasMoved[color + "RookLeft"])
+    (hasMoved[color + "King"] || hasMoved[color + "RookQueenside"])
   ) {
     return false;
   }
@@ -234,14 +235,14 @@ export const canPieceMove = (
     case "q":
       return canQueenMove(startRow, startCol, endRow, endCol, board);
     case "k":
-      // ✅ If the move is a normal king move, check regular king movement
+      // If the move is a normal king move, check regular king movement
       if (
         Math.abs(startCol - endCol) === 1 ||
         Math.abs(startRow - endRow) === 1
       ) {
         return canKingMove(startRow, startCol, endRow, endCol, board);
       }
-      // ✅ If attempting to castle, check castling logic
+      // If attempting to castle, check castling logic
       if (Math.abs(startCol - endCol) === 2) {
         const color = piece === "K" ? "white" : "black";
         const castlingSide =

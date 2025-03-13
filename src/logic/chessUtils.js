@@ -44,6 +44,16 @@ export const isKingInCheck = (board, color, hasMoved) => {
           )
         ) {
           console.log("King Is Attacked");
+          console.log(
+            "is it bugged?",
+            row,
+            col,
+            kingPosition.row,
+            kingPosition.col,
+            board,
+            "placeholder",
+            hasMoved
+          );
           return true; // King is under attack
         }
       }
