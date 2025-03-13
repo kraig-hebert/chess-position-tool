@@ -9,16 +9,8 @@ import {
   FaChessKing,
 } from "react-icons/fa6";
 
-import {
-  canBishopMove,
-  canCastle,
-  canKingMove,
-  canKnightMove,
-  canPawnMove,
-  canRookMove,
-  canQueenMove,
-} from "../../logic/moveValidation";
-import { isSameColor } from "../../logic/chessUtils";
+import { canPieceMove, canCastle } from "../../logic/moveValidation";
+import { isSameColor, isKingInCheck } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
 import PromotionModal from "../promotionModal/PromotionModal";
@@ -65,6 +57,7 @@ const Board = () => {
         piece: selectedPieceType,
       } = selectedPiece;
 
+      // if move is same square as selected piece block move
       if (selectedPieceRow === row && selectedPieceCol === col) {
         setSelectedPiece(null);
         return;
@@ -75,136 +68,81 @@ const Board = () => {
         return;
       }
 
-      // check is move is valid according to piece
-      switch (selectedPieceType.toLowerCase()) {
-        case "p":
-          if (
-            !canPawnMove(
-              selectedPieceRow,
-              selectedPieceCol,
-              row,
-              col,
-              board,
-              enPassantTarget
-            )
-          ) {
-            setSelectedPiece(null);
-            return; // Invalid move, exit function
-          }
-          const newBoard = board.map((row) => [...row]);
-          // Handle en passant capture
-          if (
-            enPassantTarget &&
-            enPassantTarget.row === row &&
-            enPassantTarget.col === col
-          ) {
-            const capturedPawnRow =
-              selectedPieceType === "P" ? row + 1 : row - 1;
-            newBoard[capturedPawnRow][col] = null; // Remove captured pawn
-          }
-
-          // ✅ Check for Pawn Promotion
-          const isWhitePromotion = selectedPieceType === "P" && row === 0;
-          const isBlackPromotion = selectedPieceType === "p" && row === 7;
-          if (isWhitePromotion || isBlackPromotion) {
-            // Replace pawn with a queen for now (later allow choice)
-            setPromotionSquare({ row, col, piece: selectedPieceType });
-            return; // Stop the move until promotion is chosen
-          }
-
-          newBoard[selectedPieceRow][selectedPieceCol] = null;
-          newBoard[row][col] = selectedPieceType;
-
-          // Check if this move creates an en passant opportunity
-          if (Math.abs(selectedPieceRow - row) === 2) {
-            setEnPassantTarget({ row: (selectedPieceRow + row) / 2, col }); // Middle square is where en passant can happen
-          } else {
-            setEnPassantTarget(null); // Reset en passant if it's not a two-square move
-          }
-
-          setBoard(newBoard);
-          setSelectedPiece(null);
-          return;
-
-        case "r":
-          if (
-            !canRookMove(selectedPieceRow, selectedPieceCol, row, col, board)
-          ) {
-            setSelectedPiece(null);
-            return; // Invalid move, exit function
-          }
-          break;
-
-        case "b":
-          if (
-            !canBishopMove(selectedPieceRow, selectedPieceCol, row, col, board)
-          ) {
-            setSelectedPiece(null);
-            return; // Invalid move, exit function
-          }
-          break;
-
-        case "n":
-          if (
-            !canKnightMove(selectedPieceRow, selectedPieceCol, row, col, board)
-          ) {
-            setSelectedPiece(null);
-            return; // Invalid move, exit function
-          }
-          break;
-
-        case "q":
-          if (
-            !canQueenMove(selectedPieceRow, selectedPieceCol, row, col, board)
-          ) {
-            setSelectedPiece(null);
-            return; // Invalid move, exit function
-          }
-          break;
-
-        case "k":
-          if (
-            !canKingMove(selectedPieceRow, selectedPieceCol, row, col, board)
-          ) {
-            // Check for Castling
-            const color = selectedPieceType === "K" ? "white" : "black";
-            let castlingSide =
-              col === 6 ? "kingside" : col === 2 ? "queenside" : null;
-
-            if (castlingSide) {
-              const castlingMove = canCastle(
-                color,
-                castlingSide,
-                board,
-                hasMoved
-              );
-              if (castlingMove) {
-                const { kingTo, rookTo } = castlingMove;
-
-                const newBoard = board.map((r) => [...r]); // Create deep copy
-                newBoard[selectedPieceRow][selectedPieceCol] = null;
-                newBoard[kingTo[0]][kingTo[1]] = selectedPieceType;
-                newBoard[rookTo[0]][rookTo[1]] =
-                  board[selectedPieceRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
-                newBoard[selectedPieceRow][
-                  castlingSide === "kingside" ? 7 : 0
-                ] = null;
-
-                setBoard(newBoard);
-                setSelectedPiece(null);
-                return;
-              }
-            }
-
-            setSelectedPiece(null);
-            return;
-          }
+      if (
+        !canPieceMove(
+          selectedPieceRow,
+          selectedPieceCol,
+          row,
+          col,
+          board,
+          enPassantTarget,
+          hasMoved
+        )
+      ) {
+        setSelectedPiece(null);
+        return; // Invalid move, exit function
       }
 
       const newBoard = board.map((row) => [...row]);
       newBoard[selectedPieceRow][selectedPieceCol] = null;
       newBoard[row][col] = selectedPieceType;
 
+      const currentPlayer =
+        selectedPieceType === selectedPieceType.toUpperCase()
+          ? "white"
+          : "black";
+      if (isKingInCheck(newBoard, currentPlayer, hasMoved)) {
+        console.log("Move rejected: King would be in check");
+        setSelectedPiece(null);
+        return; // Block the move
+      }
+
+      // handle En Passant Capture
+      if (
+        selectedPieceType.toLowerCase() == "p" &&
+        enPassantTarget &&
+        enPassantTarget.row === row &&
+        enPassantTarget.col === col
+      ) {
+        const capturedPawnRow = selectedPieceType === "P" ? row + 1 : row - 1;
+        newBoard[capturedPawnRow][col] = null; // Remove captured pawn
+      }
+
+      //  Check for Pawn Promotion
+      const isWhitePromotion = selectedPieceType === "P" && row === 0;
+      const isBlackPromotion = selectedPieceType === "p" && row === 7;
+      if (isWhitePromotion || isBlackPromotion) {
+        // Replace pawn with a queen for now (later allow choice)
+        setPromotionSquare({ row, col, piece: selectedPieceType });
+        return; // Stop the move until promotion is chosen
+      }
+
+      // Handle Castling
+      if (
+        selectedPieceType.toLowerCase() === "k" &&
+        Math.abs(selectedPieceCol - col) === 2
+      ) {
+        const color = selectedPieceType === "K" ? "white" : "black";
+        const castlingSide =
+          col === 6 ? "kingside" : col === 2 ? "queenside" : null;
+        const castlingMove = canCastle(color, castlingSide, board, hasMoved);
+
+        if (castlingMove) {
+          const { kingTo, rookTo } = castlingMove;
+          newBoard[kingTo[0]][kingTo[1]] = selectedPieceType; // Move the king
+          newBoard[rookTo[0]][rookTo[1]] =
+            board[selectedPieceRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
+          newBoard[selectedPieceRow][castlingSide === "kingside" ? 7 : 0] =
+            null; // Remove old rook position
+        }
+      }
+
+      // Check if this move creates an en passant opportunity
+      if (Math.abs(selectedPieceRow - row) === 2) {
+        setEnPassantTarget({ row: (selectedPieceRow + row) / 2, col }); // Middle square is where en passant can happen
+      } else {
+        setEnPassantTarget(null); // Reset en passant if it's not a two-square move
+      }
       setBoard(newBoard);
       setSelectedPiece(null);
     } else if (piece) {
@@ -214,7 +152,6 @@ const Board = () => {
 
   return (
     <div className="board-container">
-      // overlay will block clicks
       {promotionSquare && <div className="board-overlay"></div>}
       <div className="board">
         {board.map((row, rowIndex) =>

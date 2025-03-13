@@ -1,6 +1,5 @@
-import { isSameColor } from "./chessUtils";
+import { isKingInCheck, isSameColor, simulateMove } from "./chessUtils";
 
-// Check if a pawn's move is valid
 export const canPawnMove = (
   startRow,
   startCol,
@@ -162,6 +161,23 @@ export const canCastle = (color, side, board, hasMoved) => {
     return false;
   }
 
+  //  Ensure the king does not pass through or end in check
+  if (
+    isKingInCheck(board, color, hasMoved) || // King cannot castle while in check
+    isKingInCheck(
+      simulateMove(board, row, kingCol, row, newKingCol),
+      color,
+      hasMoved
+    ) || // King cannot move through check
+    isKingInCheck(
+      simulateMove(board, row, newKingCol, row, newKingCol),
+      color,
+      hasMoved
+    ) // King cannot land in check
+  ) {
+    return false;
+  }
+
   // TODO: Ensure the king does not pass through or end in check
 
   return { kingTo: [row, newKingCol], rookTo: [row, newRookCol] };
@@ -184,4 +200,56 @@ export const isPathBlocked = (startRow, startCol, endRow, endCol, board) => {
   }
 
   return false; // No pieces in the way
+};
+
+// function to check is move is valid dynamically for checks and checkmate
+export const canPieceMove = (
+  startRow,
+  startCol,
+  endRow,
+  endCol,
+  board,
+  enPassantTarget,
+  hasMoved
+) => {
+  const piece = board[startRow][startCol];
+  if (!piece) return false; // No piece to move
+
+  switch (piece.toLowerCase()) {
+    case "p":
+      return canPawnMove(
+        startRow,
+        startCol,
+        endRow,
+        endCol,
+        board,
+        enPassantTarget
+      );
+    case "r":
+      return canRookMove(startRow, startCol, endRow, endCol, board);
+    case "b":
+      return canBishopMove(startRow, startCol, endRow, endCol, board);
+    case "n":
+      return canKnightMove(startRow, startCol, endRow, endCol, board);
+    case "q":
+      return canQueenMove(startRow, startCol, endRow, endCol, board);
+    case "k":
+      // ✅ If the move is a normal king move, check regular king movement
+      if (
+        Math.abs(startCol - endCol) === 1 ||
+        Math.abs(startRow - endRow) === 1
+      ) {
+        return canKingMove(startRow, startCol, endRow, endCol, board);
+      }
+      // ✅ If attempting to castle, check castling logic
+      if (Math.abs(startCol - endCol) === 2) {
+        const color = piece === "K" ? "white" : "black";
+        const castlingSide =
+          endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
+        return canCastle(color, castlingSide, board, hasMoved);
+      }
+      return false;
+    default:
+      return false;
+  }
 };
