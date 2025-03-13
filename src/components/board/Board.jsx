@@ -11,6 +11,7 @@ import {
 
 import {
   canBishopMove,
+  canCastle,
   canKingMove,
   canKnightMove,
   canPawnMove,
@@ -36,7 +37,16 @@ const pieceIcons = {
 };
 
 const Board = () => {
-  const { board, setBoard, selectedPiece, setSelectedPiece } = useGameState();
+  const {
+    board,
+    setBoard,
+    selectedPiece,
+    setSelectedPiece,
+    hasMoved,
+    setHasMoved,
+    enPassantTarget,
+    setEnPassantTarget,
+  } = useGameState();
 
   const handleSquareClick = (row, col) => {
     const piece = board[row][col];
@@ -58,15 +68,48 @@ const Board = () => {
         return;
       }
 
+      // check is move is valid according to piece
       switch (selectedPieceType.toLowerCase()) {
         case "p":
           if (
-            !canPawnMove(selectedPieceRow, selectedPieceCol, row, col, board)
+            !canPawnMove(
+              selectedPieceRow,
+              selectedPieceCol,
+              row,
+              col,
+              board,
+              enPassantTarget
+            )
           ) {
             setSelectedPiece(null);
             return; // Invalid move, exit function
           }
-          break;
+          const newBoard = board.map((row) => [...row]);
+          // Handle en passant capture
+          if (
+            enPassantTarget &&
+            enPassantTarget.row === row &&
+            enPassantTarget.col === col
+          ) {
+            const capturedPawnRow =
+              selectedPieceType === "P" ? row + 1 : row - 1;
+            newBoard[capturedPawnRow][col] = null; // Remove captured pawn
+          }
+
+          newBoard[selectedPieceRow][selectedPieceCol] = null;
+          newBoard[row][col] = selectedPieceType;
+
+          // Check if this move creates an en passant opportunity
+          if (Math.abs(selectedPieceRow - row) === 2) {
+            setEnPassantTarget({ row: (selectedPieceRow + row) / 2, col }); // Middle square is where en passant can happen
+          } else {
+            setEnPassantTarget(null); // Reset en passant if it's not a two-square move
+          }
+
+          setBoard(newBoard);
+          setSelectedPiece(null);
+          return;
+
         case "r":
           if (
             !canRookMove(selectedPieceRow, selectedPieceCol, row, col, board)
@@ -107,10 +150,39 @@ const Board = () => {
           if (
             !canKingMove(selectedPieceRow, selectedPieceCol, row, col, board)
           ) {
+            // Check for Castling
+            const color = selectedPieceType === "K" ? "white" : "black";
+            let castlingSide =
+              col === 6 ? "kingside" : col === 2 ? "queenside" : null;
+
+            if (castlingSide) {
+              const castlingMove = canCastle(
+                color,
+                castlingSide,
+                board,
+                hasMoved
+              );
+              if (castlingMove) {
+                const { kingTo, rookTo } = castlingMove;
+
+                const newBoard = board.map((r) => [...r]); // Create deep copy
+                newBoard[selectedPieceRow][selectedPieceCol] = null;
+                newBoard[kingTo[0]][kingTo[1]] = selectedPieceType;
+                newBoard[rookTo[0]][rookTo[1]] =
+                  board[selectedPieceRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
+                newBoard[selectedPieceRow][
+                  castlingSide === "kingside" ? 7 : 0
+                ] = null;
+
+                setBoard(newBoard);
+                setSelectedPiece(null);
+                return;
+              }
+            }
+
             setSelectedPiece(null);
-            return; // Invalid move, exit function
+            return;
           }
-          break;
       }
 
       const newBoard = board.map((row) => [...row]);

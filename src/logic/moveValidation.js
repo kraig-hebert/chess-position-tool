@@ -1,7 +1,14 @@
 import { isSameColor } from "./chessUtils";
 
 // Check if a pawn's move is valid
-export const canPawnMove = (startRow, startCol, endRow, endCol, board) => {
+export const canPawnMove = (
+  startRow,
+  startCol,
+  endRow,
+  endCol,
+  board,
+  enPassantTarget
+) => {
   const piece = board[startRow][startCol];
   const direction = piece === piece.toUpperCase() ? -1 : 1; // White moves up (-1), Black moves down (+1)
 
@@ -25,10 +32,21 @@ export const canPawnMove = (startRow, startCol, endRow, endCol, board) => {
 
   // Capturing Diagonally
   if (Math.abs(endCol - startCol) === 1 && endRow === startRow + direction) {
-    return (
+    // normal diagonal capture
+    if (
       board[endRow][endCol] !== null &&
       !isSameColor(piece, board[endRow][endCol])
-    );
+    ) {
+      return true;
+    }
+    // En Passant capture
+    if (
+      enPassantTarget &&
+      enPassantTarget.row === endRow &&
+      enPassantTarget.col === endCol
+    ) {
+      return true;
+    }
   }
 
   return false;
@@ -113,6 +131,40 @@ export const canKingMove = (startRow, startCol, endRow, endCol, board) => {
     board[endRow][endCol] === null ||
     !isSameColor(board[startRow][startCol], board[endRow][endCol])
   );
+};
+
+// Check if castling is valid
+export const canCastle = (color, side, board, hasMoved) => {
+  const row = color === "white" ? 7 : 0; // White on row 7, black on row 0
+
+  // Determine which rook and king are involved
+  const kingCol = 4;
+  const rookCol = side === "kingside" ? 7 : 0;
+  const newKingCol = side === "kingside" ? 6 : 2;
+  const newRookCol = side === "kingside" ? 5 : 3;
+
+  // Check if the king or rook have moved
+  if (
+    side === "kingside" &&
+    (hasMoved[color + "King"] || hasMoved[color + "RookRight"])
+  ) {
+    return false;
+  }
+  if (
+    side === "queenside" &&
+    (hasMoved[color + "King"] || hasMoved[color + "RookLeft"])
+  ) {
+    return false;
+  }
+
+  // Ensure path between king and rook is clear
+  if (isPathBlocked(row, kingCol, row, rookCol, board)) {
+    return false;
+  }
+
+  // TODO: Ensure the king does not pass through or end in check
+
+  return { kingTo: [row, newKingCol], rookTo: [row, newRookCol] };
 };
 
 // Function to check if a path is blocked (used for rooks, bishops, and queens)
