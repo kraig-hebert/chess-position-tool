@@ -9,18 +9,20 @@ export const isSameColor = (firstPiece, secondPiece) => {
   return isWhite(firstPiece) === isWhite(secondPiece);
 };
 
-export const isKingInCheck = (board, color, hasMoved) => {
-  let kingPosition = null;
-
-  // Find the king's position
+// find position of king based on color
+export const getKingPostion = (board, color) => {
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       if (board[row][col] === (color === "white" ? "K" : "k")) {
-        kingPosition = { row, col };
-        break;
+        return { row, col };
       }
     }
   }
+};
+
+// check if current king is in check
+export const isKingInCheck = (board, color, hasMoved) => {
+  const kingPosition = getKingPostion(board, color);
 
   if (!kingPosition) return false; // King not found (should never happen)
 
@@ -44,6 +46,9 @@ export const isKingInCheck = (board, color, hasMoved) => {
           )
         ) {
           console.log("King Is Attacked");
+          // every once in awhile the king will be in check
+          // when it should not be. Use these values to troubleshoot
+          // tough to recreate on command
           console.log(
             "is it bugged?",
             row,

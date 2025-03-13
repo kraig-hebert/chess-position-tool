@@ -162,16 +162,21 @@ export const canCastle = (color, side, board, hasMoved) => {
     return false;
   }
 
+  // set middle square validate isKingInCheck
+  let middleCol = null;
+  if (side === "kingside") middleCol = 5;
+  else middleCol = 3;
+
   //  Ensure the king does not pass through or end in check
   if (
     isKingInCheck(board, color, hasMoved) || // King cannot castle while in check
     isKingInCheck(
-      simulateMove(board, row, kingCol, row, newKingCol),
+      simulateMove(board, row, kingCol, row, middleCol),
       color,
       hasMoved
-    ) || // King cannot move through check
+    ) || // King cannot pass through check
     isKingInCheck(
-      simulateMove(board, row, newKingCol, row, newKingCol),
+      simulateMove(board, row, kingCol, row, newKingCol),
       color,
       hasMoved
     ) // King cannot land in check
