@@ -68,6 +68,47 @@ export const isKingInCheck = (board, color, hasMoved) => {
   return false; // King is safe
 };
 
+export const isCheckmate = (board, color, hasMoved) => {
+  if (!isKingInCheck(board, color)) return false; // If not in check, not checkmate
+  const kingPosition = getKingPostion(board, color);
+
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (
+        piece &&
+        isSameColor(piece, board[kingPosition.row][kingPosition.col])
+      ) {
+        for (let targetRow = 0; targetRow < 8; targetRow++) {
+          for (let targetCol = 0; targetCol < 8; targetCol++) {
+            if (
+              canPieceMove(
+                row,
+                col,
+                targetRow,
+                targetCol,
+                board,
+                "placeholder",
+                hasMoved
+              )
+            ) {
+              // Simulate the move
+              const newBoard = board.map((row) => [...row]);
+              newBoard[targetRow][targetCol] = piece;
+              newBoard[row][col] = null;
+              if (!isKingInCheck(newBoard, color)) {
+                return false; // The king can escape, so not checkmate
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return true; // No legal moves = Checkmate
+};
+
 // Simulates a move to check if the king would be in check
 export const simulateMove = (board, startRow, startCol, endRow, endCol) => {
   const newBoard = board.map((row) => [...row]); // Deep copy of board

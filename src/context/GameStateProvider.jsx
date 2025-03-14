@@ -17,6 +17,7 @@ export const GameStateProvider = ({ children }) => {
   const [board, setBoard] = useState(initialBoard());
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
+  const [gameIsActive, setGameIsActive] = useState(true);
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState({
@@ -47,6 +48,7 @@ export const GameStateProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log(gameIsActive);
     console.log(hasMoved);
   }, [hasMoved]);
 
@@ -62,6 +64,8 @@ export const GameStateProvider = ({ children }) => {
         enPassantTarget,
         setEnPassantTarget,
         updateHasMoved,
+        gameIsActive,
+        setGameIsActive,
       }}
     >
       {children}

@@ -10,7 +10,11 @@ import {
 } from "react-icons/fa6";
 
 import { canPieceMove, canCastle } from "../../logic/moveValidation";
-import { isSameColor, isKingInCheck } from "../../logic/chessUtils";
+import {
+  isSameColor,
+  isKingInCheck,
+  isCheckmate,
+} from "../../logic/chessUtils";
 import "./boardStyles.css";
 
 import PromotionModal from "../promotionModal/PromotionModal";
@@ -41,11 +45,15 @@ const Board = () => {
     enPassantTarget,
     setEnPassantTarget,
     updateHasMoved,
+    gameIsActive,
+    setGameIsActive,
   } = useGameState();
 
   const [promotionSquare, setPromotionSquare] = useState(null);
 
   const handleSquareClick = (row, col) => {
+    // ignore clicks when game isn't active
+    if (!gameIsActive) return;
     // ignore clicks when modal is active
     if (promotionSquare) return;
 
@@ -163,6 +171,12 @@ const Board = () => {
       }
       setBoard(newBoard);
       setSelectedPiece(null);
+      // Check for Checkmate
+      const opponent = currentPlayer === "white" ? "black" : "white";
+      if (isCheckmate(newBoard, opponent, hasMoved)) {
+        console.log("Checkmate!");
+        setGameIsActive(false);
+      }
     } else if (piece) {
       setSelectedPiece({ row, col, piece });
     }
