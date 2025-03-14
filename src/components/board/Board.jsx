@@ -156,6 +156,8 @@ const Board = () => {
       } else {
         setEnPassantTarget(null); // Reset en passant if it's not a two-square move
       }
+
+      // Update hasMoved state for castling
       if (selectedPieceType === "R") {
         if (selectedPieceRow === 7 && selectedPieceCol === 0) {
           setHasMoved({ ...hasMoved, whiteRookQueenside: true });
