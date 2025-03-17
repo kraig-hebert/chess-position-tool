@@ -18,7 +18,9 @@ import {
 import "./boardStyles.css";
 
 import StudyDetails from "../studyDetails/StudyDetails";
+import GameButtons from "../gameButtons/GameButtons";
 import PromotionModal from "../promotionModal/PromotionModal";
+import GameFilters from "../gameFilters/GameFilters";
 
 const pieceIcons = {
   p: <FaChessPawn className="piece black" />,
@@ -210,7 +212,9 @@ const Board = () => {
             );
           })
         )}
+        <GameFilters />
         <StudyDetails />
+        <GameButtons />
       </div>
       {promotionSquare && (
         <PromotionModal

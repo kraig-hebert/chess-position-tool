@@ -1,0 +1,12 @@
+.game-filters {
+  position: absolute;
+  display: flex;
+  width: 500px;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  right: 100%;
+  top: 0;
+  background-color: yellow;
+}
