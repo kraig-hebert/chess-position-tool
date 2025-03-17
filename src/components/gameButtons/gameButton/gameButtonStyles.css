@@ -1,0 +1,18 @@
+.game-button {
+  display: flex;
+  width: 150px;
+  height: 50px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgb(10, 48, 110);
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.game-button:hover {
+  background-color: rgb(43, 109, 214);
+}
