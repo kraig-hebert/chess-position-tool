@@ -1,0 +1,12 @@
+.study-details {
+  position: absolute;
+  display: flex;
+  width: 500px;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  left: 100%;
+  top: 0;
+  background-color: yellow;
+}

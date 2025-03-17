@@ -16,9 +16,10 @@
 }
 
 .board {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(8, 75px);
-  grid-template-rows: repeat(8, 75px);
+  grid-template-columns: repeat(8, 100px);
+  grid-template-rows: repeat(8, 100px);
 }
 
 .square {
@@ -38,7 +39,7 @@
 }
 
 .piece {
-  font-size: 50px;
+  font-size: 65px;
   user-select: none;
 }
 
@@ -61,6 +62,6 @@
   left: -2px;
   right: -2px;
   bottom: -2px;
-  border: 3px solid yellow;
+  border: 5px solid yellow;
   pointer-events: none; /* Ensures it doesn’t interfere with clicks */
 }

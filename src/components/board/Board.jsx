@@ -17,6 +17,7 @@ import {
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
+import StudyDetails from "../studyDetails/StudyDetails";
 import PromotionModal from "../promotionModal/PromotionModal";
 
 const pieceIcons = {
@@ -209,6 +210,7 @@ const Board = () => {
             );
           })
         )}
+        <StudyDetails />
       </div>
       {promotionSquare && (
         <PromotionModal
