@@ -11,6 +11,15 @@ const initialBoard = () => [
   ["R", "N", "B", "Q", "K", "B", "N", "R"],
 ];
 
+const initialHasMoved = {
+  whiteKing: false,
+  whiteRookQueenside: false,
+  whiteRookKingside: false,
+  blackKing: false,
+  blackRookKingside: false,
+  blackRookQueenside: false,
+};
+
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
@@ -20,14 +29,7 @@ export const GameStateProvider = ({ children }) => {
   const [gameIsActive, setGameIsActive] = useState(true);
 
   // Track whether the king and rooks have moved
-  const [hasMoved, setHasMoved] = useState({
-    whiteKing: false,
-    whiteRookQueenside: false,
-    whiteRookKingside: false,
-    blackKing: false,
-    blackRookKingside: false,
-    blackRookQueenside: false,
-  });
+  const [hasMoved, setHasMoved] = useState(initialHasMoved);
 
   const updateHasMovedForCastling = (color) => {
     if (color === "white") {
@@ -48,6 +50,12 @@ export const GameStateProvider = ({ children }) => {
   };
 
   const resetBoard = () => setBoard(initialBoard());
+  const resetHasMoved = () => setHasMoved(initialHasMoved);
+  const resetGame = () => {
+    resetBoard();
+    resetHasMoved();
+    setGameIsActive(true);
+  };
 
   useEffect(() => {
     console.log(gameIsActive);
@@ -68,7 +76,7 @@ export const GameStateProvider = ({ children }) => {
         updateHasMovedForCastling,
         gameIsActive,
         setGameIsActive,
-        resetBoard,
+        resetGame,
       }}
     >
       {children}

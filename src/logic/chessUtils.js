@@ -1,6 +1,6 @@
 import { canPieceMove } from "./moveValidation";
 
-// Check if a piece is white...uppercase = white
+// uppercase = white
 export const isWhite = (piece) => piece && piece === piece.toUpperCase();
 
 // Check if two pieces are the same color
@@ -11,9 +11,10 @@ export const isSameColor = (firstPiece, secondPiece) => {
 
 // find position of king based on color
 export const getKingPostion = (board, color) => {
+  const king = color === "white" ? "K" : "k";
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      if (board[row][col] === (color === "white" ? "K" : "k")) {
+      if (board[row][col] === king) {
         return { row, col };
       }
     }

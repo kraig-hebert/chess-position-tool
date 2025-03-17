@@ -1,1 +1,2 @@
-
+- Update the hasMoved when the king moves by itself.
+- still random bug that thinks king it is check when it isn't
