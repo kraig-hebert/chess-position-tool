@@ -47,6 +47,8 @@ export const GameStateProvider = ({ children }) => {
     }
   };
 
+  const resetBoard = () => setBoard(initialBoard());
+
   useEffect(() => {
     console.log(gameIsActive);
     console.log(hasMoved);
@@ -66,6 +68,7 @@ export const GameStateProvider = ({ children }) => {
         updateHasMoved,
         gameIsActive,
         setGameIsActive,
+        resetBoard,
       }}
     >
       {children}
