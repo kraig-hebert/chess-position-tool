@@ -127,6 +127,7 @@ const Board = () => {
       if (isWhitePromotion || isBlackPromotion) {
         // Replace pawn with a queen for now (later allow choice)
         setPromotionSquare({ row, col, piece: selectedPieceType });
+        setGameIsActive(false);
         return; // Stop the move until promotion is chosen
       }
 
@@ -227,6 +228,7 @@ const Board = () => {
             setBoard(newBoard);
             setPromotionSquare(null);
             setSelectedPiece(null);
+            setGameIsActive(true);
           }}
         />
       )}

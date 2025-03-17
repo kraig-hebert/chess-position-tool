@@ -58,9 +58,11 @@ export const GameStateProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(gameIsActive);
     console.log(hasMoved);
   }, [hasMoved]);
+  useEffect(() => {
+    console.log(gameIsActive);
+  }, [gameIsActive]);
 
   return (
     <GameStateContext.Provider

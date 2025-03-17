@@ -16,3 +16,7 @@
 .game-button:hover {
   background-color: rgb(43, 109, 214);
 }
+
+.disabled {
+  pointer-events: none;
+}
