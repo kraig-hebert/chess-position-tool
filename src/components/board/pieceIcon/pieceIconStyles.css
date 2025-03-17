@@ -1,0 +1,12 @@
+.piece {
+  font-size: 65px;
+  user-select: none;
+}
+
+.white {
+  color: white;
+}
+
+.black {
+  color: black;
+}

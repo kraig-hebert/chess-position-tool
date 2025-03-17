@@ -17,24 +17,25 @@ import {
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
+import Square from "./square/Square";
 import StudyDetails from "../studyDetails/StudyDetails";
 import GameButtons from "../gameButtons/GameButtons";
 import PromotionModal from "../promotionModal/PromotionModal";
 import GameFilters from "../gameFilters/GameFilters";
 
 const pieceIcons = {
-  p: <FaChessPawn className="piece black" />,
-  r: <FaChessRook className="piece black" />,
-  n: <FaChessKnight className="piece black" />,
-  b: <FaChessBishop className="piece black" />,
-  q: <FaChessQueen className="piece black" />,
-  k: <FaChessKing className="piece black" />,
-  P: <FaChessPawn className="piece white" />,
-  R: <FaChessRook className="piece white" />,
-  N: <FaChessKnight className="piece white" />,
-  B: <FaChessBishop className="piece white" />,
-  Q: <FaChessQueen className="piece white" />,
-  K: <FaChessKing className="piece white" />,
+  p: { icon: FaChessPawn, className: "piece black" },
+  r: { icon: FaChessRook, className: "piece black" },
+  n: { icon: FaChessKnight, className: "piece black" },
+  b: { icon: FaChessBishop, className: "piece black" },
+  q: { icon: FaChessQueen, className: "piece black" },
+  k: { icon: FaChessKing, className: "piece black" },
+  P: { icon: FaChessPawn, className: "piece white" },
+  R: { icon: FaChessRook, className: "piece white" },
+  N: { icon: FaChessKnight, className: "piece white" },
+  B: { icon: FaChessBishop, className: "piece white" },
+  Q: { icon: FaChessQueen, className: "piece white" },
+  K: { icon: FaChessKing, className: "piece white" },
 };
 
 const Board = () => {
@@ -200,15 +201,13 @@ const Board = () => {
               selectedPiece.col === colIndex;
 
             return (
-              <div
+              <Square
                 key={`${rowIndex}-${colIndex}`}
-                className={`square ${isDark ? "dark" : "light"} ${
-                  isSelected ? "selected" : ""
-                }`}
+                isDark={isDark}
+                isSelected={isSelected}
                 onClick={() => handleSquareClick(rowIndex, colIndex)}
-              >
-                {piece && pieceIcons[piece]}
-              </div>
+                piece={piece && pieceIcons[piece]}
+              />
             );
           })
         )}
