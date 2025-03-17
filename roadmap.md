@@ -1,6 +1,11 @@
+\*REFRACTOR
+
+- move king check and checkmate checks to chessUtils and other functions of the kind
+
 \*BOARD
 
 - add notation to board
+- work on logic for flipping board board and notation as well
 - show captured pieces for each side
 - show controlled squares using color filters of different gradients for amount of control on square
 - add replay button to walk step by step through the position.
@@ -36,6 +41,6 @@
   - threats arrow
   - allow custom color selection
 
-MAGNUM OPUS
+\*MAGNUM OPUS
 
 - add ability to create studies
