@@ -29,7 +29,7 @@ export const GameStateProvider = ({ children }) => {
     blackRookQueenside: false,
   });
 
-  const updateHasMoved = (color) => {
+  const updateHasMovedForCastling = (color) => {
     if (color === "white") {
       setHasMoved({
         ...hasMoved,
@@ -65,7 +65,7 @@ export const GameStateProvider = ({ children }) => {
         setHasMoved,
         enPassantTarget,
         setEnPassantTarget,
-        updateHasMoved,
+        updateHasMovedForCastling,
         gameIsActive,
         setGameIsActive,
         resetBoard,

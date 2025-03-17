@@ -47,7 +47,7 @@ const Board = () => {
     setHasMoved,
     enPassantTarget,
     setEnPassantTarget,
-    updateHasMoved,
+    updateHasMovedForCastling,
     gameIsActive,
     setGameIsActive,
   } = useGameState();
@@ -146,7 +146,7 @@ const Board = () => {
             board[selectedPieceRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
           newBoard[selectedPieceRow][castlingSide === "kingside" ? 7 : 0] =
             null; // Remove old rook position
-          updateHasMoved(color);
+          updateHasMovedForCastling(color);
         }
       }
 
