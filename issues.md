@@ -1,3 +1,2 @@
 - Update the hasMoved when the king moves by itself.
 - still random bug that thinks king is check when it isn't
-- when resetting board you need to clear the promotionModal or disable buttons when modal is open

@@ -175,6 +175,10 @@ const Board = () => {
         } else if (selectedPieceRow === 0 && selectedPieceCol === 7) {
           setHasMoved({ ...hasMoved, blackRookKingside: true });
         }
+      } else if (selectedPieceType === "K") {
+        setHasMoved({ ...hasMoved, whiteKing: true });
+      } else if (selectedPieceType === "k") {
+        setHasMoved({ ...hasMoved, blackKing: true });
       }
       setBoard(newBoard);
       setSelectedPiece(null);
