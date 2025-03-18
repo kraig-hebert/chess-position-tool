@@ -184,8 +184,6 @@ export const canCastle = (color, side, board, hasMoved) => {
     return false;
   }
 
-  // TODO: Ensure the king does not pass through or end in check
-
   return { kingTo: [row, newKingCol], rookTo: [row, newRookCol] };
 };
 

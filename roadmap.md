@@ -16,6 +16,7 @@
   - stop at forks to allow user choice which line to go into
   - allow users to input PGN and FEN
     - create simple translators for this
+  - add status location for checks, checkmate, ect.....
 
 \*STUDY DETAILS
 
