@@ -214,6 +214,17 @@ const Board = () => {
     })
   );
 
+  const promotionPieceSelect = (piece) => {
+    const newBoard = board.map((row) => [...row]);
+    newBoard[promotionSquare.row][promotionSquare.col] =
+      promotionSquare.piece === "P" ? piece.toUpperCase() : piece.toLowerCase();
+    newBoard[selectedPiece.row][selectedPiece.col] = null;
+    setBoard(newBoard);
+    setPromotionSquare(null);
+    setSelectedPiece(null);
+    setGameIsActive(true);
+  };
+
   return (
     <div className="board-container">
       {promotionSquare && <div className="board-overlay"></div>}
@@ -223,22 +234,7 @@ const Board = () => {
         <StudyDetails />
         <GameButtons />
       </div>
-      {promotionSquare && (
-        <PromotionModal
-          onSelect={(piece) => {
-            const newBoard = board.map((row) => [...row]);
-            newBoard[promotionSquare.row][promotionSquare.col] =
-              promotionSquare.piece === "P"
-                ? piece.toUpperCase()
-                : piece.toLowerCase();
-            newBoard[selectedPiece.row][selectedPiece.col] = null;
-            setBoard(newBoard);
-            setPromotionSquare(null);
-            setSelectedPiece(null);
-            setGameIsActive(true);
-          }}
-        />
-      )}
+      {promotionSquare && <PromotionModal onSelect={promotionPieceSelect} />}
     </div>
   );
 };
