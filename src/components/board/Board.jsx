@@ -192,29 +192,31 @@ const Board = () => {
     }
   };
 
+  const renderedBoard = board.map((row, rowIndex) =>
+    row.map((piece, colIndex) => {
+      const isDark = (rowIndex + colIndex) % 2 !== 0;
+      const isSelected =
+        selectedPiece &&
+        selectedPiece.row === rowIndex &&
+        selectedPiece.col === colIndex;
+
+      return (
+        <Square
+          key={`${rowIndex}-${colIndex}`}
+          isDark={isDark}
+          isSelected={isSelected}
+          onClick={() => handleSquareClick(rowIndex, colIndex)}
+          piece={piece && pieceIcons[piece]}
+        />
+      );
+    })
+  );
+
   return (
     <div className="board-container">
       {promotionSquare && <div className="board-overlay"></div>}
       <div className="board">
-        {board.map((row, rowIndex) =>
-          row.map((piece, colIndex) => {
-            const isDark = (rowIndex + colIndex) % 2 !== 0;
-            const isSelected =
-              selectedPiece &&
-              selectedPiece.row === rowIndex &&
-              selectedPiece.col === colIndex;
-
-            return (
-              <Square
-                key={`${rowIndex}-${colIndex}`}
-                isDark={isDark}
-                isSelected={isSelected}
-                onClick={() => handleSquareClick(rowIndex, colIndex)}
-                piece={piece && pieceIcons[piece]}
-              />
-            );
-          })
-        )}
+        {renderedBoard}
         <GameFilters />
         <StudyDetails />
         <GameButtons />
