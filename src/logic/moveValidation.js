@@ -142,7 +142,6 @@ export const canCastle = (color, side, board, hasMoved) => {
   const rookCol = side === "kingside" ? 7 : 0;
   const newKingCol = side === "kingside" ? 6 : 2;
   const newRookCol = side === "kingside" ? 5 : 3;
-
   // Check if the king or rook have moved
   if (
     side === "kingside" &&

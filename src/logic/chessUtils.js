@@ -70,7 +70,7 @@ export const isKingInCheck = (board, color, hasMoved) => {
 };
 
 export const isCheckmate = (board, color, hasMoved) => {
-  if (!isKingInCheck(board, color)) return false; // If not in check, not checkmate
+  if (!isKingInCheck(board, color, hasMoved)) return false; // If not in check, not checkmate
   const kingPosition = getKingPostion(board, color);
 
   for (let row = 0; row < 8; row++) {
