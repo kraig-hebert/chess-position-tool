@@ -207,6 +207,8 @@ const Board = () => {
           isSelected={isSelected}
           onClick={() => handleSquareClick(rowIndex, colIndex)}
           piece={piece && pieceIcons[piece]}
+          row={rowIndex}
+          col={colIndex}
         />
       );
     })
