@@ -36,6 +36,17 @@ export const GameStateProvider = ({ children }) => {
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
 
+  const letterNotation = {
+    1: "A",
+    2: "B",
+    3: "C",
+    4: "D",
+    5: "E",
+    6: "F",
+    7: "G",
+    8: "H",
+  };
+
   const updateHasMovedForCastling = (color) => {
     if (color === "white") {
       setHasMoved({
@@ -94,6 +105,7 @@ export const GameStateProvider = ({ children }) => {
         pov,
         setPov,
         updatePov,
+        letterNotation,
       }}
     >
       {children}
