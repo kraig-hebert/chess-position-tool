@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+const initialActiveColor = "white";
+const initialPov = "white";
+
 const initialBoard = () => [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
   ["p", "p", "p", "p", "p", "p", "p", "p"],
@@ -23,10 +26,12 @@ const initialHasMoved = {
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
+  const [activeColor, setActiveColor] = useState(initialActiveColor);
   const [board, setBoard] = useState(initialBoard());
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
   const [gameIsActive, setGameIsActive] = useState(true);
+  const [pov, setPov] = useState(initialPov);
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
@@ -49,6 +54,11 @@ export const GameStateProvider = ({ children }) => {
     }
   };
 
+  const updatePov = () => {
+    if (pov === "white") setPov("black");
+    else setPov("white");
+  };
+
   const resetBoard = () => setBoard(initialBoard());
   const resetHasMoved = () => setHasMoved(initialHasMoved);
   const resetGame = () => {
@@ -58,15 +68,17 @@ export const GameStateProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log(hasMoved);
+    console.log("hasMoved", hasMoved);
   }, [hasMoved]);
   useEffect(() => {
-    console.log(gameIsActive);
+    console.log("gameIsActice", gameIsActive);
   }, [gameIsActive]);
 
   return (
     <GameStateContext.Provider
       value={{
+        activeColor,
+        setActiveColor,
         board,
         setBoard,
         selectedPiece,
@@ -79,6 +91,9 @@ export const GameStateProvider = ({ children }) => {
         gameIsActive,
         setGameIsActive,
         resetGame,
+        pov,
+        setPov,
+        updatePov,
       }}
     >
       {children}

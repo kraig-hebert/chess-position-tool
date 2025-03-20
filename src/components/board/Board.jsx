@@ -51,6 +51,7 @@ const Board = () => {
     updateHasMovedForCastling,
     gameIsActive,
     setGameIsActive,
+    pov,
   } = useGameState();
 
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -192,27 +193,32 @@ const Board = () => {
     }
   };
 
-  const renderedBoard = board.map((row, rowIndex) =>
-    row.map((piece, colIndex) => {
-      const isDark = (rowIndex + colIndex) % 2 !== 0;
-      const isSelected =
-        selectedPiece &&
-        selectedPiece.row === rowIndex &&
-        selectedPiece.col === colIndex;
+  const renderBoard = () => {
+    let boardForRender = structuredClone(board);
+    if (pov === "black")
+      boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
+    return boardForRender.map((row, rowIndex) =>
+      row.map((piece, colIndex) => {
+        const isDark = (rowIndex + colIndex) % 2 !== 0;
+        const isSelected =
+          selectedPiece &&
+          selectedPiece.row === rowIndex &&
+          selectedPiece.col === colIndex;
 
-      return (
-        <Square
-          key={`${rowIndex}-${colIndex}`}
-          isDark={isDark}
-          isSelected={isSelected}
-          onClick={() => handleSquareClick(rowIndex, colIndex)}
-          piece={piece && pieceIcons[piece]}
-          row={rowIndex}
-          col={colIndex}
-        />
-      );
-    })
-  );
+        return (
+          <Square
+            key={`${rowIndex}-${colIndex}`}
+            isDark={isDark}
+            isSelected={isSelected}
+            onClick={() => handleSquareClick(rowIndex, colIndex)}
+            piece={piece && pieceIcons[piece]}
+            row={rowIndex}
+            col={colIndex}
+          />
+        );
+      })
+    );
+  };
 
   const promotionPieceSelect = (piece) => {
     const newBoard = board.map((row) => [...row]);
@@ -229,7 +235,7 @@ const Board = () => {
     <div className="board-container">
       {promotionSquare && <div className="board-overlay"></div>}
       <div className="board">
-        {renderedBoard}
+        {renderBoard()}
         <GameFilters />
         <StudyDetails />
         <GameButtons />
