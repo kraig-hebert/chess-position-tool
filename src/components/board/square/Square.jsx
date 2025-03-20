@@ -17,6 +17,7 @@ const Square = (props) => {
       return <div className="left-notation">{Math.abs(row - 7) + 1}</div>;
     else return <div className="left-notation">{row + 1}</div>;
   };
+
   const renderBottomNotation = () => {
     if (pov === "white")
       return <div className="bottom-notation">{letterNotation[col + 1]}</div>;

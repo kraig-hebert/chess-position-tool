@@ -57,12 +57,16 @@ const Board = () => {
   const [promotionSquare, setPromotionSquare] = useState(null);
 
   const handleSquareClick = (row, col) => {
-    // ignore clicks when game isn't active
-    if (!gameIsActive) return;
-    // ignore clicks when modal is active
-    if (promotionSquare) return;
+    // ignore clicks when game isn't active or promotion modal is active
+    if (!gameIsActive || promotionSquare) return;
 
+    if (pov === "black") {
+      row = Math.abs(row - 7);
+      col = Math.abs(col - 7);
+    }
+    console.log(row, col);
     const piece = board[row][col];
+    console.log(piece);
 
     if (selectedPiece) {
       const {
@@ -194,16 +198,20 @@ const Board = () => {
   };
 
   const renderBoard = () => {
+    let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
-    if (pov === "black")
+    if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
+      tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
+      tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
+    }
     return boardForRender.map((row, rowIndex) =>
       row.map((piece, colIndex) => {
         const isDark = (rowIndex + colIndex) % 2 !== 0;
         const isSelected =
-          selectedPiece &&
-          selectedPiece.row === rowIndex &&
-          selectedPiece.col === colIndex;
+          tempSelectedPiece &&
+          tempSelectedPiece.row === rowIndex &&
+          tempSelectedPiece.col === colIndex;
 
         return (
           <Square

@@ -82,7 +82,7 @@ export const GameStateProvider = ({ children }) => {
     console.log("hasMoved", hasMoved);
   }, [hasMoved]);
   useEffect(() => {
-    console.log("gameIsActice", gameIsActive);
+    console.log("gameIsActive", gameIsActive);
   }, [gameIsActive]);
 
   return (
