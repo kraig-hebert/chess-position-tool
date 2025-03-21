@@ -54,6 +54,7 @@ const Board = () => {
     pov,
   } = useGameState();
 
+  // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
 
   const handleSquareClick = (row, col) => {
@@ -126,7 +127,7 @@ const Board = () => {
         newBoard[capturedPawnRow][col] = null; // Remove captured pawn
       }
 
-      //  Check for Pawn Promotion
+      // Check for Pawn Promotion
       const isWhitePromotion = selectedPieceType === "P" && row === 0;
       const isBlackPromotion = selectedPieceType === "p" && row === 7;
       if (isWhitePromotion || isBlackPromotion) {

@@ -4,8 +4,6 @@
 
 \*BOARD
 
-- add notation to board
-- work on logic for flipping board board and notation as well
 - show captured pieces for each side
 - show controlled squares using color filters of different gradients for amount of control on square
 - add replay button to walk step by step through the position.

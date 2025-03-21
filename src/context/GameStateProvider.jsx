@@ -69,12 +69,13 @@ export const GameStateProvider = ({ children }) => {
     if (pov === "white") setPov("black");
     else setPov("white");
   };
-
-  const resetBoard = () => setBoard(initialBoard());
-  const resetHasMoved = () => setHasMoved(initialHasMoved);
   const resetGame = () => {
-    resetBoard();
-    resetHasMoved();
+    setSelectedPiece(null);
+    setEnPassantTarget(null);
+    setActiveColor(initialActiveColor);
+    setPov(initialPov);
+    setBoard(initialBoard());
+    setHasMoved(initialHasMoved);
     setGameIsActive(true);
   };
 
