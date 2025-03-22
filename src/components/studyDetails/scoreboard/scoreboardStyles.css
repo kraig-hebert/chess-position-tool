@@ -1,0 +1,37 @@
+.scoreboard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px 0 10px;
+  background-color: red;
+}
+
+.scoreboard-side {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 50%;
+  margin: 5px;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+.side-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+}
+
+.captured-pieces {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+}
