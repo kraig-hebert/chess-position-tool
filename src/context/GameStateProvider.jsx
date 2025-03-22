@@ -128,6 +128,8 @@ export const GameStateProvider = ({ children }) => {
         letterNotation,
         capturedPieces,
         setCapturedPieces,
+        pieceValues,
+        addCapturedPiece,
       }}
     >
       {children}

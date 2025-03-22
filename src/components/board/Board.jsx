@@ -52,6 +52,7 @@ const Board = () => {
     gameIsActive,
     setGameIsActive,
     pov,
+    addCapturedPiece,
   } = useGameState();
 
   // { row, col, piece }
@@ -65,9 +66,7 @@ const Board = () => {
       row = Math.abs(row - 7);
       col = Math.abs(col - 7);
     }
-    console.log(row, col);
     const piece = board[row][col];
-    console.log(piece);
 
     if (selectedPiece) {
       const {
@@ -104,6 +103,14 @@ const Board = () => {
 
       const newBoard = board.map((row) => [...row]);
       newBoard[selectedPieceRow][selectedPieceCol] = null;
+      if (board[row][col] !== null) {
+        addCapturedPiece(
+          board[row][col],
+          selectedPieceType === selectedPieceType.toUpperCase()
+            ? "white"
+            : "black"
+        );
+      }
       newBoard[row][col] = selectedPieceType;
 
       const currentPlayer =
