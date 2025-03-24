@@ -124,6 +124,22 @@ export const GameStateProvider = ({ children }) => {
     setGameIsActive(true);
   };
 
+  const getGroupedMovesList = () => {
+    const groupedMoves = [];
+    let moveGroup = [];
+    console.log(movesList);
+    movesList.forEach((move, index) => {
+      if (index % 2 === 0) moveGroup.push(move);
+      else {
+        moveGroup.push(move);
+        groupedMoves.push(moveGroup);
+        moveGroup = [];
+      }
+      if (index === movesList.length - 1) groupedMoves.push(moveGroup);
+    });
+    return groupedMoves;
+  };
+
   useEffect(() => {
     console.log("hasMoved", hasMoved);
   }, [hasMoved]);
@@ -159,6 +175,7 @@ export const GameStateProvider = ({ children }) => {
         pieceIcons,
         movesList,
         setMovesList,
+        getGroupedMovesList,
       }}
     >
       {children}
