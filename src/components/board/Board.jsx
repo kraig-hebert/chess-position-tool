@@ -107,28 +107,46 @@ const Board = () => {
         capturedPiece,
         letterNotation
       );
-      const otherPiecePositions = getAllPiecePositions(
-        selectedPiece.piece,
-        board
-      );
-      if (otherPiecePositions.length > 1) {
-        const checkList = otherPiecePositions.map((position) =>
-          canPieceMove(
-            position.row,
-            position.col,
-            row,
-            col,
-            board,
-            "placeholder",
-            {}
-          )
+
+      // edit move notation if multiple pieces can move to the same square
+      if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
+        const otherPiecePositions = getAllPiecePositions(
+          selectedPiece.piece,
+          board
         );
-        if (checkList.filter((item) => item === true).length > 1) {
-          const newString =
-            moveNotation.slice(0, 1) +
-            letterNotation[selectedPieceCol + 1] +
-            moveNotation.slice(1);
-          moveNotation = newString;
+        if (otherPiecePositions.length > 1) {
+          const checkList = otherPiecePositions
+            .map((position) => {
+              if (
+                canPieceMove(
+                  position.row,
+                  position.col,
+                  row,
+                  col,
+                  board,
+                  "placeholder",
+                  {}
+                )
+              )
+                return position;
+              else return false;
+            })
+            .filter((position) => position !== false);
+          if (checkList.length > 1) {
+            const firstPosition = checkList[0];
+            const secondPosition = checkList[1];
+            if (firstPosition.col !== secondPosition.col) {
+              moveNotation =
+                moveNotation.slice(0, 1) +
+                letterNotation[selectedPieceCol + 1] +
+                moveNotation.slice(1);
+            } else if (firstPosition.row !== secondPosition.row) {
+              moveNotation =
+                moveNotation.slice(0, 1) +
+                Math.abs(selectedPieceRow - 8) +
+                moveNotation.slice(1);
+            }
+          }
         }
       }
       const currentPlayer =

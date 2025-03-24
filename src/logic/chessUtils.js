@@ -50,7 +50,6 @@ export const getAllPiecePositions = (piece, board) => {
       }
     }
   }
-  console.log(piecePositions);
   return piecePositions;
 };
 
