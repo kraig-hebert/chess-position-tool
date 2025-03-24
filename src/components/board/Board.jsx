@@ -139,7 +139,12 @@ const Board = () => {
       const isWhitePromotion = selectedPieceType === "P" && row === 0;
       const isBlackPromotion = selectedPieceType === "p" && row === 7;
       if (isWhitePromotion || isBlackPromotion) {
-        setPromotionSquare({ row, col, piece: selectedPieceType });
+        setPromotionSquare({
+          row,
+          col,
+          piece: selectedPieceType,
+          moveNotation,
+        });
         setGameIsActive(false);
         return; // Stop the move until promotion is chosen
       }
@@ -245,6 +250,10 @@ const Board = () => {
     newBoard[promotionSquare.row][promotionSquare.col] =
       promotionSquare.piece === "P" ? piece.toUpperCase() : piece.toLowerCase();
     newBoard[selectedPiece.row][selectedPiece.col] = null;
+    setMovesList([
+      ...movesList,
+      `${promotionSquare.moveNotation}=${piece.toUpperCase()}`,
+    ]);
     setBoard(newBoard);
     setPromotionSquare(null);
     setSelectedPiece(null);

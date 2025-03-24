@@ -19,7 +19,8 @@
 \*STUDY DETAILS
 
 - add move notation list
-  - add castling, promotion, and checkmate
+  - add checkmate, checks
+  - add notation for when 2 knights or 2 rooks can move to the same square
 - add way to add different lines to a position
 - possibly integrate chess engine API calls
   - get best moves
