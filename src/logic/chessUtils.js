@@ -40,6 +40,20 @@ export const getKingPostion = (board, color) => {
   }
 };
 
+// find all positions of piece type
+export const getAllPiecePositions = (piece, board) => {
+  const piecePositions = [];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (board[row][col] === piece) {
+        piecePositions.push({ row, col });
+      }
+    }
+  }
+  console.log(piecePositions);
+  return piecePositions;
+};
+
 // check if last move put king in check
 export const checkIfLastMovePutKingInCheck = (row, col, board, color) => {
   const kingPosition = getKingPostion(board, color);

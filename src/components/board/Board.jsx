@@ -8,6 +8,7 @@ import {
   isCheckmate,
   createNotation,
   checkIfLastMovePutKingInCheck,
+  getAllPiecePositions,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -106,7 +107,30 @@ const Board = () => {
         capturedPiece,
         letterNotation
       );
-
+      const otherPiecePositions = getAllPiecePositions(
+        selectedPiece.piece,
+        board
+      );
+      if (otherPiecePositions.length > 1) {
+        const checkList = otherPiecePositions.map((position) =>
+          canPieceMove(
+            position.row,
+            position.col,
+            row,
+            col,
+            board,
+            "placeholder",
+            {}
+          )
+        );
+        if (checkList.filter((item) => item === true).length > 1) {
+          const newString =
+            moveNotation.slice(0, 1) +
+            letterNotation[selectedPieceCol + 1] +
+            moveNotation.slice(1);
+          moveNotation = newString;
+        }
+      }
       const currentPlayer =
         selectedPieceType === selectedPieceType.toUpperCase()
           ? "white"
