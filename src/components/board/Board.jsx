@@ -6,6 +6,7 @@ import {
   isSameColor,
   isKingInCheck,
   isCheckmate,
+  createNotation,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -31,12 +32,18 @@ const Board = () => {
     pov,
     addCapturedPiece,
     pieceIcons,
+    movesList,
+    setMovesList,
+    letterNotation,
   } = useGameState();
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
 
   const handleSquareClick = (row, col) => {
+    // track captured piece
+    let capturedPiece = null;
+    let moveNotation = "";
     // ignore clicks when game isn't active or promotion modal is active
     if (!gameIsActive || promotionSquare) return;
 
@@ -81,15 +88,23 @@ const Board = () => {
 
       const newBoard = board.map((row) => [...row]);
       newBoard[selectedPieceRow][selectedPieceCol] = null;
-      if (board[row][col] !== null) {
+      capturedPiece = board[row][col];
+      if (capturedPiece !== null) {
         addCapturedPiece(
-          board[row][col],
+          capturedPiece,
           selectedPieceType === selectedPieceType.toUpperCase()
             ? "white"
             : "black"
         );
       }
       newBoard[row][col] = selectedPieceType;
+      moveNotation = createNotation(
+        row,
+        col,
+        selectedPiece,
+        capturedPiece,
+        letterNotation
+      );
 
       const currentPlayer =
         selectedPieceType === selectedPieceType.toUpperCase()
@@ -109,7 +124,15 @@ const Board = () => {
         enPassantTarget.col === col
       ) {
         const capturedPawnRow = selectedPieceType === "P" ? row + 1 : row - 1;
+        capturedPiece = newBoard[(capturedPawnRow, col)];
         newBoard[capturedPawnRow][col] = null; // Remove captured pawn
+        moveNotation = createNotation(
+          row,
+          col,
+          selectedPiece,
+          capturedPiece,
+          letterNotation
+        );
       }
 
       // Check for Pawn Promotion
@@ -152,7 +175,7 @@ const Board = () => {
         setEnPassantTarget(null); // Reset en passant if it's not a two-square move
       }
 
-      // Update hasMoved state for castling
+      // Update hasMoved state for castling if rook or king moves by itself
       if (selectedPieceType === "R") {
         if (selectedPieceRow === 7 && selectedPieceCol === 0) {
           setHasMoved({ ...hasMoved, whiteRookQueenside: true });
@@ -178,6 +201,7 @@ const Board = () => {
         console.log("Checkmate!");
         setGameIsActive(false);
       }
+      setMovesList([...movesList, moveNotation]);
     } else if (piece) {
       setSelectedPiece({ row, col, piece });
     }

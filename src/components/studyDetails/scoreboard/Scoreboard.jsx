@@ -33,14 +33,13 @@ const Scoreboard = () => {
     const pawnIconType = color === "white" ? "p" : "P";
     if (pawnTotal > 0)
       pieceList.unshift(
-        <>
+        <div key={17} className="pawn-list">
           <PieceIcon
-            key={17}
             Icon={pieceIcons[pawnIconType].icon}
             className={`${pieceIcons[pawnIconType].className} + small`}
           />
           x {pawnTotal}
-        </>
+        </div>
       );
     return pieceList;
   };

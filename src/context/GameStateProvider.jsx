@@ -11,6 +11,7 @@ import {
 const initialActiveColor = "white";
 const initialPov = "white";
 const initialCapturedPieces = { white: [], black: [] };
+const initialMovesList = [];
 
 const initialBoard = [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
@@ -42,19 +43,20 @@ export const GameStateProvider = ({ children }) => {
   const [gameIsActive, setGameIsActive] = useState(true);
   const [pov, setPov] = useState(initialPov);
   const [capturedPieces, setCapturedPieces] = useState(initialCapturedPieces);
+  const [movesList, setMovesList] = useState(initialMovesList);
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
 
   const letterNotation = {
-    1: "A",
-    2: "B",
-    3: "C",
-    4: "D",
-    5: "E",
-    6: "F",
-    7: "G",
-    8: "H",
+    1: "a",
+    2: "b",
+    3: "c",
+    4: "d",
+    5: "e",
+    6: "f",
+    7: "g",
+    8: "h",
   };
 
   const pieceValues = {
@@ -118,6 +120,7 @@ export const GameStateProvider = ({ children }) => {
     setPov(initialPov);
     setBoard(initialBoard);
     setHasMoved(initialHasMoved);
+    setMovesList(initialMovesList);
     setGameIsActive(true);
   };
 
@@ -154,6 +157,8 @@ export const GameStateProvider = ({ children }) => {
         pieceValues,
         addCapturedPiece,
         pieceIcons,
+        movesList,
+        setMovesList,
       }}
     >
       {children}

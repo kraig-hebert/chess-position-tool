@@ -9,6 +9,25 @@ export const isSameColor = (firstPiece, secondPiece) => {
   return isWhite(firstPiece) === isWhite(secondPiece);
 };
 
+export const createNotation = (
+  row,
+  col,
+  selectedPiece,
+  capturedPiece,
+  letterNotation
+) => {
+  const letter = letterNotation[col + 1];
+  const number = Math.abs(row - 8);
+  if (selectedPiece.piece.toUpperCase() !== "P") {
+    if (!capturedPiece)
+      return `${selectedPiece.piece.toUpperCase()}${letter}${number}`;
+    else return `${selectedPiece.piece.toUpperCase()}x${letter}${number}`;
+  } else if (selectedPiece.piece.toUpperCase() === "P") {
+    if (!capturedPiece) return `${letter}${number}`;
+    else return `${letterNotation[selectedPiece.col + 1]}x${letter}${number}`;
+  }
+};
+
 // find position of king based on color
 export const getKingPostion = (board, color) => {
   const king = color === "white" ? "K" : "k";
