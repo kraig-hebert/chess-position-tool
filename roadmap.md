@@ -19,6 +19,7 @@
 \*STUDY DETAILS
 
 - add move notation list
+  - add castling, promotion, and checkmate
 - add way to add different lines to a position
 - possibly integrate chess engine API calls
   - get best moves

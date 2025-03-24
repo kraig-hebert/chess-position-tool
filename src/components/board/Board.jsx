@@ -162,6 +162,8 @@ const Board = () => {
           newBoard[selectedPieceRow][castlingSide === "kingside" ? 7 : 0] =
             null; // Remove old rook position
           updateHasMovedForCastling(color);
+          if (castlingSide === "kingside") moveNotation = "0-0";
+          else if (castlingSide === "queenside") moveNotation = "0-0-0";
         }
       }
 
