@@ -207,6 +207,7 @@ const Board = () => {
       if (isCheckmate(newBoard, opponent, hasMoved)) {
         console.log("Checkmate!");
         setGameIsActive(false);
+        moveNotation = moveNotation + "#";
       }
       setMovesList([...movesList, moveNotation]);
     } else if (piece) {
