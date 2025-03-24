@@ -56,15 +56,16 @@ export const getAllPiecePositions = (piece, board) => {
 // check if last move put king in check
 export const checkIfLastMovePutKingInCheck = (row, col, board, color) => {
   const kingPosition = getKingPostion(board, color);
-  console.log(kingPosition);
-  return canPieceMove(
-    row,
-    col,
-    kingPosition.row,
-    kingPosition.col,
-    board,
-    "placeholder",
-    {}
+  return (
+    canPieceMove(
+      row,
+      col,
+      kingPosition.row,
+      kingPosition.col,
+      board,
+      "placeholder",
+      {}
+    ) || isKingInCheck(board, color, {})
   );
 };
 
