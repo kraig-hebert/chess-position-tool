@@ -10,14 +10,15 @@
 
 .scoreboard-side {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
   width: 50%;
   margin: 5px;
   color: white;
   font-size: 16px;
   text-align: center;
+  background-color: blue;
 }
 
 .side-title {

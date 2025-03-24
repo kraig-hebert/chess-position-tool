@@ -1,4 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+  FaChessPawn,
+  FaChessRook,
+  FaChessKnight,
+  FaChessBishop,
+  FaChessQueen,
+  FaChessKing,
+} from "react-icons/fa6";
 
 const initialActiveColor = "white";
 const initialPov = "white";
@@ -56,6 +64,21 @@ export const GameStateProvider = ({ children }) => {
     b: 3,
     q: 9,
     k: 0,
+  };
+
+  const pieceIcons = {
+    p: { icon: FaChessPawn, className: "piece black" },
+    r: { icon: FaChessRook, className: "piece black" },
+    n: { icon: FaChessKnight, className: "piece black" },
+    b: { icon: FaChessBishop, className: "piece black" },
+    q: { icon: FaChessQueen, className: "piece black" },
+    k: { icon: FaChessKing, className: "piece black" },
+    P: { icon: FaChessPawn, className: "piece white" },
+    R: { icon: FaChessRook, className: "piece white" },
+    N: { icon: FaChessKnight, className: "piece white" },
+    B: { icon: FaChessBishop, className: "piece white" },
+    Q: { icon: FaChessQueen, className: "piece white" },
+    K: { icon: FaChessKing, className: "piece white" },
   };
 
   const updateHasMovedForCastling = (color) => {
@@ -130,6 +153,7 @@ export const GameStateProvider = ({ children }) => {
         setCapturedPieces,
         pieceValues,
         addCapturedPiece,
+        pieceIcons,
       }}
     >
       {children}

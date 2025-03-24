@@ -1,13 +1,5 @@
 import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
-import {
-  FaChessPawn,
-  FaChessRook,
-  FaChessKnight,
-  FaChessBishop,
-  FaChessQueen,
-  FaChessKing,
-} from "react-icons/fa6";
 
 import { canPieceMove, canCastle } from "../../logic/moveValidation";
 import {
@@ -22,21 +14,6 @@ import StudyDetails from "../studyDetails/StudyDetails";
 import GameButtons from "../gameButtons/GameButtons";
 import PromotionModal from "../promotionModal/PromotionModal";
 import GameFilters from "../gameFilters/GameFilters";
-
-const pieceIcons = {
-  p: { icon: FaChessPawn, className: "piece black" },
-  r: { icon: FaChessRook, className: "piece black" },
-  n: { icon: FaChessKnight, className: "piece black" },
-  b: { icon: FaChessBishop, className: "piece black" },
-  q: { icon: FaChessQueen, className: "piece black" },
-  k: { icon: FaChessKing, className: "piece black" },
-  P: { icon: FaChessPawn, className: "piece white" },
-  R: { icon: FaChessRook, className: "piece white" },
-  N: { icon: FaChessKnight, className: "piece white" },
-  B: { icon: FaChessBishop, className: "piece white" },
-  Q: { icon: FaChessQueen, className: "piece white" },
-  K: { icon: FaChessKing, className: "piece white" },
-};
 
 const Board = () => {
   const {
@@ -53,6 +30,7 @@ const Board = () => {
     setGameIsActive,
     pov,
     addCapturedPiece,
+    pieceIcons,
   } = useGameState();
 
   // { row, col, piece }
