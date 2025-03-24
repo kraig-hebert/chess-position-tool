@@ -1,8 +1,6 @@
 .scoreboard {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
   padding: 0 10px 0 10px;
   background-color: red;
@@ -10,15 +8,14 @@
 
 .scoreboard-side {
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: flex-start;
-  width: 50%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
   margin: 5px;
   color: white;
   font-size: 16px;
   text-align: center;
-  background-color: blue;
 }
 
 .side-title {
@@ -26,7 +23,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 25px;
+  font-size: 1.25rem;
 }
 
 .captured-pieces {
@@ -34,5 +31,10 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 25px;
+  margin-right: 10px;
+}
+
+span {
+  color: yellow;
+  font-size: 1.25rem;
 }

@@ -20,30 +20,61 @@ const Scoreboard = () => {
     <PieceIcon
       key={index}
       Icon={pieceIcons[piece].icon}
-      className={pieceIcons[piece].className}
+      className={`${pieceIcons[piece].className} + small`}
     />
   ));
   const renderedBlackPieces = capturedPieces.black.map((piece, index) => (
     <PieceIcon
       key={index}
       Icon={pieceIcons[piece].icon}
-      className={pieceIcons[piece].className}
+      className={`${pieceIcons[piece].className} + small`}
     />
   ));
+
+  const renderPieceIcons = (color) => {
+    let pawnTotal = 0;
+    const pieceList = [];
+    capturedPieces[color].forEach((piece, index) => {
+      if (piece === "P" || piece === "p") pawnTotal += 1;
+      else
+        pieceList.push(
+          <PieceIcon
+            key={index}
+            Icon={pieceIcons[piece].icon}
+            className={`${pieceIcons[piece].className} + small`}
+          />
+        );
+    });
+    const pawnIconType = color === "white" ? "p" : "P";
+    if (pawnTotal > 0)
+      pieceList.unshift(
+        <>
+          <PieceIcon
+            key={17}
+            Icon={pieceIcons[pawnIconType].icon}
+            className={`${pieceIcons[pawnIconType].className} + small`}
+          />
+          x {pawnTotal}
+        </>
+      );
+    return pieceList;
+  };
 
   return (
     <div className="scoreboard">
       <div id="scoreboard-white" className="scoreboard-side">
-        <div className="side-title">
-          White {whiteScore - blackScore > 0 ? whiteScore - blackScore : ""}
-        </div>
-        <div className="captured-pieces">{renderedWhitePieces}</div>
+        <div className="side-title">White: </div>
+        <div className="captured-pieces">{renderPieceIcons("white")}</div>
+        <span>
+          {whiteScore - blackScore > 0 ? `+ ${whiteScore - blackScore}` : ""}
+        </span>
       </div>
       <div id="scoreboard-black" className="scoreboard-side">
-        <div className="side-title">
-          Black {blackScore - whiteScore > 0 ? blackScore - whiteScore : ""}
-        </div>
-        <div className="captured-pieces">{renderedBlackPieces}</div>
+        <div className="side-title">Black: </div>
+        <div className="captured-pieces">{renderPieceIcons("black")}</div>
+        <span>
+          {blackScore - whiteScore > 0 ? `+${blackScore - whiteScore}` : ""}
+        </span>
       </div>
     </div>
   );
