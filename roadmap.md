@@ -5,7 +5,6 @@
 
 \*BOARD
 
-- show captured pieces for each side
 - show controlled squares using color filters of different gradients for amount of control on square
 - add replay button to walk step by step through the position.
   - for memorization.

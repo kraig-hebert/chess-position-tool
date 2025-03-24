@@ -16,21 +16,6 @@ const Scoreboard = () => {
     blackScore += pieceValues[piece.toLowerCase()];
   });
 
-  const renderedWhitePieces = capturedPieces.white.map((piece, index) => (
-    <PieceIcon
-      key={index}
-      Icon={pieceIcons[piece].icon}
-      className={`${pieceIcons[piece].className} + small`}
-    />
-  ));
-  const renderedBlackPieces = capturedPieces.black.map((piece, index) => (
-    <PieceIcon
-      key={index}
-      Icon={pieceIcons[piece].icon}
-      className={`${pieceIcons[piece].className} + small`}
-    />
-  ));
-
   const renderPieceIcons = (color) => {
     let pawnTotal = 0;
     const pieceList = [];
