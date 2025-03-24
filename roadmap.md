@@ -1,6 +1,7 @@
 \*REFRACTOR
 
 - move king check and checkmate checks to chessUtils and other functions of the kind
+- swap context for redux....if constant rendering on context change becomes an issue
 
 \*BOARD
 
