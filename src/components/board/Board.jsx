@@ -7,6 +7,7 @@ import {
   isKingInCheck,
   isCheckmate,
   createNotation,
+  checkIfLastMovePutKingInCheck,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -207,8 +208,10 @@ const Board = () => {
       if (isCheckmate(newBoard, opponent, hasMoved)) {
         console.log("Checkmate!");
         setGameIsActive(false);
-        moveNotation = moveNotation + "#";
+        moveNotation += "#";
       }
+      if (checkIfLastMovePutKingInCheck(row, col, newBoard, opponent))
+        moveNotation += "+";
       setMovesList([...movesList, moveNotation]);
     } else if (piece) {
       setSelectedPiece({ row, col, piece });
