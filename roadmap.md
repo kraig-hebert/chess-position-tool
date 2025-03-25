@@ -1,3 +1,8 @@
+\*BUGS
+
+- when getting possibleMoves canCastyle errors because its not receiving hasMoved
+  - possible create reactHook to handle this logic for reusibilty
+
 \*REFRACTOR
 
 - move king check and checkmate checks to chessUtils and other functions of the kind
