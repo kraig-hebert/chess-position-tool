@@ -101,9 +101,14 @@ export const GameStateProvider = ({ children }) => {
     }
   };
 
-  const updatePov = () => {
+  const togglePov = () => {
     if (pov === "white") setPov("black");
     else setPov("white");
+  };
+
+  const toggleActiveColor = () => {
+    if (activeColor === "white") setActiveColor("black");
+    else setActiveColor("white");
   };
 
   const addCapturedPiece = (piece, color) =>
@@ -127,7 +132,6 @@ export const GameStateProvider = ({ children }) => {
   const getGroupedMovesList = () => {
     const groupedMoves = [];
     let moveGroup = [];
-    console.log(movesList);
     movesList.forEach((move, index) => {
       if (index % 2 === 0) moveGroup.push(move);
       else {
@@ -152,6 +156,7 @@ export const GameStateProvider = ({ children }) => {
       value={{
         activeColor,
         setActiveColor,
+        toggleActiveColor,
         board,
         setBoard,
         selectedPiece,
@@ -166,7 +171,7 @@ export const GameStateProvider = ({ children }) => {
         resetGame,
         pov,
         setPov,
-        updatePov,
+        togglePov,
         letterNotation,
         capturedPieces,
         setCapturedPieces,

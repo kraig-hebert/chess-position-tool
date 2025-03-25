@@ -1,5 +1,8 @@
 import { canPieceMove } from "./moveValidation";
 
+export const getPieceColor = (piece) =>
+  piece.toUpperCase() === piece ? "white" : "black";
+
 // uppercase = white
 export const isWhite = (piece) => piece && piece === piece.toUpperCase();
 

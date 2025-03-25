@@ -13,7 +13,7 @@ import GameButton from "./gameButton/GameButton";
 import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
-  const { resetGame, updatePov } = useGameState();
+  const { resetGame, togglePov } = useGameState();
 
   return (
     <div className="game-buttons">
@@ -21,7 +21,7 @@ const GameButtons = () => {
       <GameButton
         title="Flip Board"
         Icon={FaArrowDownUpAcrossLine}
-        onClick={updatePov}
+        onClick={togglePov}
       />
       <GameButton title="Last Move" Icon={FaBackward} />
       <GameButton title="Next Move" Icon={FaForward} />

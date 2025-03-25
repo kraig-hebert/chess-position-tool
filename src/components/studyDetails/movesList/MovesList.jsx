@@ -20,7 +20,6 @@ const MovesList = () => {
       </div>
     );
   });
-  console.log(groupedMovesList);
   return <div className="moves-list">{renderedMovesList}</div>;
 };
 

@@ -3,6 +3,7 @@ import { useGameState } from "../../context/GameStateProvider";
 
 import { canPieceMove, canCastle } from "../../logic/moveValidation";
 import {
+  getPieceColor,
   isSameColor,
   isKingInCheck,
   isCheckmate,
@@ -20,6 +21,7 @@ import GameFilters from "../gameFilters/GameFilters";
 
 const Board = () => {
   const {
+    activeColor,
     board,
     setBoard,
     selectedPiece,
@@ -37,6 +39,7 @@ const Board = () => {
     movesList,
     setMovesList,
     letterNotation,
+    toggleActiveColor,
   } = useGameState();
 
   // { row, col, piece }
@@ -54,7 +57,6 @@ const Board = () => {
       col = Math.abs(col - 7);
     }
     const piece = board[row][col];
-
     if (selectedPiece) {
       const {
         row: selectedPieceRow,
@@ -255,7 +257,8 @@ const Board = () => {
       if (checkIfLastMovePutKingInCheck(row, col, newBoard, opponent))
         moveNotation += "+";
       setMovesList([...movesList, moveNotation]);
-    } else if (piece) {
+      toggleActiveColor();
+    } else if (piece && getPieceColor(piece) === activeColor) {
       setSelectedPiece({ row, col, piece });
     }
   };
