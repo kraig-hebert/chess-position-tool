@@ -10,6 +10,7 @@ import {
   createNotation,
   checkIfLastMovePutKingInCheck,
   getAllPiecePositions,
+  getPossibleMoves,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -266,6 +267,17 @@ const Board = () => {
   const renderBoard = () => {
     let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
+    let legalMoves = [];
+    if (selectedPiece) {
+      legalMoves = getPossibleMoves(
+        board,
+        tempSelectedPiece.row,
+        tempSelectedPiece.col,
+        activeColor,
+        enPassantTarget
+      );
+    }
+
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
       tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
@@ -283,6 +295,10 @@ const Board = () => {
           <Square
             key={`${rowIndex}-${colIndex}`}
             isDark={isDark}
+            isLegal={legalMoves.some(
+              (position) =>
+                position.row === rowIndex && position.col === colIndex
+            )}
             isSelected={isSelected}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}

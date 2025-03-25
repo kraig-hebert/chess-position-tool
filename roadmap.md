@@ -18,7 +18,6 @@
 
 \*STUDY DETAILS
 
-- add move notation list
 - add way to add different lines to a position
 - possibly integrate chess engine API calls
   - get best moves

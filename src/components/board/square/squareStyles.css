@@ -30,6 +30,18 @@
   pointer-events: none; /* Ensures it doesn’t interfere with clicks */
 }
 
+.legal-move {
+  position: absolute;
+  display: block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: red;
+  left: 0;
+  top: 0;
+  z-index: 10;
+}
+
 .left-notation {
   position: absolute;
   top: 50%;

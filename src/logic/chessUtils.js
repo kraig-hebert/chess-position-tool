@@ -121,7 +121,8 @@ export const isKingInCheck = (board, color, hasMoved) => {
 };
 
 export const isCheckmate = (board, color, hasMoved) => {
-  if (!isKingInCheck(board, color, hasMoved)) return false; // If not in check, not checkmate
+  // If not in check, not checkmate
+  if (!isKingInCheck(board, color, hasMoved)) return false;
   const kingPosition = getKingPostion(board, color);
 
   for (let row = 0; row < 8; row++) {
@@ -159,6 +160,38 @@ export const isCheckmate = (board, color, hasMoved) => {
   }
 
   return true; // No legal moves = Checkmate
+};
+
+export const getPossibleMoves = (
+  board,
+  selectedPieceRow,
+  selectedPieceCol,
+  color,
+  enPassantTarget
+) => {
+  const moves = [];
+  const piece = board[selectedPieceRow][selectedPieceCol];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      if (
+        canPieceMove(
+          selectedPieceRow,
+          selectedPieceCol,
+          row,
+          col,
+          board,
+          enPassantTarget,
+          {}
+        )
+      ) {
+        const newBoard = board.map((row) => [...row]);
+        newBoard[row][col] = piece;
+        newBoard[selectedPieceRow][selectedPieceCol] = null;
+        if (!isKingInCheck(newBoard, color)) moves.push({ row, col });
+      }
+    }
+  }
+  return moves;
 };
 
 // Simulates a move to check if the king would be in check

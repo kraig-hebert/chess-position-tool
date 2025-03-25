@@ -6,11 +6,16 @@ import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
 
 const Square = (props) => {
-  const { isDark, isSelected, onClick, piece, row, col } = props;
+  const { isDark, isLegal, isSelected, onClick, piece, row, col } = props;
 
   const { pov, letterNotation } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
+
+  const renderLegalMove = () => {
+    console.log("legal");
+    return <div className="legal-move"></div>;
+  };
 
   const renderLeftNotation = () => {
     if (pov === "white")
@@ -37,6 +42,7 @@ const Square = (props) => {
       onClick={onClick}
     >
       {piece && <PieceIcon Icon={piece.icon} className={piece.className} />}
+      {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
     </div>
