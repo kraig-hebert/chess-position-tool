@@ -282,6 +282,9 @@ const Board = () => {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
       tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
       tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
+      legalMoves = legalMoves.map((move) => {
+        return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
+      });
     }
     return boardForRender.map((row, rowIndex) =>
       row.map((piece, colIndex) => {

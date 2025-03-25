@@ -13,7 +13,6 @@ const Square = (props) => {
   const bottomNotation = row === 7 ? true : false;
 
   const renderLegalMove = () => {
-    console.log("legal");
     return <div className="legal-move"></div>;
   };
 
