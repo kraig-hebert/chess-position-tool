@@ -267,9 +267,9 @@ const Board = () => {
   const renderBoard = () => {
     let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
-    let legalMoves = [];
+    let possibleMoves = [];
     if (selectedPiece) {
-      legalMoves = getPossibleMoves(
+      possibleMoves = getPossibleMoves(
         board,
         tempSelectedPiece.row,
         tempSelectedPiece.col,
@@ -282,7 +282,7 @@ const Board = () => {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
       tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
       tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
-      legalMoves = legalMoves.map((move) => {
+      possibleMoves = possibleMoves.map((move) => {
         return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
       });
     }
@@ -298,7 +298,7 @@ const Board = () => {
           <Square
             key={`${rowIndex}-${colIndex}`}
             isDark={isDark}
-            isLegal={legalMoves.some(
+            isLegal={possibleMoves.some(
               (position) =>
                 position.row === rowIndex && position.col === colIndex
             )}
