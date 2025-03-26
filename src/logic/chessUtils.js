@@ -1,15 +1,12 @@
 import { canPieceMove } from "./moveValidation";
 
+export const isWhite = (piece) => piece && piece === piece.toUpperCase();
+export const isBlack = (piece) => piece && piece === piece.toLowerCase();
 export const getPieceColor = (piece) =>
   piece.toUpperCase() === piece ? "white" : "black";
-
-// uppercase = white
-export const isWhite = (piece) => piece && piece === piece.toUpperCase();
-
-// Check if two pieces are the same color
 export const isSameColor = (firstPiece, secondPiece) => {
   if (!firstPiece || !secondPiece) return false;
-  return isWhite(firstPiece) === isWhite(secondPiece);
+  return getPieceColor(firstPiece) === getPieceColor(secondPiece);
 };
 
 export const createNotation = (

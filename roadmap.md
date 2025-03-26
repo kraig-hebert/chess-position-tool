@@ -10,6 +10,7 @@
 
 \*BOARD
 
+- ADD LEGAL MOVE CHECK FOR CASTLING
 - show controlled squares using color filters of different gradients for amount of control on square
 - add replay button to walk step by step through the position.
   - for memorization.
@@ -20,6 +21,8 @@
   - allow users to input PGN and FEN
     - create simple translators for this
   - add status location for checks, checkmate, ect.....
+  - add arrows when right click and swipe happens
+  - use article https://www.chess.com/forum/view/general/how-to-get-the-pieces-more-as-png to get piece icons for themes and such
 
 \*STUDY DETAILS
 
