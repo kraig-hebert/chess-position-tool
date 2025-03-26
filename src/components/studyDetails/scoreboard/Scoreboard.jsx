@@ -1,12 +1,13 @@
 import React from "react";
 
 import { useGameState } from "../../../context/GameStateProvider";
+import { pieceValues } from "../../../logic/chessUtils";
 
 import "./scoreboardStyles.css";
 import PieceIcon from "../../board/pieceIcon/PieceIcon";
 
 const Scoreboard = () => {
-  const { capturedPieces, pieceValues, pieceIcons } = useGameState();
+  const { capturedPieces, pieceIcons } = useGameState();
   let whiteScore = 0;
   let blackScore = 0;
   capturedPieces.white.forEach((piece) => {

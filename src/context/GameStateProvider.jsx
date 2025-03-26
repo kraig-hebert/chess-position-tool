@@ -48,26 +48,6 @@ export const GameStateProvider = ({ children }) => {
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
 
-  const letterNotation = {
-    1: "a",
-    2: "b",
-    3: "c",
-    4: "d",
-    5: "e",
-    6: "f",
-    7: "g",
-    8: "h",
-  };
-
-  const pieceValues = {
-    p: 1,
-    r: 5,
-    n: 3,
-    b: 3,
-    q: 9,
-    k: 0,
-  };
-
   const pieceIcons = {
     p: { icon: FaChessPawn, className: "piece black" },
     r: { icon: FaChessRook, className: "piece black" },
@@ -111,10 +91,10 @@ export const GameStateProvider = ({ children }) => {
     else setActiveColor("white");
   };
 
-  const addCapturedPiece = (piece, color) =>
+  const addCapturedPiece = (piece) =>
     setCapturedPieces((prev) => ({
       ...prev,
-      [color]: [...prev[color], piece],
+      [activeColor]: [...prev[activeColor], piece],
     }));
 
   const resetGame = () => {
@@ -172,10 +152,8 @@ export const GameStateProvider = ({ children }) => {
         pov,
         setPov,
         togglePov,
-        letterNotation,
         capturedPieces,
         setCapturedPieces,
-        pieceValues,
         addCapturedPiece,
         pieceIcons,
         movesList,

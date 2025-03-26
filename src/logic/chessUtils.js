@@ -1,5 +1,25 @@
 import { canPieceMove } from "./moveValidation";
 
+export const letterNotation = {
+  1: "a",
+  2: "b",
+  3: "c",
+  4: "d",
+  5: "e",
+  6: "f",
+  7: "g",
+  8: "h",
+};
+
+export const pieceValues = {
+  p: 1,
+  r: 5,
+  n: 3,
+  b: 3,
+  q: 9,
+  k: 0,
+};
+
 export const isWhite = (piece) => piece && piece === piece.toUpperCase();
 export const isBlack = (piece) => piece && piece === piece.toLowerCase();
 export const getPieceColor = (piece) =>
@@ -9,13 +29,7 @@ export const isSameColor = (firstPiece, secondPiece) => {
   return getPieceColor(firstPiece) === getPieceColor(secondPiece);
 };
 
-export const createNotation = (
-  row,
-  col,
-  selectedPiece,
-  capturedPiece,
-  letterNotation
-) => {
+export const createNotation = (row, col, selectedPiece, capturedPiece) => {
   const letter = letterNotation[col + 1];
   const number = Math.abs(row - 8);
   if (selectedPiece.piece.toUpperCase() !== "P") {

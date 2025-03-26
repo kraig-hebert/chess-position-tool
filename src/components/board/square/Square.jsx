@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useGameState } from "../../../context/GameStateProvider";
+import { letterNotation } from "../../../logic/chessUtils";
 
 import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
@@ -9,7 +10,7 @@ const Square = (props) => {
   const { isDark, isLegal, isIllegal, isSelected, onClick, piece, row, col } =
     props;
 
-  const { pov, letterNotation } = useGameState();
+  const { pov } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
 

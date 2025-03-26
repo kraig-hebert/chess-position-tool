@@ -11,6 +11,7 @@ import {
   checkIfLastMovePutKingInCheck,
   getAllPiecePositions,
   getPossibleMoves,
+  letterNotation,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -39,7 +40,6 @@ const Board = () => {
     pieceIcons,
     movesList,
     setMovesList,
-    letterNotation,
     toggleActiveColor,
   } = useGameState();
 
@@ -90,23 +90,11 @@ const Board = () => {
       newBoard[selectedPiece.row][selectedPiece.col] = null;
       capturedPiece = board[row][col];
       if (capturedPiece !== null) {
-        addCapturedPiece(
-          capturedPiece,
-          selectedPiece.piece === selectedPiece.piece.toUpperCase()
-            ? "white"
-            : "black"
-        );
+        addCapturedPiece(capturedPiece);
       }
-      /*** use chessUtil getPieceColor ***/
+
       newBoard[row][col] = selectedPiece.piece;
-      moveNotation = createNotation(
-        row,
-        col,
-        selectedPiece,
-        capturedPiece,
-        letterNotation
-      );
-      /*** move letterNotation to chessUtils....and move below as well to chessUtils ***/
+      moveNotation = createNotation(row, col, selectedPiece, capturedPiece);
 
       // edit move notation if multiple pieces can move to the same square
       if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
@@ -149,12 +137,7 @@ const Board = () => {
           }
         }
       }
-      /*** use chessUtil getPieceColor ***/
-      const currentPlayer =
-        selectedPiece.piece === selectedPiece.piece.toUpperCase()
-          ? "white"
-          : "black";
-      if (isKingInCheck(newBoard, currentPlayer, hasMoved)) {
+      if (isKingInCheck(newBoard, activeColor, hasMoved)) {
         console.log("Move rejected: King would be in check");
         setSelectedPiece(null);
         return; // Block the move
@@ -170,15 +153,8 @@ const Board = () => {
         const capturedPawnRow = selectedPiece.piece === "P" ? row + 1 : row - 1;
         capturedPiece = newBoard[(capturedPawnRow, col)];
         newBoard[capturedPawnRow][col] = null; // Remove captured pawn
-        moveNotation = createNotation(
-          row,
-          col,
-          selectedPiece,
-          capturedPiece,
-          letterNotation
-        );
+        moveNotation = createNotation(row, col, selectedPiece, capturedPiece);
       }
-      /*** move letterNotation to chessUtils....and move below as well to chessUtils ***/
 
       // Check for Pawn Promotion
       const isWhitePromotion = selectedPiece.piece === "P" && row === 0;
@@ -248,8 +224,8 @@ const Board = () => {
       setBoard(newBoard);
       setSelectedPiece(null);
       // Check for Checkmate
-      const opponent = currentPlayer === "white" ? "black" : "white";
-      if (isCheckmate(newBoard, opponent, hasMoved)) {
+      const opponentColor = activeColor === "white" ? "black" : "white";
+      if (isCheckmate(newBoard, opponentColor, hasMoved)) {
         console.log("Checkmate!");
         setGameIsActive(false);
         moveNotation += "#";
