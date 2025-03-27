@@ -95,7 +95,7 @@ export const isKingInCheck = (board, color, hasMoved) => {
       const piece = board[row][col];
       if (
         piece &&
-        isSameColor(piece, board[kingPosition.row][kingPosition.col]) === false
+        !isSameColor(piece, board[kingPosition.row][kingPosition.col])
       ) {
         if (
           canPieceMove(

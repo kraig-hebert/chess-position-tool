@@ -52,47 +52,48 @@ const Board = () => {
     // ignore clicks when game isn't active or promotion modal is active
     if (!gameIsActive || promotionSquare) return;
 
-    // track move from reverse perspective
+    /*
+      - flip click values when board is rendered from black pov
+      - values will come in from onClick with board upsidedown
+    */
     if (pov === "black") {
       row = Math.abs(row - 7);
       col = Math.abs(col - 7);
     }
-
     const nextMove = board[row][col];
+
+    /* 
+      - if there is a selectedPiece perform moveValidation
+      - else setSelectedPiece
+    */
     if (selectedPiece) {
-      // if move is same square as selected piece block move
-      if (selectedPiece.row === row && selectedPiece.col === col) {
-        setSelectedPiece(null);
-        return;
-      }
-
-      if (isSameColor(selectedPiece.piece, nextMove)) {
-        setSelectedPiece(null);
-        return;
-      }
-
+      // check for blocking moves
       if (
-        !canPieceMove(
-          selectedPiece.row,
-          selectedPiece.col,
-          row,
-          col,
-          board,
-          enPassantTarget,
-          hasMoved
-        )
+        (selectedPiece.row === row && selectedPiece.col === col) ||
+        isSameColor(selectedPiece.piece, nextMove)
       ) {
         setSelectedPiece(null);
-        return; // Invalid move, exit function
+        return; // return and block move
       }
+      !canPieceMove(
+        selectedPiece.row,
+        selectedPiece.col,
+        row,
+        col,
+        board,
+        enPassantTarget,
+        hasMoved
+      );
 
+      // set up copied board with new move
       const newBoard = board.map((row) => [...row]);
       newBoard[selectedPiece.row][selectedPiece.col] = null;
+
+      // handle piece capture notation
       capturedPiece = board[row][col];
       if (capturedPiece !== null) {
         addCapturedPiece(capturedPiece);
       }
-
       newBoard[row][col] = selectedPiece.piece;
       moveNotation = createNotation(row, col, selectedPiece, capturedPiece);
 
@@ -230,7 +231,7 @@ const Board = () => {
         setGameIsActive(false);
         moveNotation += "#";
       }
-      if (checkIfLastMovePutKingInCheck(row, col, newBoard, opponent))
+      if (checkIfLastMovePutKingInCheck(row, col, newBoard, opponentColor))
         moveNotation += "+";
       setMovesList([...movesList, moveNotation]);
       toggleActiveColor();
