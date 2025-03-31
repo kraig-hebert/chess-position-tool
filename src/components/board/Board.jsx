@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 
-import { canPieceMove, canCastle } from "../../logic/moveValidation";
+import {
+  canRookMove,
+  canKingMove,
+  canKnightMove,
+  canBishopMove,
+  canQueenMove,
+  canPawnMove,
+  canPieceMove,
+  canCastle,
+} from "../../logic/moveValidation";
 import {
   getPieceColor,
   isSameColor,
@@ -74,6 +83,36 @@ const Board = () => {
       ) {
         setSelectedPiece(null);
         return; // return and block move
+      }
+
+      // handle move logic
+      switch (selectedPiece.toLowerCase()) {
+        case "p":
+          canPawnMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board,
+            enPassantTarget,
+            setEnPassantTarget
+          );
+          break;
+        case "r":
+          canRookMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          break;
+        case "b":
+          canBishopMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          break;
+        case "n":
+          canKnightMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          break;
+        case "q":
+          canQueenMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          break;
+        case "k":
+          canKingMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          break;
       }
       !canPieceMove(
         selectedPiece.row,

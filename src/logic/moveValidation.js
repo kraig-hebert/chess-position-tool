@@ -1,4 +1,9 @@
-import { isKingInCheck, isSameColor, simulateMove } from "./chessUtils";
+import {
+  copyBoard,
+  isKingInCheck,
+  isSameColor,
+  simulateMove,
+} from "./chessUtils";
 
 export const canPawnMove = (
   startRow,
@@ -6,7 +11,8 @@ export const canPawnMove = (
   endRow,
   endCol,
   board,
-  enPassantTarget
+  enPassantTarget,
+  setEnPassantTarget
 ) => {
   const piece = board[startRow][startCol];
   const direction = piece === piece.toUpperCase() ? -1 : 1; // White moves up (-1), Black moves down (+1)

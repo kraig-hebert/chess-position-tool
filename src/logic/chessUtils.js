@@ -29,6 +29,8 @@ export const isSameColor = (firstPiece, secondPiece) => {
   return getPieceColor(firstPiece) === getPieceColor(secondPiece);
 };
 
+export const copyBoard = (board) => board.map((row) => [...row]);
+
 export const createNotation = (row, col, selectedPiece, capturedPiece) => {
   const letter = letterNotation[col + 1];
   const number = Math.abs(row - 8);
