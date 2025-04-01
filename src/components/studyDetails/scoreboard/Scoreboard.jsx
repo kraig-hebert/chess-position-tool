@@ -21,6 +21,7 @@ const Scoreboard = () => {
     let pawnTotal = 0;
     const pieceList = [];
     capturedPieces[color].forEach((piece, index) => {
+      console.log(piece);
       if (piece === "P" || piece === "p") pawnTotal += 1;
       else
         pieceList.push(

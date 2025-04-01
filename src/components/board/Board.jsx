@@ -7,7 +7,7 @@ import {
   canKnightMove,
   canBishopMove,
   canQueenMove,
-  canPawnMove,
+  makePawnMove,
   canPieceMove,
   canCastle,
 } from "../../logic/moveValidation";
@@ -56,8 +56,6 @@ const Board = () => {
   const [promotionSquare, setPromotionSquare] = useState(null);
 
   const handleSquareClick = (row, col) => {
-    let capturedPiece = null;
-    let moveNotation = "";
     // ignore clicks when game isn't active or promotion modal is active
     if (!gameIsActive || promotionSquare) return;
 
@@ -76,6 +74,7 @@ const Board = () => {
       - else setSelectedPiece
     */
     if (selectedPiece) {
+      let move = {};
       // check for same square/color blocking moves
       if (
         (selectedPiece.row === row && selectedPiece.col === col) ||
@@ -86,17 +85,17 @@ const Board = () => {
       }
 
       // handle move logic
-      switch (selectedPiece.toLowerCase()) {
+      switch (selectedPiece.piece.toLowerCase()) {
         case "p":
-          canPawnMove(
+          move = makePawnMove(
             selectedPiece.row,
             selectedPiece.col,
             row,
             col,
             board,
-            enPassantTarget,
-            setEnPassantTarget
+            enPassantTarget
           );
+          if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
           break;
         case "r":
           canRookMove(selectedPiece.row, selectedPiece.col, row, col, board);
@@ -114,27 +113,15 @@ const Board = () => {
           canKingMove(selectedPiece.row, selectedPiece.col, row, col, board);
           break;
       }
-      !canPieceMove(
-        selectedPiece.row,
-        selectedPiece.col,
+      // handle piece capture
+      if (move.capturedPiece) addCapturedPiece(move.capturedPiece);
+
+      const moveNotation = createNotation(
         row,
         col,
-        board,
-        enPassantTarget,
-        hasMoved
+        selectedPiece,
+        move.capturedPiece
       );
-
-      // set up copied board with new move
-      const newBoard = board.map((row) => [...row]);
-      newBoard[selectedPiece.row][selectedPiece.col] = null;
-
-      // handle piece capture notation
-      capturedPiece = board[row][col];
-      if (capturedPiece !== null) {
-        addCapturedPiece(capturedPiece);
-      }
-      newBoard[row][col] = selectedPiece.piece;
-      moveNotation = createNotation(row, col, selectedPiece, capturedPiece);
 
       // edit move notation if multiple pieces can move to the same square
       if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
@@ -177,23 +164,10 @@ const Board = () => {
           }
         }
       }
-      if (isKingInCheck(newBoard, activeColor, hasMoved)) {
+      if (isKingInCheck(move.newBoard, activeColor, hasMoved)) {
         console.log("Move rejected: King would be in check");
         setSelectedPiece(null);
         return; // Block the move
-      }
-
-      // handle En Passant Capture
-      if (
-        selectedPiece.piece.toLowerCase() == "p" &&
-        enPassantTarget &&
-        enPassantTarget.row === row &&
-        enPassantTarget.col === col
-      ) {
-        const capturedPawnRow = selectedPiece.piece === "P" ? row + 1 : row - 1;
-        capturedPiece = newBoard[(capturedPawnRow, col)];
-        newBoard[capturedPawnRow][col] = null; // Remove captured pawn
-        moveNotation = createNotation(row, col, selectedPiece, capturedPiece);
       }
 
       // Check for Pawn Promotion
@@ -233,16 +207,6 @@ const Board = () => {
         }
       }
 
-      // Check if this move creates an en passant opportunity
-      if (
-        selectedPiece.piece.toLowerCase() === "p" &&
-        Math.abs(selectedPiece.row - row) === 2
-      ) {
-        setEnPassantTarget({ row: (selectedPiece.row + row) / 2, col }); // Middle square is where en passant can happen
-      } else {
-        setEnPassantTarget(null); // Reset en passant if it's not a two-square move
-      }
-
       // Update hasMoved state for castling if rook or king moves by itself
       if (selectedPiece.piece === "R") {
         if (selectedPiece.row === 7 && selectedPiece.col === 0) {
@@ -261,16 +225,16 @@ const Board = () => {
       } else if (selectedPiece.piece === "k") {
         setHasMoved({ ...hasMoved, blackKing: true });
       }
-      setBoard(newBoard);
+      setBoard(move.newBoard);
       setSelectedPiece(null);
       // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
-      if (isCheckmate(newBoard, opponentColor, hasMoved)) {
+      if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
         console.log("Checkmate!");
         setGameIsActive(false);
         moveNotation += "#";
       }
-      if (checkIfLastMovePutKingInCheck(row, col, newBoard, opponentColor))
+      if (checkIfLastMovePutKingInCheck(row, col, move.newBoard, opponentColor))
         moveNotation += "+";
       setMovesList([...movesList, moveNotation]);
       toggleActiveColor();

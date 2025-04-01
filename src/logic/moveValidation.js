@@ -5,21 +5,26 @@ import {
   simulateMove,
 } from "./chessUtils";
 
-export const canPawnMove = (
+export const makePawnMove = (
   startRow,
   startCol,
   endRow,
   endCol,
   board,
-  enPassantTarget,
-  setEnPassantTarget
+  enPassantTarget
 ) => {
-  const piece = board[startRow][startCol];
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
   const direction = piece === piece.toUpperCase() ? -1 : 1; // White moves up (-1), Black moves down (+1)
+  newBoard[startRow][startCol] = null;
 
   // Moving Forward (1 Square)
   if (endCol === startCol && endRow === startRow + direction) {
-    return board[endRow][endCol] === null;
+    if (nextMove === null) {
+      newBoard[endRow][endCol] = piece;
+      return { newBoard };
+    } else false;
   }
 
   // Moving Forward (2 Squares) - Only if on starting row
@@ -29,20 +34,23 @@ export const canPawnMove = (
     endCol === startCol &&
     endRow === startRow + 2 * direction
   ) {
-    return (
-      board[endRow][endCol] === null &&
-      board[startRow + direction][endCol] === null
-    ); // both squares must be empty so no piece can be jumped
+    // both squares must be empty...no piece can be jumped
+    if (nextMove === null && board[startRow + direction][endCol] === null) {
+      newBoard[endRow][endCol] = piece;
+      return {
+        newBoard,
+        // set middle square as enPassantTarget
+        enPassantTarget: { row: (startRow + endRow) / 2, col: startCol },
+      };
+    } else false;
   }
 
   // Capturing Diagonally
   if (Math.abs(endCol - startCol) === 1 && endRow === startRow + direction) {
     // normal diagonal capture
-    if (
-      board[endRow][endCol] !== null &&
-      !isSameColor(piece, board[endRow][endCol])
-    ) {
-      return true;
+    if (nextMove !== null && !isSameColor(piece, nextMove)) {
+      newBoard[endRow][endCol] = piece;
+      return { newBoard, capturedPiece: nextMove };
     }
     // En Passant capture
     if (
@@ -50,11 +58,15 @@ export const canPawnMove = (
       enPassantTarget.row === endRow &&
       enPassantTarget.col === endCol
     ) {
-      return true;
+      const capturedPawnRow = piece === "P" ? endRow + 1 : endRow - 1;
+      const capturedPiece = newBoard[capturedPawnRow][endCol];
+      newBoard[capturedPawnRow][endCol] = null;
+      newBoard[endRow][endCol] = piece;
+      return { newBoard, capturedPiece };
     }
-  }
+  } else false;
 
-  return false;
+  return false; // no valid move
 };
 
 // Check if a rook's move is valid
@@ -226,7 +238,7 @@ export const canPieceMove = (
 
   switch (piece.toLowerCase()) {
     case "p":
-      return canPawnMove(
+      return makePawnMove(
         startRow,
         startCol,
         endRow,
