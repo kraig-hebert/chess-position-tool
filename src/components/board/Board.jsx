@@ -76,7 +76,7 @@ const Board = () => {
       - else setSelectedPiece
     */
     if (selectedPiece) {
-      // check for blocking moves
+      // check for same square/color blocking moves
       if (
         (selectedPiece.row === row && selectedPiece.col === col) ||
         isSameColor(selectedPiece.piece, nextMove)
