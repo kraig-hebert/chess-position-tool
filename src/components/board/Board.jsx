@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 
 import {
-  canRookMove,
+  makeRookMove,
   canKingMove,
-  canKnightMove,
+  makeKnightMove,
   canBishopMove,
-  canQueenMove,
+  makeQueenMove,
   makePawnMove,
   canPieceMove,
   canCastle,
@@ -98,25 +98,59 @@ const Board = () => {
           if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
           break;
         case "r":
-          canRookMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          move = makeRookMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board
+          );
           break;
         case "b":
-          canBishopMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          move = canBishopMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board
+          );
           break;
         case "n":
-          canKnightMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          move = makeKnightMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board
+          );
           break;
         case "q":
-          canQueenMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          move = makeQueenMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board
+          );
           break;
         case "k":
-          canKingMove(selectedPiece.row, selectedPiece.col, row, col, board);
+          move = canKingMove(
+            selectedPiece.row,
+            selectedPiece.col,
+            row,
+            col,
+            board
+          );
           break;
+      }
+      if (!move) {
+        setSelectedPiece(null);
+        return;
       }
       // handle piece capture
       if (move.capturedPiece) addCapturedPiece(move.capturedPiece);
 
-      const moveNotation = createNotation(
+      let moveNotation = createNotation(
         row,
         col,
         selectedPiece,
@@ -124,49 +158,50 @@ const Board = () => {
       );
 
       // edit move notation if multiple pieces can move to the same square
-      if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
-        const otherPiecePositions = getAllPiecePositions(
-          selectedPiece.piece,
-          board
-        );
-        if (otherPiecePositions.length > 1) {
-          const checkList = otherPiecePositions
-            .map((position) => {
-              if (
-                canPieceMove(
-                  position.row,
-                  position.col,
-                  row,
-                  col,
-                  board,
-                  "placeholder",
-                  {}
-                )
-              )
-                return position;
-              else return false;
-            })
-            .filter((position) => position !== false);
-          if (checkList.length > 1) {
-            const firstPosition = checkList[0];
-            const secondPosition = checkList[1];
-            if (firstPosition.col !== secondPosition.col) {
-              moveNotation =
-                moveNotation.slice(0, 1) +
-                letterNotation[selectedPiece.col + 1] +
-                moveNotation.slice(1);
-            } else if (firstPosition.row !== secondPosition.row) {
-              moveNotation =
-                moveNotation.slice(0, 1) +
-                Math.abs(selectedPiece.row - 8) +
-                moveNotation.slice(1);
-            }
-          }
-        }
-      }
+      // if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
+      //   const otherPiecePositions = getAllPiecePositions(
+      //     selectedPiece.piece,
+      //     board
+      //   );
+      //   if (otherPiecePositions.length > 1) {
+      //     const checkList = otherPiecePositions
+      //       .map((position) => {
+      //         if (
+      //           canPieceMove(
+      //             position.row,
+      //             position.col,
+      //             row,
+      //             col,
+      //             board,
+      //             "placeholder",
+      //             {}
+      //           )
+      //         )
+      //           return position;
+      //         else return false;
+      //       })
+      //       .filter((position) => position !== false);
+      //     if (checkList.length > 1) {
+      //       const firstPosition = checkList[0];
+      //       const secondPosition = checkList[1];
+      //       if (firstPosition.col !== secondPosition.col) {
+      //         moveNotation =
+      //           moveNotation.slice(0, 1) +
+      //           letterNotation[selectedPiece.col + 1] +
+      //           moveNotation.slice(1);
+      //       } else if (firstPosition.row !== secondPosition.row) {
+      //         moveNotation =
+      //           moveNotation.slice(0, 1) +
+      //           Math.abs(selectedPiece.row - 8) +
+      //           moveNotation.slice(1);
+      //       }
+      //     }
+      //   }
+      // }
       if (isKingInCheck(move.newBoard, activeColor, hasMoved)) {
         console.log("Move rejected: King would be in check");
         setSelectedPiece(null);
+        setEnPassantTarget(null);
         return; // Block the move
       }
 
@@ -305,6 +340,7 @@ const Board = () => {
     setPromotionSquare(null);
     setSelectedPiece(null);
     setGameIsActive(true);
+    toggleActiveColor();
   };
 
   return (

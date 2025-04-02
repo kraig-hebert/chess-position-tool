@@ -69,85 +69,88 @@ export const makePawnMove = (
   return false; // no valid move
 };
 
-// Check if a rook's move is valid
-export const canRookMove = (startRow, startCol, endRow, endCol, board) => {
-  // check if rook move is either in the same row or column
-  if (startRow !== endRow && startCol !== endCol) return false;
+export const makeRookMove = (startRow, startCol, endRow, endCol, board) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
 
+  // make sure is either in the same row or column
+  if (startRow !== endRow && startCol !== endCol) return false;
   // check if that is blocked
   if (isPathBlocked(startRow, startCol, endRow, endCol, board)) return false;
 
-  // Ensure the destination is either empty or occupied by an opponent
-  return (
-    board[endRow][endCol] === null ||
-    !isSameColor(board[startRow][startCol], board[endRow][endCol])
-  );
+  newBoard[endRow][endCol] = piece;
+  return { newBoard, capturedPiece: nextMove };
 };
 
-// Check if a bishop's move is valid
 export const canBishopMove = (startRow, startCol, endRow, endCol, board) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
+
   // check if bishop moved diagonally → row difference = column difference
   if (Math.abs(startRow - endRow) !== Math.abs(startCol - endCol)) return false;
-
   // Check if the path is blocked
   if (isPathBlocked(startRow, startCol, endRow, endCol, board)) return false;
 
-  // Ensure destination is either empty or occupied by an opponent
-  return (
-    board[endRow][endCol] === null ||
-    !isSameColor(board[startRow][startCol], board[endRow][endCol])
-  );
+  newBoard[endRow][endCol] = piece;
+  return { newBoard, capturedPiece: nextMove };
 };
 
 // Check if a knight's move is valid
-export const canKnightMove = (startRow, startCol, endRow, endCol, board) => {
+export const makeKnightMove = (startRow, startCol, endRow, endCol, board) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
+
   const rowDiff = Math.abs(startRow - endRow);
   const colDiff = Math.abs(startCol - endCol);
 
   // Knights move in an "L" shape → (2,1) or (1,2)
-  if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) {
+  if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2)))
     return false;
-  }
 
-  // Ensure the destination is either empty or occupied by an opponent
-  return (
-    board[endRow][endCol] === null ||
-    !isSameColor(board[startRow][startCol], board[endRow][endCol])
-  );
+  newBoard[endRow][endCol] = piece;
+  return { newBoard, capturedPiece: nextMove };
 };
 
-// Check if a queen's move is valid
-export const canQueenMove = (startRow, startCol, endRow, endCol, board) => {
+export const makeQueenMove = (startRow, startCol, endRow, endCol, board) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
+
   // check if bishop or rook move
   const isRookMove = startRow === endRow || startCol === endCol;
   const isBishopMove =
     Math.abs(startRow - endRow) === Math.abs(startCol - endCol);
 
   if (!isRookMove && !isBishopMove) return false; // Must be a valid rook or bishop move
-
   // Check if the path is blocked
   if (isPathBlocked(startRow, startCol, endRow, endCol, board)) return false;
 
-  // Ensure destination is either empty or occupied by an opponent
-  return (
-    board[endRow][endCol] === null ||
-    !isSameColor(board[startRow][startCol], board[endRow][endCol])
-  );
+  newBoard[endRow][endCol] = piece;
+  return { newBoard, capturedPiece: nextMove };
 };
 
 // Check if a king's move is valid
 export const canKingMove = (startRow, startCol, endRow, endCol, board) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
+
   const rowDiff = Math.abs(startRow - endRow);
   const colDiff = Math.abs(startCol - endCol);
 
   // King can only move one square in any direction
   if (rowDiff > 1 || colDiff > 1) return false;
 
-  // Ensure destination is either empty or occupied by an opponent
-  return (
-    board[endRow][endCol] === null ||
-    !isSameColor(board[startRow][startCol], board[endRow][endCol])
-  );
+  newBoard[endRow][endCol] = piece;
+  return { newBoard, capturedPiece: nextMove };
 };
 
 // Check if castling is valid
@@ -247,13 +250,13 @@ export const canPieceMove = (
         enPassantTarget
       );
     case "r":
-      return canRookMove(startRow, startCol, endRow, endCol, board);
+      return makeRookMove(startRow, startCol, endRow, endCol, board);
     case "b":
       return canBishopMove(startRow, startCol, endRow, endCol, board);
     case "n":
-      return canKnightMove(startRow, startCol, endRow, endCol, board);
+      return makeKnightMove(startRow, startCol, endRow, endCol, board);
     case "q":
-      return canQueenMove(startRow, startCol, endRow, endCol, board);
+      return makeQueenMove(startRow, startCol, endRow, endCol, board);
     case "k":
       // If the move is a normal king move, check regular king movement
       if (
