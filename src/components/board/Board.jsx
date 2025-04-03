@@ -107,20 +107,6 @@ const Board = () => {
         move.castlingSide
       );
 
-      // Check for Pawn Promotion
-      const isWhitePromotion = selectedPiece.piece === "P" && row === 0;
-      const isBlackPromotion = selectedPiece.piece === "p" && row === 7;
-      if (isWhitePromotion || isBlackPromotion) {
-        setPromotionSquare({
-          row,
-          col,
-          piece: selectedPiece.piece,
-          moveNotation,
-        });
-        setGameIsActive(false);
-        return; // Stop the move until promotion is chosen
-      }
-
       // Update hasMoved state for castling if rook or king moves by itself
       if (selectedPiece.piece === "R") {
         if (selectedPiece.row === 7 && selectedPiece.col === 0) {
@@ -134,10 +120,24 @@ const Board = () => {
         } else if (selectedPiece.row === 0 && selectedPiece.col === 7) {
           setHasMoved({ ...hasMoved, blackRookKingside: true });
         }
-      } else if (selectedPiece.piece === "K") {
+      } else if (selectedPiece.piece === "K" && !move.castlingSide) {
         setHasMoved({ ...hasMoved, whiteKing: true });
-      } else if (selectedPiece.piece === "k") {
+      } else if (selectedPiece.piece === "k" && !move.castlingSide) {
         setHasMoved({ ...hasMoved, blackKing: true });
+      }
+
+      // Check for Pawn Promotion
+      const isWhitePromotion = selectedPiece.piece === "P" && row === 0;
+      const isBlackPromotion = selectedPiece.piece === "p" && row === 7;
+      if (isWhitePromotion || isBlackPromotion) {
+        setPromotionSquare({
+          row,
+          col,
+          piece: selectedPiece.piece,
+          moveNotation,
+        });
+        setGameIsActive(false);
+        return; // Stop the move until promotion is chosen
       }
 
       setBoard(move.newBoard);

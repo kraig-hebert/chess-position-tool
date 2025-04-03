@@ -162,9 +162,9 @@ export const makeKingMove = (
     newBoard[endRow][endCol] = piece;
     return { newBoard, capturedPiece: nextMove };
   }
+  const color = piece === "K" ? "white" : "black";
   // handle castling
   if (Math.abs(startCol - endCol) === 2 && startRow === endRow) {
-    const color = piece === "K" ? "white" : "black";
     const castlingSide =
       endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
     const castlingMove = canCastle(color, castlingSide, board, hasMoved);
@@ -174,8 +174,8 @@ export const makeKingMove = (
       newBoard[rookTo[0]][rookTo[1]] =
         board[startRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
       newBoard[startRow][castlingSide === "kingside" ? 7 : 0] = null; // Remove old rook position
+      return { newBoard, castlingSide };
     }
-    return { newBoard, castlingSide };
   }
   return false;
 };

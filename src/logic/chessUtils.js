@@ -236,7 +236,9 @@ export const isCheckmate = (board, color, hasMoved) => {
       ) {
         for (let targetRow = 0; targetRow < 8; targetRow++) {
           for (let targetCol = 0; targetCol < 8; targetCol++) {
-            if (makePieceMove(row, col, targetRow, targetCol, board)) {
+            if (
+              makePieceMove(row, col, targetRow, targetCol, board, { hasMoved })
+            ) {
               // Simulate the move
               const newBoard = board.map((row) => [...row]);
               newBoard[targetRow][targetCol] = piece;
