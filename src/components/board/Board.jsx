@@ -175,6 +175,7 @@ const Board = () => {
         activeColor,
         { enPassantTarget, hasMoved }
       );
+      console.log(possibleMoves);
     }
 
     if (pov === "black") {

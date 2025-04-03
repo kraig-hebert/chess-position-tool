@@ -244,7 +244,13 @@ export const makePieceMove = (
   options
 ) => {
   const piece = board[startRow][startCol];
-  if (!piece) return false; // No piece to move
+  const nextMove = board[endRow][endCol];
+  if (
+    !piece ||
+    isSameColor(piece, nextMove) ||
+    (startRow === endRow && startCol === endCol)
+  )
+    return false; // No piece to move
 
   switch (piece.toLowerCase()) {
     case "p":

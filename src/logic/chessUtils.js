@@ -272,6 +272,7 @@ export const getPossibleMoves = (
         board,
         options
       );
+
       if (nextMove.newBoard) {
         if (!isKingInCheck(nextMove.newBoard, color, options.hasMoved))
           moves.push({ row, col });
