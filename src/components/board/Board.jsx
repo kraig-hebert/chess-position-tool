@@ -8,7 +8,6 @@ import {
   isKingInCheck,
   isCheckmate,
   createNotation,
-  checkIfLastMovePutKingInCheck,
   getPossibleMoves,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
@@ -81,14 +80,9 @@ const Board = () => {
         { enPassantTarget, hasMoved }
       );
 
-      if (!move) {
+      if (!move || isKingInCheck(move.newBoard, activeColor)) {
         setSelectedPiece(null);
         return;
-      }
-      if (isKingInCheck(move.newBoard, activeColor)) {
-        console.log("Move rejected: King would be in check");
-        setSelectedPiece(null);
-        return; // Block the move
       }
 
       // handle setting enPassantTarget
@@ -144,17 +138,11 @@ const Board = () => {
       setSelectedPiece(null);
       // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
-      if (
-        checkIfLastMovePutKingInCheck(row, col, move.newBoard, opponentColor, {
-          enPassantTarget,
-          hasMoved,
-        })
-      )
-        moveNotation += "+";
+      if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
       if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
         console.log("Checkmate!");
         setGameIsActive(false);
-        moveNotation = moveNotation.slice(0, -1);
+        moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
       setMovesList([...movesList, moveNotation]);

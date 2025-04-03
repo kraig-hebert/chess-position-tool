@@ -1,12 +1,5 @@
 \*BUGS
 
-- when getting possibleMoves canCastyle errors because its not receiving hasMoved
-
-  - possible create reactHook to handle this logic for reusibilty
-
-- fix issue where pieces will show they can move one into their neighbor
-  - use same color check during piece move
-
 \*REFRACTOR
 
 - move king check and checkmate checks to chessUtils and other functions of the kind

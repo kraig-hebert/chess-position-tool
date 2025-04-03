@@ -1,10 +1,4 @@
-import {
-  copyBoard,
-  isKingInCheck,
-  isSameColor,
-  isPathBlocked,
-  simulateMove,
-} from "./chessUtils";
+import { copyBoard, isSameColor, isPathBlocked, canCastle } from "./chessUtils";
 
 export const makePawnMove = (
   startRow,
@@ -178,60 +172,6 @@ export const makeKingMove = (
     }
   }
   return false;
-};
-
-// Check if castling is valid
-export const canCastle = (color, side, board, hasMoved) => {
-  const row = color === "white" ? 7 : 0; // White on row 7, black on row 0
-
-  // Determine which rook and king are involved
-  const kingCol = 4;
-
-  const rookCol = side === "kingside" ? 7 : 0;
-  const newKingCol = side === "kingside" ? 6 : 2;
-  const newRookCol = side === "kingside" ? 5 : 3;
-  // Check if the king or rook have moved
-  if (
-    side === "kingside" &&
-    (hasMoved[color + "King"] || hasMoved[color + "RookKingside"])
-  ) {
-    return false;
-  }
-  if (
-    side === "queenside" &&
-    (hasMoved[color + "King"] || hasMoved[color + "RookQueenside"])
-  ) {
-    return false;
-  }
-
-  // Ensure path between king and rook is clear
-  if (isPathBlocked(row, kingCol, row, rookCol, board)) {
-    return false;
-  }
-
-  // set middle square validate isKingInCheck
-  let middleCol = null;
-  if (side === "kingside") middleCol = 5;
-  else middleCol = 3;
-
-  //  Ensure the king does not pass through or end in check
-  if (
-    isKingInCheck(board, color, hasMoved) || // King cannot castle while in check
-    isKingInCheck(
-      simulateMove(board, row, kingCol, row, middleCol),
-      color,
-      hasMoved
-    ) || // King cannot pass through check
-    isKingInCheck(
-      simulateMove(board, row, kingCol, row, newKingCol),
-      color,
-      hasMoved
-    ) // King cannot land in check
-  ) {
-    return false;
-  }
-
-  return { kingTo: [row, newKingCol], rookTo: [row, newRookCol] };
 };
 
 // function to check is move is valid dynamically for checks and checkmate
