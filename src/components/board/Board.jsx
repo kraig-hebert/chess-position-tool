@@ -144,11 +144,6 @@ const Board = () => {
       setSelectedPiece(null);
       // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
-      if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
-        console.log("Checkmate!");
-        setGameIsActive(false);
-        moveNotation += "#";
-      }
       if (
         checkIfLastMovePutKingInCheck(row, col, move.newBoard, opponentColor, {
           enPassantTarget,
@@ -156,6 +151,12 @@ const Board = () => {
         })
       )
         moveNotation += "+";
+      if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
+        console.log("Checkmate!");
+        setGameIsActive(false);
+        moveNotation = moveNotation.slice(0, -1);
+        moveNotation += "#";
+      }
       setMovesList([...movesList, moveNotation]);
       toggleActiveColor();
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
@@ -175,7 +176,6 @@ const Board = () => {
         activeColor,
         { enPassantTarget, hasMoved }
       );
-      console.log(possibleMoves);
     }
 
     if (pov === "black") {
