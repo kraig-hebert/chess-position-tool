@@ -63,8 +63,8 @@ export const GameStateProvider = ({ children }) => {
     K: { icon: FaChessKing, className: "piece white" },
   };
 
-  const updateHasMovedForCastling = (color) => {
-    if (color === "white") {
+  const updateHasMovedForCastling = () => {
+    if (activeColor === "white") {
       setHasMoved({
         ...hasMoved,
         whiteKing: true,

@@ -1,16 +1,7 @@
 import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 
-import {
-  makeRookMove,
-  canKingMove,
-  makeKnightMove,
-  canBishopMove,
-  makeQueenMove,
-  makePawnMove,
-  canPieceMove,
-  canCastle,
-} from "../../logic/moveValidation";
+import { makePieceMove } from "../../logic/moveValidation";
 import {
   getPieceColor,
   isSameColor,
@@ -18,9 +9,7 @@ import {
   isCheckmate,
   createNotation,
   checkIfLastMovePutKingInCheck,
-  getAllPiecePositions,
   getPossibleMoves,
-  letterNotation,
 } from "../../logic/chessUtils";
 import "./boardStyles.css";
 
@@ -74,7 +63,6 @@ const Board = () => {
       - else setSelectedPiece
     */
     if (selectedPiece) {
-      let move = {};
       // check for same square/color blocking moves
       if (
         (selectedPiece.row === row && selectedPiece.col === col) ||
@@ -84,126 +72,40 @@ const Board = () => {
         return; // return and block move
       }
 
-      // handle move logic
-      switch (selectedPiece.piece.toLowerCase()) {
-        case "p":
-          move = makePawnMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board,
-            enPassantTarget
-          );
-          if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
-          break;
-        case "r":
-          move = makeRookMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board
-          );
-          break;
-        case "b":
-          move = canBishopMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board
-          );
-          break;
-        case "n":
-          move = makeKnightMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board
-          );
-          break;
-        case "q":
-          move = makeQueenMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board
-          );
-          break;
-        case "k":
-          move = canKingMove(
-            selectedPiece.row,
-            selectedPiece.col,
-            row,
-            col,
-            board
-          );
-          break;
-      }
+      const move = makePieceMove(
+        selectedPiece.row,
+        selectedPiece.col,
+        row,
+        col,
+        board,
+        { enPassantTarget, hasMoved }
+      );
+
       if (!move) {
         setSelectedPiece(null);
         return;
       }
+      if (isKingInCheck(move.newBoard, activeColor)) {
+        console.log("Move rejected: King would be in check");
+        setSelectedPiece(null);
+        return; // Block the move
+      }
+
+      // handle setting enPassantTarget
+      if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
       // handle piece capture
       if (move.capturedPiece) addCapturedPiece(move.capturedPiece);
+      // handle castling
+      if (move.castlingSide) updateHasMovedForCastling(activeColor);
 
       let moveNotation = createNotation(
         row,
         col,
         selectedPiece,
-        move.capturedPiece
+        move.capturedPiece,
+        board,
+        move.castlingSide
       );
-
-      // edit move notation if multiple pieces can move to the same square
-      // if (["R", "N", "B", "Q"].includes(selectedPiece.piece.toUpperCase())) {
-      //   const otherPiecePositions = getAllPiecePositions(
-      //     selectedPiece.piece,
-      //     board
-      //   );
-      //   if (otherPiecePositions.length > 1) {
-      //     const checkList = otherPiecePositions
-      //       .map((position) => {
-      //         if (
-      //           canPieceMove(
-      //             position.row,
-      //             position.col,
-      //             row,
-      //             col,
-      //             board,
-      //             "placeholder",
-      //             {}
-      //           )
-      //         )
-      //           return position;
-      //         else return false;
-      //       })
-      //       .filter((position) => position !== false);
-      //     if (checkList.length > 1) {
-      //       const firstPosition = checkList[0];
-      //       const secondPosition = checkList[1];
-      //       if (firstPosition.col !== secondPosition.col) {
-      //         moveNotation =
-      //           moveNotation.slice(0, 1) +
-      //           letterNotation[selectedPiece.col + 1] +
-      //           moveNotation.slice(1);
-      //       } else if (firstPosition.row !== secondPosition.row) {
-      //         moveNotation =
-      //           moveNotation.slice(0, 1) +
-      //           Math.abs(selectedPiece.row - 8) +
-      //           moveNotation.slice(1);
-      //       }
-      //     }
-      //   }
-      // }
-      if (isKingInCheck(move.newBoard, activeColor, hasMoved)) {
-        console.log("Move rejected: King would be in check");
-        setSelectedPiece(null);
-        setEnPassantTarget(null);
-        return; // Block the move
-      }
 
       // Check for Pawn Promotion
       const isWhitePromotion = selectedPiece.piece === "P" && row === 0;
@@ -217,29 +119,6 @@ const Board = () => {
         });
         setGameIsActive(false);
         return; // Stop the move until promotion is chosen
-      }
-
-      // Handle Castling
-      if (
-        selectedPiece.piece.toLowerCase() === "k" &&
-        Math.abs(selectedPiece.col - col) === 2
-      ) {
-        const color = selectedPiece.piece === "K" ? "white" : "black";
-        const castlingSide =
-          col === 6 ? "kingside" : col === 2 ? "queenside" : null;
-        const castlingMove = canCastle(color, castlingSide, board, hasMoved);
-
-        if (castlingMove) {
-          const { kingTo, rookTo } = castlingMove;
-          newBoard[kingTo[0]][kingTo[1]] = selectedPiece.piece; // Move the king
-          newBoard[rookTo[0]][rookTo[1]] =
-            board[selectedPiece.row][castlingSide === "kingside" ? 7 : 0]; // Move the rook
-          newBoard[selectedPiece.row][castlingSide === "kingside" ? 7 : 0] =
-            null; // Remove old rook position
-          updateHasMovedForCastling(color);
-          if (castlingSide === "kingside") moveNotation = "0-0";
-          else if (castlingSide === "queenside") moveNotation = "0-0-0";
-        }
       }
 
       // Update hasMoved state for castling if rook or king moves by itself
@@ -260,6 +139,7 @@ const Board = () => {
       } else if (selectedPiece.piece === "k") {
         setHasMoved({ ...hasMoved, blackKing: true });
       }
+
       setBoard(move.newBoard);
       setSelectedPiece(null);
       // Check for Checkmate
@@ -269,7 +149,12 @@ const Board = () => {
         setGameIsActive(false);
         moveNotation += "#";
       }
-      if (checkIfLastMovePutKingInCheck(row, col, move.newBoard, opponentColor))
+      if (
+        checkIfLastMovePutKingInCheck(row, col, move.newBoard, opponentColor, {
+          enPassantTarget,
+          hasMoved,
+        })
+      )
         moveNotation += "+";
       setMovesList([...movesList, moveNotation]);
       toggleActiveColor();
@@ -288,7 +173,7 @@ const Board = () => {
         tempSelectedPiece.row,
         tempSelectedPiece.col,
         activeColor,
-        enPassantTarget
+        { enPassantTarget, hasMoved }
       );
     }
 

@@ -2,6 +2,7 @@ import {
   copyBoard,
   isKingInCheck,
   isSameColor,
+  isPathBlocked,
   simulateMove,
 } from "./chessUtils";
 
@@ -137,7 +138,14 @@ export const makeQueenMove = (startRow, startCol, endRow, endCol, board) => {
 };
 
 // Check if a king's move is valid
-export const canKingMove = (startRow, startCol, endRow, endCol, board) => {
+export const makeKingMove = (
+  startRow,
+  startCol,
+  endRow,
+  endCol,
+  board,
+  hasMoved
+) => {
   const newBoard = copyBoard(board);
   const piece = newBoard[startRow][startCol];
   const nextMove = newBoard[endRow][endCol];
@@ -146,11 +154,30 @@ export const canKingMove = (startRow, startCol, endRow, endCol, board) => {
   const rowDiff = Math.abs(startRow - endRow);
   const colDiff = Math.abs(startCol - endCol);
 
-  // King can only move one square in any direction
-  if (rowDiff > 1 || colDiff > 1) return false;
+  // must be legal move
+  if (rowDiff > 1 || colDiff > 2) return false;
 
-  newBoard[endRow][endCol] = piece;
-  return { newBoard, capturedPiece: nextMove };
+  // King can only move one square in any direction
+  if (rowDiff < 2 || colDiff < 2) {
+    newBoard[endRow][endCol] = piece;
+    return { newBoard, capturedPiece: nextMove };
+  }
+  // handle castling
+  if (Math.abs(startCol - endCol) === 2) {
+    const color = piece === "K" ? "white" : "black";
+    const castlingSide =
+      endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
+    const castlingMove = canCastle(color, castlingSide, board, hasMoved);
+    if (castlingMove) {
+      const { kingTo, rookTo } = castlingMove;
+      newBoard[kingTo[0]][kingTo[1]] = piece; // Move the king
+      newBoard[rookTo[0]][rookTo[1]] =
+        board[startRow][castlingSide === "kingside" ? 7 : 0]; // Move the rook
+      newBoard[startRow][castlingSide === "kingside" ? 7 : 0] = null; // Remove old rook position
+    }
+    return { newBoard, castlingSide };
+  }
+  return false;
 };
 
 // Check if castling is valid
@@ -207,34 +234,14 @@ export const canCastle = (color, side, board, hasMoved) => {
   return { kingTo: [row, newKingCol], rookTo: [row, newRookCol] };
 };
 
-// Function to check if a path is blocked (used for rooks, bishops, and queens)
-export const isPathBlocked = (startRow, startCol, endRow, endCol, board) => {
-  // set step direction based on start and end position
-  const rowStep = startRow === endRow ? 0 : endRow > startRow ? 1 : -1;
-  const colStep = startCol === endCol ? 0 : endCol > startCol ? 1 : -1;
-
-  let currentRow = startRow + rowStep;
-  let currentCol = startCol + colStep;
-
-  // check each square in path until destination or path is blocked
-  while (currentRow !== endRow || currentCol !== endCol) {
-    if (board[currentRow][currentCol] !== null) return true; // A piece is blocking the path
-    currentRow += rowStep;
-    currentCol += colStep;
-  }
-
-  return false; // No pieces in the way
-};
-
 // function to check is move is valid dynamically for checks and checkmate
-export const canPieceMove = (
+export const makePieceMove = (
   startRow,
   startCol,
   endRow,
   endCol,
   board,
-  enPassantTarget,
-  hasMoved
+  options
 ) => {
   const piece = board[startRow][startCol];
   if (!piece) return false; // No piece to move
@@ -247,7 +254,7 @@ export const canPieceMove = (
         endRow,
         endCol,
         board,
-        enPassantTarget
+        options.enPassantTarget ? options.enPassantTarget : null
       );
     case "r":
       return makeRookMove(startRow, startCol, endRow, endCol, board);
@@ -258,21 +265,14 @@ export const canPieceMove = (
     case "q":
       return makeQueenMove(startRow, startCol, endRow, endCol, board);
     case "k":
-      // If the move is a normal king move, check regular king movement
-      if (
-        Math.abs(startCol - endCol) === 1 ||
-        Math.abs(startRow - endRow) === 1
-      ) {
-        return canKingMove(startRow, startCol, endRow, endCol, board);
-      }
-      // If attempting to castle, check castling logic
-      if (Math.abs(startCol - endCol) === 2) {
-        const color = piece === "K" ? "white" : "black";
-        const castlingSide =
-          endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
-        return canCastle(color, castlingSide, board, hasMoved);
-      }
-      return false;
+      return makeKingMove(
+        startRow,
+        startCol,
+        endRow,
+        endCol,
+        board,
+        options.hasMoved ? options.hasMoved : null
+      );
     default:
       return false;
   }

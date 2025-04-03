@@ -1,4 +1,4 @@
-import { canPieceMove } from "./moveValidation";
+import { makePieceMove } from "./moveValidation";
 
 export const letterNotation = {
   1: "a",
@@ -31,17 +31,96 @@ export const isSameColor = (firstPiece, secondPiece) => {
 
 export const copyBoard = (board) => board.map((row) => [...row]);
 
-export const createNotation = (row, col, selectedPiece, capturedPiece) => {
+export const createNotation = (
+  row,
+  col,
+  selectedPiece,
+  capturedPiece,
+  board,
+  castlingSide
+) => {
+  let moveNotation = "";
   const letter = letterNotation[col + 1];
   const number = Math.abs(row - 8);
-  if (selectedPiece.piece.toUpperCase() !== "P") {
-    if (!capturedPiece)
-      return `${selectedPiece.piece.toUpperCase()}${letter}${number}`;
-    else return `${selectedPiece.piece.toUpperCase()}x${letter}${number}`;
-  } else if (selectedPiece.piece.toUpperCase() === "P") {
-    if (!capturedPiece) return `${letter}${number}`;
-    else return `${letterNotation[selectedPiece.col + 1]}x${letter}${number}`;
+  const piece = selectedPiece.piece.toUpperCase();
+  if (["R", "N", "B", "Q"].includes(piece))
+    moveNotation = handleMajorPieceNotation(
+      piece,
+      letter,
+      number,
+      selectedPiece,
+      capturedPiece,
+      row,
+      col,
+      board
+    );
+  else if (piece === "P") {
+    if (!capturedPiece) moveNotation = `${letter}${number}`;
+    else
+      moveNotation = `${
+        letterNotation[selectedPiece.col + 1]
+      }x${letter}${number}`;
+  } else if (piece === "K") {
+    if (castlingSide) {
+      if (castlingSide === "kingside") moveNotation = "0-0";
+      else if (castlingSide === "queenside") moveNotation = "0-0-0";
+    } else
+      moveNotation = handleMajorPieceNotation(
+        piece,
+        letter,
+        number,
+        selectedPiece,
+        capturedPiece,
+        row,
+        col,
+        board
+      );
   }
+  return moveNotation;
+};
+
+// edit notation if two pieces of the same kind can make move
+export const handleMajorPieceNotation = (
+  piece,
+  letter,
+  number,
+  selectedPiece,
+  capturedPiece,
+  row,
+  col,
+  board
+) => {
+  let moveNotation = "";
+  if (!capturedPiece) moveNotation = `${piece}${letter}${number}`;
+  else moveNotation = `${piece}x${letter}${number}`;
+
+  // check if other pieces of same king can make the same move
+  const otherPiecePositions = getAllPiecePositions(selectedPiece.piece, board);
+  if (otherPiecePositions.length > 1) {
+    const checkList = otherPiecePositions
+      .map((position) => {
+        if (makePieceMove(position.row, position.col, row, col, board))
+          return position;
+        else return false;
+      })
+      .filter((position) => position !== false);
+    if (checkList.length > 1) {
+      const firstPosition = checkList[0];
+      const secondPosition = checkList[1];
+      if (firstPosition.col !== secondPosition.col) {
+        moveNotation =
+          moveNotation.slice(0, 1) +
+          letterNotation[selectedPiece.col + 1] +
+          moveNotation.slice(1);
+      } else if (firstPosition.row !== secondPosition.row) {
+        moveNotation =
+          moveNotation.slice(0, 1) +
+          Math.abs(selectedPiece.row - 8) +
+          moveNotation.slice(1);
+      }
+    }
+  }
+  return moveNotation;
 };
 
 // find position of king based on color
@@ -70,19 +149,43 @@ export const getAllPiecePositions = (piece, board) => {
 };
 
 // check if last move put king in check
-export const checkIfLastMovePutKingInCheck = (row, col, board, color) => {
+export const checkIfLastMovePutKingInCheck = (
+  row,
+  col,
+  board,
+  color,
+  options
+) => {
   const kingPosition = getKingPostion(board, color);
   return (
-    canPieceMove(
+    makePieceMove(
       row,
       col,
       kingPosition.row,
       kingPosition.col,
       board,
-      "placeholder",
-      {}
-    ) || isKingInCheck(board, color, {})
+      options
+    ) || isKingInCheck(board, color)
   );
+};
+
+// Function to check if a path is blocked (used for rooks, bishops, and queens)
+export const isPathBlocked = (startRow, startCol, endRow, endCol, board) => {
+  // set step direction based on start and end position
+  const rowStep = startRow === endRow ? 0 : endRow > startRow ? 1 : -1;
+  const colStep = startCol === endCol ? 0 : endCol > startCol ? 1 : -1;
+
+  let currentRow = startRow + rowStep;
+  let currentCol = startCol + colStep;
+
+  // check each square in path until destination or path is blocked
+  while (currentRow !== endRow || currentCol !== endCol) {
+    if (board[currentRow][currentCol] !== null) return true; // A piece is blocking the path
+    currentRow += rowStep;
+    currentCol += colStep;
+  }
+
+  return false; // No pieces in the way
 };
 
 // check if current king is in check
@@ -100,30 +203,16 @@ export const isKingInCheck = (board, color, hasMoved) => {
         !isSameColor(piece, board[kingPosition.row][kingPosition.col])
       ) {
         if (
-          canPieceMove(
-            row,
-            col,
-            kingPosition.row,
-            kingPosition.col,
-            board,
-            "placeholder",
-            hasMoved
-          )
+          makePieceMove(row, col, kingPosition.row, kingPosition.col, board, {
+            hasMoved,
+          })
         ) {
-          console.log("King Is Attacked");
-          // every once in awhile the king will be in check
-          // when it should not be. Use these values to troubleshoot
-          // tough to recreate on command
           console.log(
-            "is it bugged?",
-            row,
-            col,
-            kingPosition.row,
-            kingPosition.col,
-            board,
-            "placeholder",
-            hasMoved
+            makePieceMove(row, col, kingPosition.row, kingPosition.col, board, {
+              hasMoved,
+            })
           );
+          console.log(board[row][col]);
           return true; // King is under attack
         }
       }
@@ -147,17 +236,7 @@ export const isCheckmate = (board, color, hasMoved) => {
       ) {
         for (let targetRow = 0; targetRow < 8; targetRow++) {
           for (let targetCol = 0; targetCol < 8; targetCol++) {
-            if (
-              canPieceMove(
-                row,
-                col,
-                targetRow,
-                targetCol,
-                board,
-                "placeholder",
-                hasMoved
-              )
-            ) {
+            if (makePieceMove(row, col, targetRow, targetCol, board)) {
               // Simulate the move
               const newBoard = board.map((row) => [...row]);
               newBoard[targetRow][targetCol] = piece;
@@ -180,27 +259,22 @@ export const getPossibleMoves = (
   selectedPieceRow,
   selectedPieceCol,
   color,
-  enPassantTarget
+  options
 ) => {
   const moves = [];
-  const piece = board[selectedPieceRow][selectedPieceCol];
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
-      if (
-        canPieceMove(
-          selectedPieceRow,
-          selectedPieceCol,
-          row,
-          col,
-          board,
-          enPassantTarget,
-          {}
-        )
-      ) {
-        const newBoard = board.map((row) => [...row]);
-        newBoard[row][col] = piece;
-        newBoard[selectedPieceRow][selectedPieceCol] = null;
-        if (!isKingInCheck(newBoard, color)) moves.push({ row, col });
+      const nextMove = makePieceMove(
+        selectedPieceRow,
+        selectedPieceCol,
+        row,
+        col,
+        board,
+        options
+      );
+      if (nextMove.newBoard) {
+        if (!isKingInCheck(nextMove.newBoard, color, options.hasMoved))
+          moves.push({ row, col });
       }
     }
   }
