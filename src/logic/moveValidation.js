@@ -158,12 +158,12 @@ export const makeKingMove = (
   if (rowDiff > 1 || colDiff > 2) return false;
 
   // King can only move one square in any direction
-  if (rowDiff < 2 || colDiff < 2) {
+  if (rowDiff < 2 && colDiff < 2) {
     newBoard[endRow][endCol] = piece;
     return { newBoard, capturedPiece: nextMove };
   }
   // handle castling
-  if (Math.abs(startCol - endCol) === 2) {
+  if (Math.abs(startCol - endCol) === 2 && startRow === endRow) {
     const color = piece === "K" ? "white" : "black";
     const castlingSide =
       endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
