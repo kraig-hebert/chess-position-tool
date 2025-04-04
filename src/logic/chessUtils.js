@@ -310,6 +310,21 @@ export const getPossibleMoves = (
   return moves;
 };
 
+// used to set up inital data for moveValidation
+export const setUpMoveValidation = (
+  startRow,
+  startCol,
+  endRow,
+  endCol,
+  board
+) => {
+  const newBoard = copyBoard(board);
+  const piece = newBoard[startRow][startCol];
+  const nextMove = newBoard[endRow][endCol];
+  newBoard[startRow][startCol] = null;
+  return { piece, nextMove, newBoard };
+};
+
 // Simulates a move to check if the king would be in check
 export const simulateMove = (board, startRow, startCol, endRow, endCol) => {
   const newBoard = board.map((row) => [...row]); // Deep copy of board

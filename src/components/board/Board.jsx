@@ -145,7 +145,7 @@ const Board = () => {
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
-      setMovesList([...movesList, moveNotation]);
+      setMovesList([...movesList, { moveNotation, newBoard: move.newBoard }]);
       toggleActiveColor();
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
       setSelectedPiece({ row, col, piece: nextMove });
@@ -208,7 +208,10 @@ const Board = () => {
     newBoard[selectedPiece.row][selectedPiece.col] = null;
     setMovesList([
       ...movesList,
-      `${promotionSquare.moveNotation}=${piece.toUpperCase()}`,
+      {
+        moveNotation: `${promotionSquare.moveNotation}=${piece.toUpperCase()}`,
+        newBoard,
+      },
     ]);
     setBoard(newBoard);
     setPromotionSquare(null);
