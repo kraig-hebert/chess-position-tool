@@ -32,6 +32,8 @@
   - why is Nb3 the best move in this position?....GOOD
   - what is the best move in this position?....BAD - confuses them
 - allow user to add comments to certain positions
+- allow to build custom position by selecting piece and setting it on the board
+  - helps when studying puzzle positions
 
 \*GAME FILTERS
 
