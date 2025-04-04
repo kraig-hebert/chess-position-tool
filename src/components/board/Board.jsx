@@ -33,7 +33,8 @@ const Board = () => {
     gameIsActive,
     setGameIsActive,
     pov,
-    addCapturedPiece,
+    capturedPieces,
+    setCapturedPieces,
     pieceIcons,
     movesList,
     setMovesList,
@@ -42,6 +43,7 @@ const Board = () => {
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
+  const tempCapturedPieces = { ...capturedPieces };
 
   const handleSquareClick = (row, col) => {
     // ignore clicks when game isn't active or promotion modal is active
@@ -87,8 +89,15 @@ const Board = () => {
 
       // handle setting enPassantTarget
       if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
-      // handle piece capture
-      if (move.capturedPiece) addCapturedPiece(move.capturedPiece);
+      // store captured pieces temporarily for immediate use
+      if (move.capturedPiece) {
+        tempCapturedPieces[activeColor] = [
+          ...tempCapturedPieces[activeColor],
+          move.capturedPiece,
+        ];
+      }
+      setCapturedPieces({ ...tempCapturedPieces });
+
       // handle castling
       if (move.castlingSide) updateHasMovedForCastling(activeColor);
 
@@ -145,7 +154,14 @@ const Board = () => {
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
-      setMovesList([...movesList, { moveNotation, newBoard: move.newBoard }]);
+      setMovesList([
+        ...movesList,
+        {
+          moveNotation,
+          board: move.newBoard,
+          capturedPieces: tempCapturedPieces,
+        },
+      ]);
       toggleActiveColor();
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
       setSelectedPiece({ row, col, piece: nextMove });
@@ -210,7 +226,8 @@ const Board = () => {
       ...movesList,
       {
         moveNotation: `${promotionSquare.moveNotation}=${piece.toUpperCase()}`,
-        newBoard,
+        board: newBoard,
+        capturedPieces: tempCapturedPieces,
       },
     ]);
     setBoard(newBoard);

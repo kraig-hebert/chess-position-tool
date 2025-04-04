@@ -4,11 +4,13 @@ import { useGameState } from "../../../context/GameStateProvider";
 import "./movesListStyles.css";
 
 const MovesList = () => {
-  const { getGroupedMovesList } = useGameState();
+  const { getGroupedMovesList, setBoard, setCapturedPieces } = useGameState();
   const groupedMovesList = getGroupedMovesList();
 
-  const handleClick = (e) => {
-    console.log(e);
+  const handleClick = (groupIndex, index) => {
+    const move = groupedMovesList[groupIndex][index];
+    setBoard(move.board);
+    setCapturedPieces({ ...move.capturedPieces });
   };
 
   const renderedMovesList = groupedMovesList.map((group, groupIndex) => {
@@ -19,7 +21,7 @@ const MovesList = () => {
             <div
               key={index}
               className="move"
-              onClick={(e) => handleClick(e, index)}
+              onClick={() => handleClick(groupIndex, index)}
             >
               {index % 2 === 0 ? groupIndex + 1 : ""}
               {move.moveNotation}

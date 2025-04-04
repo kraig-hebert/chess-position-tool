@@ -91,12 +91,6 @@ export const GameStateProvider = ({ children }) => {
     else setActiveColor("white");
   };
 
-  const addCapturedPiece = (piece) =>
-    setCapturedPieces((prev) => ({
-      ...prev,
-      [activeColor]: [...prev[activeColor], piece],
-    }));
-
   const resetGame = () => {
     setCapturedPieces(initialCapturedPieces);
     setSelectedPiece(null);
@@ -154,7 +148,6 @@ export const GameStateProvider = ({ children }) => {
         togglePov,
         capturedPieces,
         setCapturedPieces,
-        addCapturedPiece,
         pieceIcons,
         movesList,
         setMovesList,
