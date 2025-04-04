@@ -1,4 +1,9 @@
-import { copyBoard, isSameColor, isPathBlocked, canCastle } from "./chessUtils";
+import {
+  isSameColor,
+  isPathBlocked,
+  canCastle,
+  setUpMoveValidation,
+} from "./chessUtils";
 
 export const makePawnMove = (
   startRow,
@@ -8,11 +13,14 @@ export const makePawnMove = (
   board,
   enPassantTarget
 ) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
   const direction = piece === piece.toUpperCase() ? -1 : 1; // White moves up (-1), Black moves down (+1)
-  newBoard[startRow][startCol] = null;
 
   // Moving Forward (1 Square)
   if (endCol === startCol && endRow === startRow + direction) {
@@ -65,10 +73,13 @@ export const makePawnMove = (
 };
 
 export const makeRookMove = (startRow, startCol, endRow, endCol, board) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
-  newBoard[startRow][startCol] = null;
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
 
   // make sure is either in the same row or column
   if (startRow !== endRow && startCol !== endCol) return false;
@@ -80,10 +91,13 @@ export const makeRookMove = (startRow, startCol, endRow, endCol, board) => {
 };
 
 export const canBishopMove = (startRow, startCol, endRow, endCol, board) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
-  newBoard[startRow][startCol] = null;
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
 
   // check if bishop moved diagonally → row difference = column difference
   if (Math.abs(startRow - endRow) !== Math.abs(startCol - endCol)) return false;
@@ -96,10 +110,13 @@ export const canBishopMove = (startRow, startCol, endRow, endCol, board) => {
 
 // Check if a knight's move is valid
 export const makeKnightMove = (startRow, startCol, endRow, endCol, board) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
-  newBoard[startRow][startCol] = null;
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
 
   const rowDiff = Math.abs(startRow - endRow);
   const colDiff = Math.abs(startCol - endCol);
@@ -113,10 +130,13 @@ export const makeKnightMove = (startRow, startCol, endRow, endCol, board) => {
 };
 
 export const makeQueenMove = (startRow, startCol, endRow, endCol, board) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
-  newBoard[startRow][startCol] = null;
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
 
   // check if bishop or rook move
   const isRookMove = startRow === endRow || startCol === endCol;
@@ -140,10 +160,13 @@ export const makeKingMove = (
   board,
   hasMoved
 ) => {
-  const newBoard = copyBoard(board);
-  const piece = newBoard[startRow][startCol];
-  const nextMove = newBoard[endRow][endCol];
-  newBoard[startRow][startCol] = null;
+  const { piece, nextMove, newBoard } = setUpMoveValidation(
+    startRow,
+    startCol,
+    endRow,
+    endCol,
+    board
+  );
 
   const rowDiff = Math.abs(startRow - endRow);
   const colDiff = Math.abs(startCol - endCol);
