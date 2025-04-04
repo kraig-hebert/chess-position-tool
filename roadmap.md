@@ -2,12 +2,10 @@
 
 \*REFRACTOR
 
-- move king check and checkmate checks to chessUtils and other functions of the kind
 - swap context for redux....if constant rendering on context change becomes an issue
 
 \*BOARD
 
-- ADD LEGAL MOVE CHECK FOR CASTLING
 - show controlled squares using color filters of different gradients for amount of control on square
 - add replay button to walk step by step through the position.
   - for memorization.
@@ -34,6 +32,10 @@
 - allow user to add comments to certain positions
 - allow to build custom position by selecting piece and setting it on the board
   - helps when studying puzzle positions
+- allow user to set replays of positions
+  - allow start and end move to rotate through
+  - speed control
+  - ect.....
 
 \*GAME FILTERS
 
@@ -45,6 +47,8 @@
   - best move arrow
   - threats arrow
   - allow custom color selection
+  - add arrows on right click for showing moves
+    - allow user to turn this on when studying to show move order visually to help calculations
 
 \*MAGNUM OPUS
 

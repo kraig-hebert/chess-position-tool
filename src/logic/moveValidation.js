@@ -1,5 +1,6 @@
 import {
   isSameColor,
+  getPieceColor,
   isPathBlocked,
   canCastle,
   setUpMoveValidation,
@@ -43,7 +44,11 @@ export const makePawnMove = (
       return {
         newBoard,
         // set middle square as enPassantTarget
-        enPassantTarget: { row: (startRow + endRow) / 2, col: startCol },
+        enPassantTarget: {
+          row: (startRow + endRow) / 2,
+          col: startCol,
+          color: getPieceColor(piece),
+        },
       };
     } else false;
   }

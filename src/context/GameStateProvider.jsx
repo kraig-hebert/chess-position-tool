@@ -87,6 +87,8 @@ export const GameStateProvider = ({ children }) => {
   };
 
   const toggleActiveColor = () => {
+    if (enPassantTarget && enPassantTarget.color !== activeColor)
+      setEnPassantTarget(null);
     if (activeColor === "white") setActiveColor("black");
     else setActiveColor("white");
   };
