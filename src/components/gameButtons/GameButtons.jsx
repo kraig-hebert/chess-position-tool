@@ -13,7 +13,48 @@ import GameButton from "./gameButton/GameButton";
 import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
-  const { resetGame, togglePov } = useGameState();
+  const {
+    resetGame,
+    togglePov,
+    activeMove,
+    setBoard,
+    setActiveMove,
+    getGroupedMovesList,
+  } = useGameState();
+
+  const groupedMovesList = getGroupedMovesList();
+  const handleMoveBackwards = () => {
+    if (activeMove.groupIndex === 0 && activeMove.moveIndex === 0) return;
+    if (activeMove.moveIndex === 1) {
+      setActiveMove({
+        groupIndex: activeMove.groupIndex,
+        moveIndex: 0,
+      });
+      setBoard(groupedMovesList[activeMove.groupIndex][0].board);
+    } else {
+      setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 });
+      setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board);
+    }
+  };
+  const handleMoveForwards = () => {
+    const groupIndex = groupedMovesList.length - 1;
+    const moveIndex = groupedMovesList[groupIndex].length - 1;
+    if (
+      activeMove.groupIndex === groupIndex &&
+      activeMove.moveIndex === moveIndex
+    )
+      return;
+    if (activeMove.moveIndex === 1) {
+      setActiveMove({
+        groupIndex: activeMove.groupIndex + 1,
+        moveIndex: 0,
+      });
+      setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board);
+    } else {
+      setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 });
+      setBoard(groupedMovesList[activeMove.groupIndex][1].board);
+    }
+  };
 
   return (
     <div className="game-buttons">
@@ -23,8 +64,16 @@ const GameButtons = () => {
         Icon={FaArrowDownUpAcrossLine}
         onClick={togglePov}
       />
-      <GameButton title="Last Move" Icon={FaBackward} />
-      <GameButton title="Next Move" Icon={FaForward} />
+      <GameButton
+        title="Last Move"
+        Icon={FaBackward}
+        onClick={handleMoveBackwards}
+      />
+      <GameButton
+        title="Next Move"
+        Icon={FaForward}
+        onClick={handleMoveForwards}
+      />
     </div>
   );
 };
