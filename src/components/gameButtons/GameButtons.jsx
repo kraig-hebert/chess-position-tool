@@ -20,6 +20,7 @@ const GameButtons = () => {
     setBoard,
     setActiveMove,
     getGroupedMovesList,
+    setCapturedPieces,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -30,9 +31,15 @@ const GameButtons = () => {
         groupIndex: activeMove.groupIndex,
         moveIndex: 0,
       });
+      setCapturedPieces(
+        groupedMovesList[activeMove.groupIndex][0].capturedPieces
+      );
       setBoard(groupedMovesList[activeMove.groupIndex][0].board);
     } else {
       setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 });
+      setCapturedPieces(
+        groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
+      );
       setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board);
     }
   };
@@ -49,9 +56,15 @@ const GameButtons = () => {
         groupIndex: activeMove.groupIndex + 1,
         moveIndex: 0,
       });
+      setCapturedPieces(
+        groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
+      );
       setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board);
     } else {
       setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 });
+      setCapturedPieces(
+        groupedMovesList[activeMove.groupIndex][1].capturedPieces
+      );
       setBoard(groupedMovesList[activeMove.groupIndex][1].board);
     }
   };
