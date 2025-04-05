@@ -39,6 +39,8 @@ const Board = () => {
     movesList,
     setMovesList,
     toggleActiveColor,
+    setActiveMove,
+    getNextGroupedMovesListIndex,
   } = useGameState();
 
   // { row, col, piece }
@@ -154,6 +156,8 @@ const Board = () => {
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
+      const { groupIndex, moveIndex } = getNextGroupedMovesListIndex();
+      setActiveMove({ groupIndex, moveIndex });
       setMovesList([
         ...movesList,
         {
@@ -162,6 +166,7 @@ const Board = () => {
           capturedPieces: tempCapturedPieces,
         },
       ]);
+
       toggleActiveColor();
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
       setSelectedPiece({ row, col, piece: nextMove });
@@ -222,6 +227,9 @@ const Board = () => {
     newBoard[promotionSquare.row][promotionSquare.col] =
       promotionSquare.piece === "P" ? piece.toUpperCase() : piece.toLowerCase();
     newBoard[selectedPiece.row][selectedPiece.col] = null;
+
+    const { groupIndex, moveIndex } = getNextGroupedMovesListIndex();
+    setActiveMove({ groupIndex, moveIndex });
     setMovesList([
       ...movesList,
       {

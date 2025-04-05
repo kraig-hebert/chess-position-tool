@@ -37,6 +37,7 @@ const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
   const [activeColor, setActiveColor] = useState(initialActiveColor);
+  const [activeMove, setActiveMove] = useState(null);
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
@@ -120,6 +121,15 @@ export const GameStateProvider = ({ children }) => {
     return groupedMoves;
   };
 
+  const getNextGroupedMovesListIndex = () => {
+    const groupedMovesList = getGroupedMovesList();
+    if (groupedMovesList.length === 0) return { groupIndex: 0, moveIndex: 0 };
+    const groupIndex = groupedMovesList.length - 1;
+    const moveIndex = groupedMovesList[groupIndex].length - 1;
+    if (moveIndex === 1) return { groupIndex: groupIndex + 1, moveIndex: 0 };
+    return { groupIndex, moveIndex: moveIndex + 1 };
+  };
+
   useEffect(() => {
     console.log("hasMoved", hasMoved);
   }, [hasMoved]);
@@ -154,6 +164,9 @@ export const GameStateProvider = ({ children }) => {
         movesList,
         setMovesList,
         getGroupedMovesList,
+        activeMove,
+        setActiveMove,
+        getNextGroupedMovesListIndex,
       }}
     >
       {children}

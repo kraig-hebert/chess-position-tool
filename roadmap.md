@@ -1,8 +1,12 @@
 \*BUGS
 
+- add isKingInCHeck and isCheckmate to promotionPieceSelect afyer piece
+  is chosen
+
 \*REFRACTOR
 
 - swap context for redux....if constant rendering on context change becomes an issue
+- move pieceIcons from gamestate to chessUtils
 
 \*BOARD
 
