@@ -24,6 +24,15 @@ const initialBoard = [
   ["R", "N", "B", "Q", "K", "B", "N", "R"],
 ];
 
+const initialActiveFilters = {
+  white: {
+    squarePressure: true,
+  },
+  black: {
+    squarePressure: false,
+  },
+};
+
 const initialHasMoved = {
   whiteKing: false,
   whiteRookQueenside: false,
@@ -39,6 +48,7 @@ export const GameStateProvider = ({ children }) => {
   const [activeColor, setActiveColor] = useState(initialActiveColor);
   const [activeMove, setActiveMove] = useState(null);
   const [board, setBoard] = useState(initialBoard);
+  const [activeFilters, setActiveFilters] = useState(initialActiveFilters);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
   const [gameIsActive, setGameIsActive] = useState(true);
@@ -101,6 +111,7 @@ export const GameStateProvider = ({ children }) => {
     setActiveColor(initialActiveColor);
     setPov(initialPov);
     setBoard(initialBoard);
+    setBoardLayers(initialActiveFilters);
     setHasMoved(initialHasMoved);
     setMovesList(initialMovesList);
     setGameIsActive(true);
@@ -167,6 +178,8 @@ export const GameStateProvider = ({ children }) => {
         activeMove,
         setActiveMove,
         getNextGroupedMovesListIndex,
+        activeFilters,
+        setActiveFilters,
       }}
     >
       {children}
