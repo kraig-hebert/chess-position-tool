@@ -163,14 +163,15 @@ export const makeKingMove = (
   endRow,
   endCol,
   board,
-  hasMoved
+  options
 ) => {
   const { piece, nextMove, newBoard } = setUpMoveValidation(
     startRow,
     startCol,
     endRow,
     endCol,
-    board
+    board,
+    options
   );
 
   const rowDiff = Math.abs(startRow - endRow);
@@ -185,11 +186,22 @@ export const makeKingMove = (
     return { newBoard, capturedPiece: nextMove };
   }
   const color = piece === "K" ? "white" : "black";
+  console.log(options);
   // handle castling
-  if (Math.abs(startCol - endCol) === 2 && startRow === endRow) {
+  if (
+    (options?.validateCastle ?? false) &&
+    Math.abs(startCol - endCol) === 2 &&
+    startRow === endRow
+  ) {
     const castlingSide =
       endCol === 6 ? "kingside" : endCol === 2 ? "queenside" : null;
-    const castlingMove = canCastle(color, castlingSide, board, hasMoved);
+    const castlingMove = canCastle(
+      color,
+      castlingSide,
+      board,
+      options.hasMoved
+    );
+    console.log(castlingMove);
     if (castlingMove) {
       const { kingTo, rookTo } = castlingMove;
       newBoard[kingTo[0]][kingTo[1]] = piece; // Move the king
@@ -213,12 +225,9 @@ export const makePieceMove = (
 ) => {
   const piece = board[startRow][startCol];
   const nextMove = board[endRow][endCol];
-  if (
-    !piece ||
-    isSameColor(piece, nextMove) ||
-    (startRow === endRow && startCol === endCol)
-  )
-    return false; // No piece to move
+  if (!piece || (startRow === endRow && startCol === endCol)) return false;
+  const coverageValidation = options?.coverageValidation ?? false;
+  if (!coverageValidation && isSameColor(piece, nextMove)) return false;
 
   switch (piece.toLowerCase()) {
     case "p":
@@ -228,7 +237,7 @@ export const makePieceMove = (
         endRow,
         endCol,
         board,
-        options.enPassantTarget ? options.enPassantTarget : null
+        options?.enPassantTarget ?? null
       );
     case "r":
       return makeRookMove(startRow, startCol, endRow, endCol, board);
@@ -239,14 +248,10 @@ export const makePieceMove = (
     case "q":
       return makeQueenMove(startRow, startCol, endRow, endCol, board);
     case "k":
-      return makeKingMove(
-        startRow,
-        startCol,
-        endRow,
-        endCol,
-        board,
-        options.hasMoved ? options.hasMoved : null
-      );
+      return makeKingMove(startRow, startCol, endRow, endCol, board, {
+        hasMoved: options?.hasMoved ?? null,
+        validateCastle: options?.validateCheckAndCastle ?? false,
+      });
     default:
       return false;
   }

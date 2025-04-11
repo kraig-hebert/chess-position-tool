@@ -33,7 +33,7 @@
 
 .player-filters-item {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -44,6 +44,7 @@
   border-radius: 3px;
   transition: 0.3s;
   cursor: pointer;
+  margin-left: 10px;
   background-color: red;
 }
 

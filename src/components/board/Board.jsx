@@ -10,6 +10,7 @@ import {
   createNotation,
   getPossibleMoves,
 } from "../../logic/chessUtils";
+import { getSquarePressures } from "../../logic/filterUtils";
 import "./boardStyles.css";
 
 import Square from "./square/Square";
@@ -41,7 +42,10 @@ const Board = () => {
     toggleActiveColor,
     setActiveMove,
     getNextGroupedMovesListIndex,
+    activeFilters,
   } = useGameState();
+
+  getSquarePressures(board, "white");
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -81,7 +85,7 @@ const Board = () => {
         row,
         col,
         board,
-        { enPassantTarget, hasMoved }
+        { enPassantTarget, hasMoved, validateCheckAndCastle: true }
       );
 
       if (!move || isKingInCheck(move.newBoard, activeColor)) {
@@ -183,7 +187,7 @@ const Board = () => {
         tempSelectedPiece.row,
         tempSelectedPiece.col,
         activeColor,
-        { enPassantTarget, hasMoved }
+        { enPassantTarget, hasMoved, validateCheckAndCastle: true }
       );
     }
 

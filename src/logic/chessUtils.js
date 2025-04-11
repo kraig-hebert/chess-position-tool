@@ -300,13 +300,44 @@ export const getPossibleMoves = (
         board,
         options
       );
+      console.log(options);
 
       if (nextMove.newBoard) {
-        if (!isKingInCheck(nextMove.newBoard, color, options.hasMoved))
-          moves.push({ row, col });
+        if (options?.validateCheckAndCastle ?? false) {
+          if (!isKingInCheck(nextMove.newBoard, color, options.hasMoved))
+            moves.push({ row, col });
+        } else moves.push({ row, col }); // If not validating check, add all moves
       }
     }
   }
+  return moves;
+};
+
+export const getPossiblePawnDiagonalPressures = (
+  board,
+  selectedPieceRow,
+  selectedPieceCol,
+  color
+) => {
+  const moves = [];
+  const direction = color === "white" ? -1 : 1; // White moves up, black moves down
+  const attackMoves = [
+    [selectedPieceRow + direction, selectedPieceCol - 1],
+    [selectedPieceRow + direction, selectedPieceCol + 1],
+  ];
+
+  for (const [row, col] of attackMoves) {
+    if (row >= 0 && row < 8 && col >= 0 && col < 8) {
+      const targetPiece = board[row][col];
+      if (
+        targetPiece &&
+        !isSameColor(targetPiece, board[selectedPieceRow][selectedPieceCol])
+      ) {
+        moves.push({ row, col });
+      }
+    }
+  }
+
   return moves;
 };
 
