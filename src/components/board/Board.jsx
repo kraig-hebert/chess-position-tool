@@ -189,11 +189,13 @@ const Board = () => {
       );
     }
 
-    const whitePressure = getSquarePressures(board, "white");
-    const blackPressure = getSquarePressures(board, "black");
+    let whitePressure = getSquarePressures(board, "white");
+    let blackPressure = getSquarePressures(board, "black");
 
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
+      whitePressure = whitePressure.reverse().map((inner) => inner.reverse());
+      blackPressure = blackPressure.reverse().map((inner) => inner.reverse());
       tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
       tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
       possibleMoves = possibleMoves.map((move) => {
