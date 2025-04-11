@@ -186,7 +186,6 @@ export const makeKingMove = (
     return { newBoard, capturedPiece: nextMove };
   }
   const color = piece === "K" ? "white" : "black";
-  console.log(options);
   // handle castling
   if (
     (options?.validateCastle ?? false) &&
@@ -201,7 +200,6 @@ export const makeKingMove = (
       board,
       options.hasMoved
     );
-    console.log(castlingMove);
     if (castlingMove) {
       const { kingTo, rookTo } = castlingMove;
       newBoard[kingTo[0]][kingTo[1]] = piece; // Move the king
@@ -226,6 +224,8 @@ export const makePieceMove = (
   const piece = board[startRow][startCol];
   const nextMove = board[endRow][endCol];
   if (!piece || (startRow === endRow && startCol === endCol)) return false;
+
+  // if not checking for piece coverage, check if same color
   const coverageValidation = options?.coverageValidation ?? false;
   if (!coverageValidation && isSameColor(piece, nextMove)) return false;
 

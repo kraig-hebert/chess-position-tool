@@ -300,7 +300,6 @@ export const getPossibleMoves = (
         board,
         options
       );
-      console.log(options);
 
       if (nextMove.newBoard) {
         if (options?.validateCheckAndCastle ?? false) {
@@ -314,7 +313,6 @@ export const getPossibleMoves = (
 };
 
 export const getPossiblePawnDiagonalPressures = (
-  board,
   selectedPieceRow,
   selectedPieceCol,
   color
@@ -327,15 +325,7 @@ export const getPossiblePawnDiagonalPressures = (
   ];
 
   for (const [row, col] of attackMoves) {
-    if (row >= 0 && row < 8 && col >= 0 && col < 8) {
-      const targetPiece = board[row][col];
-      if (
-        targetPiece &&
-        !isSameColor(targetPiece, board[selectedPieceRow][selectedPieceCol])
-      ) {
-        moves.push({ row, col });
-      }
-    }
+    if (row >= 0 && row < 8 && col >= 0 && col < 8) moves.push({ row, col });
   }
 
   return moves;

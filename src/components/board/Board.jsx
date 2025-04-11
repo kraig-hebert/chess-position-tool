@@ -45,7 +45,7 @@ const Board = () => {
     activeFilters,
   } = useGameState();
 
-  getSquarePressures(board, "white");
+  console.log(getSquarePressures(board, "black"));
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);

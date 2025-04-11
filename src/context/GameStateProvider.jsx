@@ -29,7 +29,7 @@ const initialActiveFilters = {
     squarePressure: true,
   },
   black: {
-    squarePressure: false,
+    squarePressure: true,
   },
 };
 
