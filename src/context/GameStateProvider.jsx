@@ -104,6 +104,14 @@ export const GameStateProvider = ({ children }) => {
     else setActiveColor("white");
   };
 
+  const toggleFiltersByColor = (color) => {
+    const toggledFilters = {};
+    Object.keys(activeFilters[color]).forEach(
+      (filter) => (toggledFilters[filter] = !activeFilters[color][filter])
+    );
+    setActiveFilters({ ...activeFilters, [color]: toggledFilters });
+  };
+
   const resetGame = () => {
     setCapturedPieces(initialCapturedPieces);
     setSelectedPiece(null);
@@ -147,6 +155,9 @@ export const GameStateProvider = ({ children }) => {
   useEffect(() => {
     console.log("gameIsActive", gameIsActive);
   }, [gameIsActive]);
+  useEffect(() => {
+    console.log("activeFilters", activeFilters);
+  }, [activeFilters]);
 
   return (
     <GameStateContext.Provider
@@ -180,6 +191,7 @@ export const GameStateProvider = ({ children }) => {
         getNextGroupedMovesListIndex,
         activeFilters,
         setActiveFilters,
+        toggleFiltersByColor,
       }}
     >
       {children}
