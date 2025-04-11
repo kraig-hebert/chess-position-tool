@@ -24,37 +24,16 @@ const Square = (props) => {
 
   const renderLegalMove = () => <div className="possible-move"></div>;
 
-  const convertPressure = (pressure) => {
-    return pressure === 1
-      ? "level-1"
-      : pressure === 2
-      ? "level-2"
-      : pressure === 3
-      ? "level-3"
-      : pressure === 4
-      ? "level-4"
-      : pressure === 5
-      ? "level-5"
-      : pressure === 6
-      ? "level-6"
-      : pressure === 7
-      ? "level-7"
-      : pressure === 8
-      ? "level-8"
-      : pressure === 9
-      ? "level-9"
-      : pressure === 10
-      ? "level-10"
-      : null;
-  };
-  const renderWhitePressure = (pressureLevel) =>
-    activeFilters.white.squarePressure ? (
-      <div className={`white-pressure ${convertPressure(pressureLevel)}`}></div>
-    ) : null;
-  const renderBlackPressure = (pressureLevel) =>
-    activeFilters.black.squarePressure ? (
-      <div className={`black-pressure ${convertPressure(pressureLevel)}`}></div>
-    ) : null;
+  const renderWhitePressure = (pressureLevel) => (
+    <div className={`white-pressure level-${pressureLevel}`}>
+      {pressureLevel}
+    </div>
+  );
+  const renderBlackPressure = (pressureLevel) => (
+    <div className={`black-pressure level-${pressureLevel}`}>
+      {pressureLevel}
+    </div>
+  );
 
   const renderLeftNotation = () => {
     if (pov === "white")
@@ -84,8 +63,12 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {whitePressure && renderWhitePressure(whitePressure[row][col])}
-      {blackPressure && renderBlackPressure(blackPressure[row][col])}
+      {activeFilters.white.squarePressure &&
+        whitePressure &&
+        renderWhitePressure(whitePressure[row][col])}
+      {activeFilters.black.squarePressure &&
+        blackPressure &&
+        renderBlackPressure(blackPressure[row][col])}
     </div>
   );
 };

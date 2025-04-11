@@ -11,6 +11,16 @@
 \*BOARD
 
 - show controlled squares using color filters of different gradients for amount of control on square
+  - create button that turns cursor into a pressure selector and when you click a square it highlights which pieces are pressuring the square
+  - allow user to choose between types of pressures
+    - immediate: only show primary pressure
+      - pinned pieces and the like don't show pressure status
+    - total: show all piece pressures even when pinned
+  - allow different versions of filters(DIRECT/INDIRECT)
+  - indirect control could have filters for secondary and tertiary control if a bishop is behind a piece but attacking secondarily
+    - ex: square pressures can show board sides pressure or combine to only show who has control of the square
+      - have counter for each color on dark and light square color control
+      - when showing square control take piece value into account as well...maybe show control by total pieces but also asterix if queen involed or minor piece and pawn totals are mismatched
 - add replay button to walk step by step through the position.
   - for memorization.
   - allow user to control replay speed, and select which information will show at each position

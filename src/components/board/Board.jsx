@@ -189,6 +189,7 @@ const Board = () => {
       );
     }
 
+    // gathers total pressure on squares as 2d with pressure level by number
     let whitePressure = getSquarePressures(board, "white");
     let blackPressure = getSquarePressures(board, "black");
 
