@@ -18,7 +18,6 @@ const Square = (props) => {
     row,
     col,
   } = props;
-  console.log(whitePressure, blackPressure);
   const { pov } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
