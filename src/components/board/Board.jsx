@@ -45,8 +45,6 @@ const Board = () => {
     activeFilters,
   } = useGameState();
 
-  console.log(getSquarePressures(board, "black"));
-
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
@@ -191,6 +189,9 @@ const Board = () => {
       );
     }
 
+    const whitePressure = getSquarePressures(board, "white");
+    const blackPressure = getSquarePressures(board, "black");
+
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
       tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
@@ -218,6 +219,8 @@ const Board = () => {
             isSelected={isSelected}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}
+            whitePressure={whitePressure[rowIndex][colIndex]}
+            blackPressure={blackPressure[rowIndex][colIndex]}
             row={rowIndex}
             col={colIndex}
           />

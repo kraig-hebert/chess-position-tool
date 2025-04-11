@@ -7,13 +7,53 @@ import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
 
 const Square = (props) => {
-  const { isDark, isLegal, isSelected, onClick, piece, row, col } = props;
-
+  const {
+    isDark,
+    isLegal,
+    isSelected,
+    onClick,
+    piece,
+    whitePressure,
+    blackPressure,
+    row,
+    col,
+  } = props;
+  console.log(whitePressure, blackPressure);
   const { pov } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
 
-  const renderLegalMove = () => <div className="possible-move legal"></div>;
+  const renderLegalMove = () => <div className="possible-move"></div>;
+
+  const convertPressure = (pressure) => {
+    return pressure === 1
+      ? "level-1"
+      : pressure === 2
+      ? "level-2"
+      : pressure === 3
+      ? "level-3"
+      : pressure === 4
+      ? "level-4"
+      : pressure === 5
+      ? "level-5"
+      : pressure === 6
+      ? "level-6"
+      : pressure === 7
+      ? "level-7"
+      : pressure === 8
+      ? "level-8"
+      : pressure === 9
+      ? "level-9"
+      : pressure === 10
+      ? "level-10"
+      : null;
+  };
+  const renderWhitePressure = () => (
+    <div className={`white-pressure ${convertPressure(whitePressure)}`}></div>
+  );
+  const renderBlackPressure = () => (
+    <div className={`black-pressure ${convertPressure(blackPressure)}`}></div>
+  );
 
   const renderLeftNotation = () => {
     if (pov === "white")
@@ -43,6 +83,8 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
+      {whitePressure > 0 && renderWhitePressure(whitePressure)}
+      {blackPressure > 0 && renderBlackPressure(blackPressure)}
     </div>
   );
 };
