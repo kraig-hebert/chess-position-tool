@@ -18,7 +18,7 @@ const Square = (props) => {
     row,
     col,
   } = props;
-  const { pov } = useGameState();
+  const { activeFilters, pov } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
 
@@ -47,12 +47,14 @@ const Square = (props) => {
       ? "level-10"
       : null;
   };
-  const renderWhitePressure = () => (
-    <div className={`white-pressure ${convertPressure(whitePressure)}`}></div>
-  );
-  const renderBlackPressure = () => (
-    <div className={`black-pressure ${convertPressure(blackPressure)}`}></div>
-  );
+  const renderWhitePressure = (pressureLevel) =>
+    activeFilters.white.squarePressure ? (
+      <div className={`white-pressure ${convertPressure(pressureLevel)}`}></div>
+    ) : null;
+  const renderBlackPressure = (pressureLevel) =>
+    activeFilters.black.squarePressure ? (
+      <div className={`black-pressure ${convertPressure(pressureLevel)}`}></div>
+    ) : null;
 
   const renderLeftNotation = () => {
     if (pov === "white")
@@ -82,8 +84,8 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {whitePressure > 0 && renderWhitePressure(whitePressure)}
-      {blackPressure > 0 && renderBlackPressure(blackPressure)}
+      {whitePressure && renderWhitePressure(whitePressure[row][col])}
+      {blackPressure && renderBlackPressure(blackPressure[row][col])}
     </div>
   );
 };

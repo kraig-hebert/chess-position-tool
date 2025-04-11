@@ -119,7 +119,6 @@ export const GameStateProvider = ({ children }) => {
     setActiveColor(initialActiveColor);
     setPov(initialPov);
     setBoard(initialBoard);
-    setBoardLayers(initialActiveFilters);
     setHasMoved(initialHasMoved);
     setMovesList(initialMovesList);
     setGameIsActive(true);

@@ -221,8 +221,8 @@ const Board = () => {
             isSelected={isSelected}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}
-            whitePressure={whitePressure[rowIndex][colIndex]}
-            blackPressure={blackPressure[rowIndex][colIndex]}
+            whitePressure={whitePressure}
+            blackPressure={blackPressure}
             row={rowIndex}
             col={colIndex}
           />
