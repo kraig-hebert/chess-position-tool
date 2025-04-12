@@ -1,14 +1,22 @@
-.game-filters {
+.game-filters-container {
   position: absolute;
   display: flex;
   width: 400px;
   height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   right: 100%;
   top: 0;
   background-color: yellow;
+}
+
+.game-filters-content {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 15px;
 }
 
 .player-filters {

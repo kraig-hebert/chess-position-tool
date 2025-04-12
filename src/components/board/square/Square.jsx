@@ -25,14 +25,10 @@ const Square = (props) => {
   const renderLegalMove = () => <div className="possible-move"></div>;
 
   const renderWhitePressure = (pressureLevel) => (
-    <div className={`white-pressure level-${pressureLevel}`}>
-      {pressureLevel}
-    </div>
+    <div className={`white-pressure level-6`}>{pressureLevel}</div>
   );
   const renderBlackPressure = (pressureLevel) => (
-    <div className={`black-pressure level-${pressureLevel}`}>
-      {pressureLevel}
-    </div>
+    <div className={`black-pressure level-6`}>{pressureLevel}</div>
   );
 
   const renderLeftNotation = () => {
@@ -64,10 +60,10 @@ const Square = (props) => {
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
       {activeFilters.white.squarePressure &&
-        whitePressure &&
+        whitePressure[row][col] > 0 &&
         renderWhitePressure(whitePressure[row][col])}
       {activeFilters.black.squarePressure &&
-        blackPressure &&
+        blackPressure[row][col] > 0 &&
         renderBlackPressure(blackPressure[row][col])}
     </div>
   );
