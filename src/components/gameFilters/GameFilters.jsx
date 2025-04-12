@@ -18,7 +18,7 @@ const GameFilters = () => {
             Pressure
             <span
               className={`checkbox ${
-                activeFilters.white.squarePressure ? "checkbox-active" : ""
+                activeFilters.colors.white ? "checkbox-active" : ""
               }`}
               onClick={() => handleCheckboxClick("white")}
             ></span>
@@ -30,7 +30,7 @@ const GameFilters = () => {
             Pressure
             <span
               className={`checkbox ${
-                activeFilters.black.squarePressure ? "checkbox-active" : ""
+                activeFilters.colors.black ? "checkbox-active" : ""
               }`}
               onClick={() => handleCheckboxClick("black")}
             ></span>

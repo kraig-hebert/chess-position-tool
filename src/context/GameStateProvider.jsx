@@ -25,12 +25,8 @@ const initialBoard = [
 ];
 
 const initialActiveFilters = {
-  white: {
-    squarePressure: true,
-  },
-  black: {
-    squarePressure: true,
-  },
+  colors: { white: true, black: true },
+  activeFilterType: "pressure", // pressure or control
 };
 
 const initialHasMoved = {
@@ -105,11 +101,21 @@ export const GameStateProvider = ({ children }) => {
   };
 
   const toggleFiltersByColor = (color) => {
-    const toggledFilters = {};
-    Object.keys(activeFilters[color]).forEach(
-      (filter) => (toggledFilters[filter] = !activeFilters[color][filter])
-    );
-    setActiveFilters({ ...activeFilters, [color]: toggledFilters });
+    setActiveFilters((prev) => ({
+      ...prev,
+      colors: {
+        ...prev.colors,
+        [color]: !prev.colors[color],
+      },
+    }));
+  };
+
+  const toggleActiveFilterType = () => {
+    setActiveFilters((prev) => ({
+      ...prev,
+      activeFilterType:
+        prev.activeFilterType === "pressure" ? "control" : "pressure",
+    }));
   };
 
   const resetGame = () => {
@@ -191,6 +197,7 @@ export const GameStateProvider = ({ children }) => {
         activeFilters,
         setActiveFilters,
         toggleFiltersByColor,
+        toggleActiveFilterType,
       }}
     >
       {children}

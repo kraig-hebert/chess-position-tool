@@ -59,10 +59,10 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {activeFilters.white.squarePressure &&
+      {activeFilters.colors.white &&
         whitePressure[row][col] > 0 &&
         renderWhitePressure(whitePressure[row][col])}
-      {activeFilters.black.squarePressure &&
+      {activeFilters.colors.black &&
         blackPressure[row][col] > 0 &&
         renderBlackPressure(blackPressure[row][col])}
     </div>
