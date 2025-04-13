@@ -8,6 +8,9 @@ import FilterToggle from "./filterToggle/FilterToggle";
 const GameFilters = () => {
   const { activeFilters, toggleFiltersByColor } = useGameState();
   const handleCheckboxClick = (color) => toggleFiltersByColor(color);
+  const activeFilterType =
+    String(activeFilters.activeFilterType).charAt(0).toUpperCase() +
+    activeFilters.activeFilterType.slice(1);
   return (
     <div className="game-filters-container">
       <div className="game-filters-content">
@@ -15,7 +18,7 @@ const GameFilters = () => {
         <div className="player-filters">
           <div className="player-filters-title">White</div>
           <div className="player-filters-item">
-            Pressure
+            {activeFilterType}
             <span
               className={`checkbox ${
                 activeFilters.colors.white ? "checkbox-active" : ""
@@ -27,7 +30,7 @@ const GameFilters = () => {
         <div className="player-filters">
           <div className="player-filters-title">Black</div>
           <div className="player-filters-item">
-            Pressure
+            {activeFilterType}
             <span
               className={`checkbox ${
                 activeFilters.colors.black ? "checkbox-active" : ""
