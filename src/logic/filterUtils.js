@@ -35,3 +35,19 @@ export const getSquarePressures = (board, color) => {
   );
   return boardWithPressures;
 };
+
+export const getSquareControl = (row, col, whitePressure, blackPressure) => {
+  const whitePressureValue = whitePressure[row][col];
+  const blackPressureValue = blackPressure[row][col];
+  if (whitePressureValue > blackPressureValue) {
+    return {
+      color: "white",
+      control: whitePressureValue - blackPressureValue,
+    };
+  } else if (blackPressureValue > whitePressureValue) {
+    return {
+      color: "black",
+      control: blackPressureValue - whitePressureValue,
+    };
+  } else return { color: "none", control: 0 };
+};

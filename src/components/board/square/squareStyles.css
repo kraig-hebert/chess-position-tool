@@ -42,7 +42,7 @@
   background-color: green;
 }
 
-.white-pressure {
+.white-filter {
   position: absolute;
   display: flex;
   justify-content: center;
@@ -58,7 +58,7 @@
   opacity: 0;
 }
 
-.black-pressure {
+.black-filter {
   position: absolute;
   display: block;
   display: flex;

@@ -2,6 +2,7 @@ import React from "react";
 
 import { useGameState } from "../../../context/GameStateProvider";
 import { letterNotation } from "../../../logic/chessUtils";
+import { getSquareControl } from "../../../logic/filterUtils";
 
 import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
@@ -21,15 +22,36 @@ const Square = (props) => {
   const { activeFilters, pov } = useGameState();
   const leftNotation = col === 0 ? true : false;
   const bottomNotation = row === 7 ? true : false;
+  const squareControl = getSquareControl(
+    row,
+    col,
+    whitePressure,
+    blackPressure
+  );
+  console.log(squareControl);
 
   const renderLegalMove = () => <div className="possible-move"></div>;
 
-  const renderWhitePressure = (pressureLevel) => (
-    <div className={`white-pressure level-6`}>{pressureLevel}</div>
-  );
-  const renderBlackPressure = (pressureLevel) => (
-    <div className={`black-pressure level-6`}>{pressureLevel}</div>
-  );
+  const renderWhiteFilter = () => {
+    if (
+      activeFilters.activeFilterType === "pressure" &&
+      whitePressure[row][col] > 0
+    ) {
+      return (
+        <div className={`white-filter level-6`}>{whitePressure[row][col]}</div>
+      );
+    }
+  };
+  const renderBlackFilter = () => {
+    if (
+      activeFilters.activeFilterType === "pressure" &&
+      blackPressure[row][col] > 0
+    ) {
+      return (
+        <div className={`white-filter level-6`}>{blackPressure[row][col]}</div>
+      );
+    }
+  };
 
   const renderLeftNotation = () => {
     if (pov === "white")
@@ -59,12 +81,8 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {activeFilters.colors.white &&
-        whitePressure[row][col] > 0 &&
-        renderWhitePressure(whitePressure[row][col])}
-      {activeFilters.colors.black &&
-        blackPressure[row][col] > 0 &&
-        renderBlackPressure(blackPressure[row][col])}
+      {activeFilters.colors.white && renderWhiteFilter()}
+      {activeFilters.colors.black && renderBlackFilter()}
     </div>
   );
 };
