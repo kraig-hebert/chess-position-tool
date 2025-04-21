@@ -32,25 +32,28 @@ const Square = (props) => {
 
   const renderLegalMove = () => <div className="possible-move"></div>;
 
-  const renderWhiteFilter = () => {
+  const renderedWhiteFilter =
+    activeFilters.activeFilterType === "pressure" &&
+    whitePressure[row][col] > 0 ? (
+      <div className={`white-filter level-6`}>{whitePressure[row][col]}</div>
+    ) : null;
+
+  const renderedBlackFilter =
+    activeFilters.activeFilterType === "pressure" &&
+    blackPressure[row][col] > 0 ? (
+      <div className={`black-filter level-6`}>{blackPressure[row][col]}</div>
+    ) : null;
+
+  const renderSquareControl = () => {
     if (
-      activeFilters.activeFilterType === "pressure" &&
-      whitePressure[row][col] > 0
-    ) {
+      activeFilters.activeFilterType === "control" &&
+      squareControl.control > 0
+    )
       return (
-        <div className={`white-filter level-6`}>{whitePressure[row][col]}</div>
+        <div className={`${squareControl.color}-filter level-6`}>
+          {squareControl.control}
+        </div>
       );
-    }
-  };
-  const renderBlackFilter = () => {
-    if (
-      activeFilters.activeFilterType === "pressure" &&
-      blackPressure[row][col] > 0
-    ) {
-      return (
-        <div className={`white-filter level-6`}>{blackPressure[row][col]}</div>
-      );
-    }
   };
 
   const renderLeftNotation = () => {
@@ -81,8 +84,9 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {activeFilters.colors.white && renderWhiteFilter()}
-      {activeFilters.colors.black && renderBlackFilter()}
+      {activeFilters.colors.white && renderedWhiteFilter}
+      {activeFilters.colors.black && renderedBlackFilter}
+      {renderSquareControl()}
     </div>
   );
 };
