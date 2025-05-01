@@ -45,15 +45,26 @@ const Square = (props) => {
     ) : null;
 
   const renderSquareControl = () => {
-    if (
-      activeFilters.activeFilterType === "control" &&
-      squareControl.control > 0
-    )
+    if (squareControl.control > 0 && activeFilters.colors[squareControl.color])
       return (
         <div className={`${squareControl.color}-filter level-6`}>
           {squareControl.control}
         </div>
       );
+  };
+
+  const renderSquareNotations = () => {
+    if (activeFilters.activeFilterType === "pressure") {
+      return (
+        <>
+          {activeFilters.colors.white && renderedWhiteFilter}
+          {activeFilters.colors.black && renderedBlackFilter}
+        </>
+      );
+    }
+    if (activeFilters.activeFilterType === "control") {
+      return renderSquareControl();
+    }
   };
 
   const renderLeftNotation = () => {
@@ -84,9 +95,7 @@ const Square = (props) => {
       {isLegal && renderLegalMove()}
       {leftNotation && renderLeftNotation()}
       {bottomNotation && renderBottomNotation()}
-      {activeFilters.colors.white && renderedWhiteFilter}
-      {activeFilters.colors.black && renderedBlackFilter}
-      {renderSquareControl()}
+      {renderSquareNotations()}
     </div>
   );
 };
