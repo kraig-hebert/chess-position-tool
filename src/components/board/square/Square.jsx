@@ -28,7 +28,6 @@ const Square = (props) => {
     whitePressure,
     blackPressure
   );
-  console.log(squareControl);
 
   const renderLegalMove = () => <div className="possible-move"></div>;
 
