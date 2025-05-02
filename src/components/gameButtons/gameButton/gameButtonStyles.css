@@ -1,6 +1,6 @@
 .game-button {
   display: flex;
-  width: 150px;
+  width: 125px;
   height: 50px;
   flex-direction: row;
   justify-content: space-around;

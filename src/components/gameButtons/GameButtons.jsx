@@ -1,10 +1,13 @@
 import React from "react";
+
 import {
   FaBackward,
   FaForward,
   FaArrowDownUpAcrossLine,
   FaRecycle,
+  FaPencil,
 } from "react-icons/fa6";
+import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
 
@@ -21,6 +24,8 @@ const GameButtons = () => {
     setActiveMove,
     getGroupedMovesList,
     setCapturedPieces,
+    isEditMode,
+    setIsEditMode,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -69,8 +74,17 @@ const GameButtons = () => {
     }
   };
 
+  const handleEditSaveClick = () => {
+    setIsEditMode(!isEditMode);
+  };
+
   return (
     <div className="game-buttons">
+      <GameButton
+        title={isEditMode ? "Save" : "Edit"}
+        Icon={isEditMode ? FaSave : FaPencil}
+        onClick={handleEditSaveClick}
+      />
       <GameButton title="Reset" Icon={FaRecycle} onClick={resetGame} />
       <GameButton
         title="Flip Board"

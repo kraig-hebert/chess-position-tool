@@ -51,6 +51,7 @@ export const GameStateProvider = ({ children }) => {
   const [pov, setPov] = useState(initialPov);
   const [capturedPieces, setCapturedPieces] = useState(initialCapturedPieces);
   const [movesList, setMovesList] = useState(initialMovesList);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
@@ -128,6 +129,7 @@ export const GameStateProvider = ({ children }) => {
     setHasMoved(initialHasMoved);
     setMovesList(initialMovesList);
     setGameIsActive(true);
+    setIsEditMode(false);
   };
 
   const getGroupedMovesList = () => {
@@ -198,6 +200,8 @@ export const GameStateProvider = ({ children }) => {
         setActiveFilters,
         toggleFiltersByColor,
         toggleActiveFilterType,
+        isEditMode,
+        setIsEditMode,
       }}
     >
       {children}
