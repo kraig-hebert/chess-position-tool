@@ -119,6 +119,10 @@ export const GameStateProvider = ({ children }) => {
     }));
   };
 
+  const setInitialBoard = () => {
+    setBoard(initialBoard);
+  };
+
   const resetGame = () => {
     setCapturedPieces(initialCapturedPieces);
     setSelectedPiece(null);
@@ -202,6 +206,7 @@ export const GameStateProvider = ({ children }) => {
         toggleActiveFilterType,
         isEditMode,
         setIsEditMode,
+        setInitialBoard,
       }}
     >
       {children}

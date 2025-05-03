@@ -6,7 +6,7 @@ import BoardControls from "./boardControls/BoardControls";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const { pieceIcons, resetGame, setBoard, board } = useGameState();
+  const { setBoard, board, setInitialBoard } = useGameState();
   const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
   const [selectedPiece, setSelectedPiece] = useState(null);
 
@@ -43,7 +43,7 @@ const EditPanel = () => {
         />
         <BoardControls
           onClearBoard={handleClearBoard}
-          onResetBoard={resetGame}
+          onResetBoard={setInitialBoard}
         />
       </div>
     </div>
