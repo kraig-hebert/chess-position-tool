@@ -18,6 +18,7 @@ import StudyDetails from "../studyDetails/StudyDetails";
 import GameButtons from "../gameButtons/GameButtons";
 import PromotionModal from "../promotionModal/PromotionModal";
 import GameFilters from "../gameFilters/GameFilters";
+import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
   const {
@@ -43,6 +44,7 @@ const Board = () => {
     setActiveMove,
     getNextGroupedMovesListIndex,
     activeFilters,
+    isEditMode,
   } = useGameState();
 
   // { row, col, piece }
@@ -260,7 +262,7 @@ const Board = () => {
       {promotionSquare && <div className="board-overlay"></div>}
       <div className="board">
         {renderBoard()}
-        <GameFilters />
+        {isEditMode ? <EditPanel /> : <GameFilters />}
         <StudyDetails />
         <GameButtons />
       </div>
