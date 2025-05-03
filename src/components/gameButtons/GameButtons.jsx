@@ -85,21 +85,29 @@ const GameButtons = () => {
         Icon={isEditMode ? FaSave : FaPencil}
         onClick={handleEditSaveClick}
       />
-      <GameButton title="Reset" Icon={FaRecycle} onClick={resetGame} />
+      <GameButton
+        title="Reset"
+        Icon={FaRecycle}
+        onClick={resetGame}
+        disabled={isEditMode}
+      />
       <GameButton
         title="Flip Board"
         Icon={FaArrowDownUpAcrossLine}
         onClick={togglePov}
+        disabled={isEditMode}
       />
       <GameButton
         title="Last Move"
         Icon={FaBackward}
         onClick={handleMoveBackwards}
+        disabled={isEditMode}
       />
       <GameButton
         title="Next Move"
         Icon={FaForward}
         onClick={handleMoveForwards}
+        disabled={isEditMode}
       />
     </div>
   );
