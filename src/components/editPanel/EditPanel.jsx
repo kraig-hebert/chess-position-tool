@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 import ActionButtons from "./actionButtons/ActionButtons";
+import PieceButtons from "./pieceButtons/PieceButtons";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
   const { pieceIcons } = useGameState();
   const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
+  const [selectedPiece, setSelectedPiece] = useState(null);
 
   const handleActionClick = (action) => {
     setActiveAction(action);
+    // Clear selected piece when switching to move or trash actions
+    if (action !== "add") {
+      setSelectedPiece(null);
+    }
+  };
+
+  const handlePieceSelect = (piece) => {
+    // Only allow piece selection in add mode
+    if (activeAction === "add") {
+      setSelectedPiece(selectedPiece === piece ? null : piece);
+    }
   };
 
   return (
@@ -18,10 +31,10 @@ const EditPanel = () => {
           activeAction={activeAction}
           onActionClick={handleActionClick}
         />
-        <div className="pieces-container">
-          <div className="white-pieces">{/* White pieces will go here */}</div>
-          <div className="black-pieces">{/* Black pieces will go here */}</div>
-        </div>
+        <PieceButtons
+          selectedPiece={selectedPiece}
+          onPieceSelect={handlePieceSelect}
+        />
         <div className="clear-button">
           {/* Clear board button will go here */}
         </div>

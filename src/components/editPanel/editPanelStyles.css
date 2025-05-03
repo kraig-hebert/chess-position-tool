@@ -19,25 +19,6 @@
   padding: 15px;
 }
 
-.pieces-container {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.white-pieces,
-.black-pieces {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  gap: 10px;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
 .clear-button {
   display: flex;
   width: 100%;
