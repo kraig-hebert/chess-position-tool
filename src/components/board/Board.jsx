@@ -3,6 +3,7 @@ import { useGameState } from "../../context/GameStateProvider";
 
 import { makePieceMove } from "../../logic/moveValidation";
 import {
+  copyBoard,
   getPieceColor,
   isSameColor,
   isKingInCheck,
@@ -52,8 +53,17 @@ const Board = () => {
   const tempCapturedPieces = { ...capturedPieces };
 
   const handleSquareClick = (row, col) => {
-    // ignore clicks when game isn't active or promotion modal is active
-    if (!gameIsActive || promotionSquare) return;
+    // ignore clicks when promotion modal is active
+    if (promotionSquare) return;
+
+    // if in edit mode, don't validate moves
+    if (isEditMode) {
+      // We'll handle edit mode clicks here later
+      return;
+    }
+
+    // ignore clicks when game isn't active
+    if (!gameIsActive) return;
 
     /*
       - flip click values when board is rendered from black pov
@@ -181,34 +191,44 @@ const Board = () => {
     let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
     let possibleMoves = [];
-    if (selectedPiece) {
-      possibleMoves = getPossibleMoves(
-        board,
-        tempSelectedPiece.row,
-        tempSelectedPiece.col,
-        activeColor,
-        { enPassantTarget, hasMoved, validateCheckAndCastle: true }
-      );
-    }
+    // Initialize as 8x8 arrays filled with zeros
+    let whitePressure = copyBoard(board).map((row) => row.map((col) => 0));
 
-    // gathers total pressure on squares as 2d with pressure level by number
-    let whitePressure = getSquarePressures(board, "white");
-    let blackPressure = getSquarePressures(board, "black");
+    let blackPressure = copyBoard(board).map((row) => row.map((col) => 0));
+
+    if (!isEditMode) {
+      if (selectedPiece) {
+        possibleMoves = getPossibleMoves(
+          board,
+          tempSelectedPiece.row,
+          tempSelectedPiece.col,
+          activeColor,
+          { enPassantTarget, hasMoved, validateCheckAndCastle: true }
+        );
+      }
+      // Only calculate pressures when not in edit mode
+      whitePressure = getSquarePressures(board, "white");
+      blackPressure = getSquarePressures(board, "black");
+    }
 
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
-      whitePressure = whitePressure.reverse().map((inner) => inner.reverse());
-      blackPressure = blackPressure.reverse().map((inner) => inner.reverse());
-      tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
-      tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
-      possibleMoves = possibleMoves.map((move) => {
-        return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
-      });
+      if (!isEditMode) {
+        whitePressure = whitePressure.reverse().map((inner) => inner.reverse());
+        blackPressure = blackPressure.reverse().map((inner) => inner.reverse());
+        tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
+        tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
+        possibleMoves = possibleMoves.map((move) => {
+          return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
+        });
+      }
     }
+
     return boardForRender.map((row, rowIndex) =>
       row.map((piece, colIndex) => {
         const isDark = (rowIndex + colIndex) % 2 !== 0;
         const isSelected =
+          !isEditMode &&
           tempSelectedPiece &&
           tempSelectedPiece.row === rowIndex &&
           tempSelectedPiece.col === colIndex;
@@ -217,10 +237,13 @@ const Board = () => {
           <Square
             key={`${rowIndex}-${colIndex}`}
             isDark={isDark}
-            isLegal={possibleMoves.some(
-              (position) =>
-                position.row === rowIndex && position.col === colIndex
-            )}
+            isLegal={
+              !isEditMode &&
+              possibleMoves.some(
+                (position) =>
+                  position.row === rowIndex && position.col === colIndex
+              )
+            }
             isSelected={isSelected}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}
