@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useGameState } from "../../context/GameStateProvider";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
+import BoardControls from "./boardControls/BoardControls";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const { pieceIcons } = useGameState();
+  const { pieceIcons, resetGame, setBoard, board } = useGameState();
   const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
   const [selectedPiece, setSelectedPiece] = useState(null);
 
@@ -24,6 +25,11 @@ const EditPanel = () => {
     }
   };
 
+  const handleClearBoard = () => {
+    const emptyBoard = board.map((row) => row.map((col) => null));
+    setBoard(emptyBoard);
+  };
+
   return (
     <div className="edit-panel-container">
       <div className="edit-panel-content">
@@ -35,9 +41,10 @@ const EditPanel = () => {
           selectedPiece={selectedPiece}
           onPieceSelect={handlePieceSelect}
         />
-        <div className="clear-button">
-          {/* Clear board button will go here */}
-        </div>
+        <BoardControls
+          onClearBoard={handleClearBoard}
+          onResetBoard={resetGame}
+        />
       </div>
     </div>
   );

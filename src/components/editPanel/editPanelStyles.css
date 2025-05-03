@@ -18,9 +18,3 @@
   align-items: center;
   padding: 15px;
 }
-
-.clear-button {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-}

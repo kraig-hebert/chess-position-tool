@@ -3,7 +3,6 @@ import { useGameState } from "../../context/GameStateProvider";
 
 import { makePieceMove } from "../../logic/moveValidation";
 import {
-  copyBoard,
   getPieceColor,
   isSameColor,
   isKingInCheck,
@@ -192,9 +191,9 @@ const Board = () => {
     let boardForRender = structuredClone(board);
     let possibleMoves = [];
     // Initialize as 8x8 arrays filled with zeros
-    let whitePressure = copyBoard(board).map((row) => row.map((col) => 0));
+    let whitePressure = board.map((row) => row.map((col) => 0));
 
-    let blackPressure = copyBoard(board).map((row) => row.map((col) => 0));
+    let blackPressure = board.map((row) => row.map((col) => 0));
 
     if (!isEditMode) {
       if (selectedPiece) {
