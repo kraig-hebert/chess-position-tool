@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useGameState } from "../../context/GameStateProvider";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
+import ColorSelector from "./colorSelector/ColorSelector";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
@@ -47,6 +48,7 @@ const EditPanel = () => {
           selectedPieceType={selectedPieceType}
           onPieceSelect={handlePieceSelect}
         />
+        <ColorSelector />
         <BoardControls
           onClearBoard={handleClearBoard}
           onResetBoard={setInitialBoard}

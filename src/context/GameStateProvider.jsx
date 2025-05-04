@@ -55,6 +55,7 @@ export const GameStateProvider = ({ children }) => {
   const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
   const [selectedMoveSquare, setSelectedMoveSquare] = useState(null); // { row, col, piece }
   const [selectedPieceType, setSelectedPieceType] = useState(null);
+  const [nextMoveColor, setNextMoveColor] = useState("white");
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
@@ -217,6 +218,8 @@ export const GameStateProvider = ({ children }) => {
         selectedPieceType,
         setSelectedPieceType,
         initialBoard,
+        nextMoveColor,
+        setNextMoveColor,
       }}
     >
       {children}

@@ -34,6 +34,9 @@ const GameButtons = () => {
     board,
     initialBoard,
     setHasMoved,
+    setActiveColor,
+    setGameIsActive,
+    nextMoveColor,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -102,6 +105,12 @@ const GameButtons = () => {
         blackRookKingside: !castlingRights.blackRookKingside,
         blackRookQueenside: !castlingRights.blackRookQueenside,
       });
+
+      // Set the active color based on the nextMoveColor from context
+      setActiveColor(nextMoveColor);
+
+      // Set game to active
+      setGameIsActive(true);
     }
     setIsEditMode(!isEditMode);
   };

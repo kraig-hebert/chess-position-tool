@@ -14,8 +14,8 @@ When saving/exiting edit mode:
   - Look for pawns on rank 3 (white) or rank 6 (black)
   - Check if enemy pawns are adjacent and could capture
   - Set `enPassantTarget` if conditions are met
-- Add UI for selecting which color moves next
-- Set `gameIsActive` to true
+    ✓ Add UI for selecting which color moves next
+    ✓ Set `gameIsActive` to true
 - Validate position before saving:
   - Each side must have exactly one king
   - No pawns can be on first/last rank
