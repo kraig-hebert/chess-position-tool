@@ -69,6 +69,9 @@ export const GameStateProvider = ({ children }) => {
   // Add position validation state
   const [positionIsValid, setPositionIsValid] = useState(true);
 
+  // Rename to tempHasMoved for clarity
+  const [tempHasMoved, setTempHasMoved] = useState(initialHasMoved);
+
   const pieceIcons = {
     p: { icon: FaChessPawn, className: "piece black" },
     r: { icon: FaChessRook, className: "piece black" },
@@ -237,6 +240,8 @@ export const GameStateProvider = ({ children }) => {
         setSelectedEnPassantTarget,
         positionIsValid,
         setPositionIsValid,
+        tempHasMoved,
+        setTempHasMoved,
       }}
     >
       {children}

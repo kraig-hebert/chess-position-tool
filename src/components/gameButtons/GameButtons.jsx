@@ -10,11 +10,7 @@ import {
 import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
-import {
-  calculateCapturedPieces,
-  calculateCastlingRights,
-  copyBoard,
-} from "../../logic/chessUtils";
+import { calculateCapturedPieces, copyBoard } from "../../logic/chessUtils";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -28,7 +24,6 @@ const GameButtons = () => {
     setBoard,
     setActiveMove,
     getGroupedMovesList,
-
     setCapturedPieces,
     isEditMode,
     setIsEditMode,
@@ -44,6 +39,7 @@ const GameButtons = () => {
     selectedEnPassantTarget,
     setEnPassantTarget,
     positionIsValid,
+    tempHasMoved,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -93,22 +89,28 @@ const GameButtons = () => {
     }
   };
 
+  const validateCastlingPositions = () => {
+    const validatedHasMoved = { ...tempHasMoved };
+
+    if (board[7][4] !== "K") validatedHasMoved.whiteKing = true;
+    else if (board[7][7] !== "R") validatedHasMoved.whiteRookKingside = true;
+    else if (board[7][0] !== "R") validatedHasMoved.whiteRookQueenside = true;
+    else if (board[0][4] !== "k") validatedHasMoved.blackKing = true;
+    else if (board[0][7] !== "r") validatedHasMoved.blackRookKingside = true;
+    else if (board[0][0] !== "r") validatedHasMoved.blackRookQueenside = true;
+
+    return validatedHasMoved;
+  };
+
   const handleEditSaveClick = () => {
     if (isEditMode) {
       // Calculate and set captured pieces
       const captured = calculateCapturedPieces(board, initialBoard);
       setCapturedPieces(captured);
 
-      // Set castling rights based on piece positions
-      const castlingRights = calculateCastlingRights(board);
-      setHasMoved({
-        whiteKing: !castlingRights.whiteKing,
-        whiteRookKingside: !castlingRights.whiteRookKingside,
-        whiteRookQueenside: !castlingRights.whiteRookQueenside,
-        blackKing: !castlingRights.blackKing,
-        blackRookKingside: !castlingRights.blackRookKingside,
-        blackRookQueenside: !castlingRights.blackRookQueenside,
-      });
+      // Validate and update hasMoved based on piece positions
+      const validatedHasMoved = validateCastlingPositions();
+      setHasMoved(validatedHasMoved);
 
       // Set the active color based on the nextMoveColor from context
       setActiveColor(nextMoveColor);
