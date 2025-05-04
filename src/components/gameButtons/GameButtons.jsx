@@ -37,6 +37,10 @@ const GameButtons = () => {
     setActiveColor,
     setGameIsActive,
     nextMoveColor,
+    enPassantEnabled,
+    possibleEnPassantTargets,
+    selectedEnPassantTarget,
+    setEnPassantTarget,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -108,6 +112,19 @@ const GameButtons = () => {
 
       // Set the active color based on the nextMoveColor from context
       setActiveColor(nextMoveColor);
+
+      // Set en passant target if enabled and a valid target is selected
+      if (enPassantEnabled && possibleEnPassantTargets.length > 0) {
+        const target = possibleEnPassantTargets[selectedEnPassantTarget];
+        setEnPassantTarget({
+          row: target.row,
+          col: target.col,
+          color: nextMoveColor, // The color that can make the en passant capture
+        });
+      } else {
+        // Clear any existing en passant target
+        setEnPassantTarget(null);
+      }
 
       // Set game to active
       setGameIsActive(true);

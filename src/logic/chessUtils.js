@@ -428,3 +428,56 @@ export const calculateCastlingRights = (board) => {
 
   return castlingRights;
 };
+
+export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
+  const targets = [];
+
+  if (nextMoveColor === "white") {
+    // If white moves next, look for white pawns on the 5th rank (index 3)
+    for (let col = 0; col < 8; col++) {
+      if (board[3][col] === "P") {
+        // Check if there are adjacent black pawns
+        if (col > 0 && board[3][col - 1] === "p") {
+          targets.push({
+            row: 2,
+            col: col - 1,
+            notation: `${letterNotation[col]}6`,
+          });
+        }
+        if (col < 7 && board[3][col + 1] === "p") {
+          // Black pawn on the right
+          targets.push({
+            row: 2,
+            col: col + 1,
+            notation: `${letterNotation[col + 2]}6`,
+          });
+        }
+      }
+    }
+  } else {
+    // If black moves next, look for black pawns on the 4th rank (index 4)
+    for (let col = 0; col < 8; col++) {
+      if (board[4][col] === "p") {
+        // Check if there are adjacent white pawns
+        if (col > 0 && board[4][col - 1] === "P") {
+          // White pawn on the left
+          targets.push({
+            row: 5,
+            col: col - 1,
+            notation: `${letterNotation[col]}3`,
+          });
+        }
+        if (col < 7 && board[4][col + 1] === "P") {
+          // White pawn on the right
+          targets.push({
+            row: 5,
+            col: col + 1,
+            notation: `${letterNotation[col + 2]}3`,
+          });
+        }
+      }
+    }
+  }
+
+  return targets;
+};
