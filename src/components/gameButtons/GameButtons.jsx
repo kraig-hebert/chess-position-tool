@@ -10,6 +10,7 @@ import {
 import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
+import { calculateCapturedPieces } from "../../logic/chessUtils";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -27,9 +28,12 @@ const GameButtons = () => {
     isEditMode,
     setIsEditMode,
     setMovesList,
+    board,
+    initialBoard,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
+
   const handleMoveBackwards = () => {
     if (activeMove.groupIndex === 0 && activeMove.moveIndex === 0) return;
     if (activeMove.moveIndex === 1) {
@@ -79,6 +83,10 @@ const GameButtons = () => {
     if (isEditMode) {
       // Reset moves list when saving from edit mode
       setMovesList([]);
+
+      // Calculate and set captured pieces
+      const captured = calculateCapturedPieces(board, initialBoard);
+      setCapturedPieces(captured);
     }
     setIsEditMode(!isEditMode);
   };

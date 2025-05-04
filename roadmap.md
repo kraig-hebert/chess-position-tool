@@ -15,6 +15,11 @@ When saving/exiting edit mode:
   - Set `enPassantTarget` if conditions are met
 - Add UI for selecting which color moves next
 - Set `gameIsActive` to true
+- Validate position before saving:
+  - Each side must have exactly one king
+  - No pawns can be on first/last rank
+  - Each piece type cannot exceed its initial count (8 pawns, 2 bishops, etc.)
+  - Show error message if position is invalid
 
 \*BUGS
 

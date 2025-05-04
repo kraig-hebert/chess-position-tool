@@ -353,3 +353,50 @@ export const simulateMove = (board, startRow, startCol, endRow, endCol) => {
   newBoard[startRow][startCol] = null; // Clear old position
   return newBoard;
 };
+
+// Count pieces of each type on the board
+export const countPieces = (boardState) => {
+  const pieceCounts = {
+    white: { P: 0, R: 0, N: 0, B: 0, Q: 0, K: 0 },
+    black: { p: 0, r: 0, n: 0, b: 0, q: 0, k: 0 },
+  };
+
+  boardState.forEach((row) => {
+    row.forEach((piece) => {
+      if (piece) {
+        const color = getPieceColor(piece);
+        pieceCounts[color][piece]++;
+      }
+    });
+  });
+  return pieceCounts;
+};
+
+// Calculate captured pieces by comparing with initial position
+export const calculateCapturedPieces = (currentBoard, initialBoard) => {
+  const initialPieceCounts = countPieces(initialBoard);
+  const currentPieceCounts = countPieces(currentBoard);
+
+  const captured = {
+    white: [],
+    black: [],
+  };
+
+  // Add missing white pieces to black's captured list
+  Object.entries(initialPieceCounts.white).forEach(([piece, count]) => {
+    const missing = count - (currentPieceCounts.white[piece] || 0);
+    for (let i = 0; i < missing; i++) {
+      captured.black.push(piece);
+    }
+  });
+
+  // Add missing black pieces to white's captured list
+  Object.entries(initialPieceCounts.black).forEach(([piece, count]) => {
+    const missing = count - (currentPieceCounts.black[piece] || 0);
+    for (let i = 0; i < missing; i++) {
+      captured.white.push(piece);
+    }
+  });
+
+  return captured;
+};

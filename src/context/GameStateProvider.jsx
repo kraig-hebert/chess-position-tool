@@ -216,6 +216,7 @@ export const GameStateProvider = ({ children }) => {
         setSelectedMoveSquare,
         selectedPieceType,
         setSelectedPieceType,
+        initialBoard,
       }}
     >
       {children}
