@@ -89,11 +89,11 @@ const Board = () => {
             newBoard[selectedMoveSquare.row][selectedMoveSquare.col] = null;
             setBoard(newBoard);
             setSelectedMoveSquare(null);
+          } else if (clickedPiece) {
+            // First click - select the piece
+            setSelectedMoveSquare({ row, col, piece: clickedPiece });
           }
-        } else if (clickedPiece) {
-          // First click - select the piece
-          setSelectedMoveSquare({ row, col, piece: clickedPiece });
-        }
+        } else setSelectedMoveSquare({ row, col, piece: clickedPiece });
         return;
       }
 
