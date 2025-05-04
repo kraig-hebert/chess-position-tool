@@ -226,10 +226,13 @@ const Board = () => {
   const renderBoard = () => {
     let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
+    // Make a copy of the selectedMoveSquare for rendering
+    let tempSelectedMoveSquare = selectedMoveSquare
+      ? { ...selectedMoveSquare }
+      : null;
     let possibleMoves = [];
     // Initialize as 8x8 arrays filled with zeros
     let whitePressure = board.map((row) => row.map((col) => 0));
-
     let blackPressure = board.map((row) => row.map((col) => 0));
 
     if (!isEditMode) {
@@ -249,6 +252,8 @@ const Board = () => {
 
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
+
+      // Adjust coordinates for both game mode and edit mode
       if (!isEditMode) {
         whitePressure = whitePressure.reverse().map((inner) => inner.reverse());
         blackPressure = blackPressure.reverse().map((inner) => inner.reverse());
@@ -257,6 +262,12 @@ const Board = () => {
         possibleMoves = possibleMoves.map((move) => {
           return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
         });
+      }
+
+      // Also adjust the selectedMoveSquare coordinates when in edit mode
+      if (isEditMode && tempSelectedMoveSquare) {
+        tempSelectedMoveSquare.row = Math.abs(tempSelectedMoveSquare.row - 7);
+        tempSelectedMoveSquare.col = Math.abs(tempSelectedMoveSquare.col - 7);
       }
     }
 
@@ -270,9 +281,9 @@ const Board = () => {
             tempSelectedPiece.col === colIndex) ||
           (isEditMode &&
             activeAction === "move" &&
-            selectedMoveSquare &&
-            selectedMoveSquare.row === rowIndex &&
-            selectedMoveSquare.col === colIndex);
+            tempSelectedMoveSquare &&
+            tempSelectedMoveSquare.row === rowIndex &&
+            tempSelectedMoveSquare.col === colIndex);
 
         return (
           <Square
