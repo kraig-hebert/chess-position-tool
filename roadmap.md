@@ -1,3 +1,21 @@
+\*CURRENT WORK - Edit Mode Save Logic
+
+When saving/exiting edit mode:
+
+- Reset moves list (new starting position)
+- Calculate and set captured pieces based on missing pieces from initial position
+- Set castling rights based on piece positions:
+  - White king on e1 + rook on h1 -> kingside castling allowed
+  - White king on e1 + rook on a1 -> queenside castling allowed
+  - Black king on e8 + rook on h8 -> kingside castling allowed
+  - Black king on e8 + rook on a8 -> queenside castling allowed
+- Check for potential en passant:
+  - Look for pawns on rank 3 (white) or rank 6 (black)
+  - Check if enemy pawns are adjacent and could capture
+  - Set `enPassantTarget` if conditions are met
+- Add UI for selecting which color moves next
+- Set `gameIsActive` to true
+
 \*BUGS
 
 - add isKingInCHeck and isCheckmate to promotionPieceSelect afyer piece

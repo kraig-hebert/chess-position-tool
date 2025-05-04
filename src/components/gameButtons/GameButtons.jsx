@@ -26,6 +26,7 @@ const GameButtons = () => {
     setCapturedPieces,
     isEditMode,
     setIsEditMode,
+    setMovesList,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -75,6 +76,10 @@ const GameButtons = () => {
   };
 
   const handleEditSaveClick = () => {
+    if (isEditMode) {
+      // Reset moves list when saving from edit mode
+      setMovesList([]);
+    }
     setIsEditMode(!isEditMode);
   };
 
