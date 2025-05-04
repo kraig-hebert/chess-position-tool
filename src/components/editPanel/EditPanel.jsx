@@ -6,8 +6,8 @@ import BoardControls from "./boardControls/BoardControls";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const { setBoard, board, setInitialBoard } = useGameState();
-  const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
+  const { setBoard, board, setInitialBoard, activeAction, setActiveAction } =
+    useGameState();
   const [selectedPiece, setSelectedPiece] = useState(null);
 
   const handleActionClick = (action) => {

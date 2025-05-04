@@ -52,6 +52,7 @@ export const GameStateProvider = ({ children }) => {
   const [capturedPieces, setCapturedPieces] = useState(initialCapturedPieces);
   const [movesList, setMovesList] = useState(initialMovesList);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
@@ -207,6 +208,8 @@ export const GameStateProvider = ({ children }) => {
         isEditMode,
         setIsEditMode,
         setInitialBoard,
+        activeAction,
+        setActiveAction,
       }}
     >
       {children}

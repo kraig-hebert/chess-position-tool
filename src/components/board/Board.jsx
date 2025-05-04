@@ -9,6 +9,7 @@ import {
   isCheckmate,
   createNotation,
   getPossibleMoves,
+  copyBoard,
 } from "../../logic/chessUtils";
 import { getSquarePressures } from "../../logic/filterUtils";
 import "./boardStyles.css";
@@ -45,6 +46,7 @@ const Board = () => {
     getNextGroupedMovesListIndex,
     activeFilters,
     isEditMode,
+    activeAction,
   } = useGameState();
 
   // { row, col, piece }
@@ -55,15 +57,6 @@ const Board = () => {
     // ignore clicks when promotion modal is active
     if (promotionSquare) return;
 
-    // if in edit mode, don't validate moves
-    if (isEditMode) {
-      // We'll handle edit mode clicks here later
-      return;
-    }
-
-    // ignore clicks when game isn't active
-    if (!gameIsActive) return;
-
     /*
       - flip click values when board is rendered from black pov
       - values will come in from onClick with board upsidedown
@@ -72,6 +65,23 @@ const Board = () => {
       row = Math.abs(row - 7);
       col = Math.abs(col - 7);
     }
+
+    // if in edit mode, don't validate moves
+    if (isEditMode) {
+      const clickedPiece = board[row][col];
+
+      if (activeAction === "trash" && clickedPiece) {
+        const newBoard = copyBoard(board);
+        newBoard[row][col] = null;
+        setBoard(newBoard);
+        return;
+      }
+      return;
+    }
+
+    // ignore clicks when game isn't active
+    if (!gameIsActive) return;
+
     const nextMove = board[row][col];
 
     /* 
