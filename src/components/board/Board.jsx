@@ -49,6 +49,7 @@ const Board = () => {
     activeAction,
     selectedMoveSquare,
     setSelectedMoveSquare,
+    selectedPieceType,
   } = useGameState();
 
   // { row, col, piece }
@@ -104,6 +105,13 @@ const Board = () => {
           // First click - select the piece
           setSelectedMoveSquare({ row, col, piece: clickedPiece });
         }
+        return;
+      }
+
+      if (activeAction === "add" && selectedPieceType && !clickedPiece) {
+        const newBoard = copyBoard(board);
+        newBoard[row][col] = selectedPieceType;
+        setBoard(newBoard);
         return;
       }
       return;

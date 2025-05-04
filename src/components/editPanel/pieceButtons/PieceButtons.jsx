@@ -3,7 +3,7 @@ import { useGameState } from "../../../context/GameStateProvider";
 import "./pieceButtonsStyles.css";
 
 const PieceButtons = (props) => {
-  const { onPieceSelect, selectedPiece } = props;
+  const { onPieceSelect, selectedPieceType } = props;
   const { pieceIcons } = useGameState();
 
   const whitePieces = ["K", "Q", "R", "B", "N", "P"];
@@ -15,7 +15,9 @@ const PieceButtons = (props) => {
       return (
         <button
           key={index}
-          className={`piece-button ${selectedPiece === piece ? "active" : ""}`}
+          className={`piece-button ${
+            selectedPieceType === piece ? "active" : ""
+          }`}
           onClick={() => onPieceSelect(piece)}
         >
           <Icon className={className} />

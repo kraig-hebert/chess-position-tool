@@ -6,22 +6,28 @@ import BoardControls from "./boardControls/BoardControls";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const { setBoard, board, setInitialBoard, activeAction, setActiveAction } =
-    useGameState();
-  const [selectedPiece, setSelectedPiece] = useState(null);
+  const {
+    setBoard,
+    board,
+    setInitialBoard,
+    activeAction,
+    setActiveAction,
+    selectedPieceType,
+    setSelectedPieceType,
+  } = useGameState();
 
   const handleActionClick = (action) => {
     setActiveAction(action);
     // Clear selected piece when switching to move or trash actions
     if (action !== "add") {
-      setSelectedPiece(null);
+      setSelectedPieceType(null);
     }
   };
 
   const handlePieceSelect = (piece) => {
     // Only allow piece selection in add mode
     if (activeAction === "add") {
-      setSelectedPiece(selectedPiece === piece ? null : piece);
+      setSelectedPieceType(selectedPieceType === piece ? null : piece);
     }
   };
 
@@ -38,7 +44,7 @@ const EditPanel = () => {
           onActionClick={handleActionClick}
         />
         <PieceButtons
-          selectedPiece={selectedPiece}
+          selectedPieceType={selectedPieceType}
           onPieceSelect={handlePieceSelect}
         />
         <BoardControls
