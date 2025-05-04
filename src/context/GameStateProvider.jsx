@@ -7,6 +7,7 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
+import { findPossibleEnPassantTargets } from "../logic/chessUtils";
 
 const initialActiveColor = "white";
 const initialPov = "white";
@@ -64,6 +65,9 @@ export const GameStateProvider = ({ children }) => {
 
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
+
+  // Add position validation state
+  const [positionIsValid, setPositionIsValid] = useState(true);
 
   const pieceIcons = {
     p: { icon: FaChessPawn, className: "piece black" },
@@ -231,6 +235,8 @@ export const GameStateProvider = ({ children }) => {
         setPossibleEnPassantTargets,
         selectedEnPassantTarget,
         setSelectedEnPassantTarget,
+        positionIsValid,
+        setPositionIsValid,
       }}
     >
       {children}

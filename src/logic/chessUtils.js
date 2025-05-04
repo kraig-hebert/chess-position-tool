@@ -481,3 +481,98 @@ export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
 
   return targets;
 };
+
+export const validatePosition = (board) => {
+  const errors = [];
+
+  let whiteKingCount = 0;
+  let blackKingCount = 0;
+
+  let pawnsOnInvalidRanks = false;
+
+  const pieceCounts = {
+    white: { P: 0, R: 0, N: 0, B: 0, Q: 0, K: 0 },
+    black: { p: 0, r: 0, n: 0, b: 0, q: 0, k: 0 },
+  };
+
+  const maxPieceCounts = {
+    P: 8,
+    R: 2,
+    N: 2,
+    B: 2,
+    Q: 1,
+    K: 1,
+    p: 8,
+    r: 2,
+    n: 2,
+    b: 2,
+    q: 1,
+    k: 1,
+  };
+
+  // Analyze the board
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (!piece) continue;
+
+      // Count the piece
+      const color = getPieceColor(piece);
+      pieceCounts[color][piece]++;
+
+      // Check kings
+      if (piece === "K") whiteKingCount++;
+      if (piece === "k") blackKingCount++;
+
+      // Check pawns on first/last rank
+      if ((piece === "P" || piece === "p") && (row === 0 || row === 7)) {
+        pawnsOnInvalidRanks = true;
+      }
+    }
+  }
+
+  // Validate pawn positions
+  if (pawnsOnInvalidRanks) {
+    errors.push("Pawns cannot be placed on the first or last rank");
+  }
+
+  // Validate piece counts
+  for (const color of ["white", "black"]) {
+    for (const pieceType in pieceCounts[color]) {
+      const count = pieceCounts[color][pieceType];
+      const maxCount = maxPieceCounts[pieceType];
+
+      if (count > maxCount) {
+        const colorName = color.charAt(0).toUpperCase() + color.slice(1);
+        const pieceName = getPieceName(pieceType);
+        errors.push(
+          `${colorName} has too many ${pieceName}s (${count}/${maxCount})`
+        );
+      }
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+};
+
+// Helper function to get piece name
+const getPieceName = (pieceType) => {
+  const names = {
+    P: "Pawn",
+    R: "Rook",
+    N: "Knight",
+    B: "Bishop",
+    Q: "Queen",
+    K: "King",
+    p: "Pawn",
+    r: "Rook",
+    n: "Knight",
+    b: "Bishop",
+    q: "Queen",
+    k: "King",
+  };
+  return names[pieceType];
+};

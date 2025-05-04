@@ -1,38 +1,45 @@
-\*CURRENT WORK - Edit Mode Save Logic
+\*COMPLETED - Edit Mode Save Logic
 
-When saving/exiting edit mode:
+## 1. Position Validation
 
-✓ Reset moves list (new starting position)
-✓ Calculate and set captured pieces based on missing pieces from initial position
-✓ Set castling rights based on piece positions:
-✓ White king on e1 + rook on h1 -> kingside castling allowed
-✓ White king on e1 + rook on a1 -> queenside castling allowed
-✓ Black king on e8 + rook on h8 -> kingside castling allowed
-✓ Black king on e8 + rook on a8 -> queenside castling allowed
+- ✓ Validate position before saving:
+- ✓ Each side must have exactly one king
+- ✓ No pawns can be on first/last rank
+- ✓ Each piece type cannot exceed its initial count (8 pawns, 2 bishops, etc.)
+- ✓ Show error message if position is invalid
 
-✓ Check for potential en passant:
-✓ Create dedicated EnPassantSelector component with:
-✓ Checkbox to enable/disable en passant captures
-✓ List of potential targets based on board position
-✓ Selection mechanism for choosing active target
-✓ Add state variables to GameStateProvider:
-✓ enPassantEnabled toggle
-✓ possibleEnPassantTargets array
-✓ selectedEnPassantTarget index
-✓ Calculate potential targets based on pawn positions and next move color
-✓ Update targets when board position or next move color changes
-✓ When saving, set enPassantTarget based on selection
-✓ Add UI for selecting which color moves next
-✓ Created standalone ColorSelector component with dedicated styles
-✓ Implemented in the EditPanel with context-based state management
-✓ Fixed CSS class naming conflicts with chess board highlighting
-✓ Set `gameIsActive` to true
+## 2. Color Selection for Next Move
 
-- Validate position before saving:
-  - Each side must have exactly one king
-  - No pawns can be on first/last rank
-  - Each piece type cannot exceed its initial count (8 pawns, 2 bishops, etc.)
-  - Show error message if position is invalid
+- ✓ Add UI for selecting which color moves next
+- ✓ Created standalone ColorSelector component with dedicated styles
+- ✓ Implemented in the EditPanel with context-based state management
+- ✓ Fixed CSS class naming conflicts with chess board highlighting
+
+## 3. En Passant Functionality
+
+- ✓ Check for potential en passant:
+- ✓ Create dedicated EnPassantSelector component with:
+- ✓ Checkbox to enable/disable en passant captures
+- ✓ List of potential targets based on board position
+- ✓ Selection mechanism for choosing active target
+- ✓ Add state variables to GameStateProvider:
+- ✓ enPassantEnabled toggle
+- ✓ possibleEnPassantTargets array
+- ✓ selectedEnPassantTarget index
+- ✓ Calculate potential targets based on pawn positions and next move color
+- ✓ Update targets when board position or next move color changes
+- ✓ When saving, set enPassantTarget based on selection
+
+## 4. Game State Management
+
+- ✓ Reset moves list (new starting position)
+- ✓ Calculate and set captured pieces based on missing pieces from initial position
+- ✓ Set castling rights based on piece positions:
+- ✓ White king on e1 + rook on h1 -> kingside castling allowed
+- ✓ White king on e1 + rook on a1 -> queenside castling allowed
+- ✓ Black king on e8 + rook on h8 -> kingside castling allowed
+- ✓ Black king on e8 + rook on a8 -> queenside castling allowed
+- ✓ Set `gameIsActive` to true
 
 \*BUGS
 

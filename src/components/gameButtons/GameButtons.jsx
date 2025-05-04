@@ -41,6 +41,7 @@ const GameButtons = () => {
     possibleEnPassantTargets,
     selectedEnPassantTarget,
     setEnPassantTarget,
+    positionIsValid,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -128,8 +129,13 @@ const GameButtons = () => {
 
       // Set game to active
       setGameIsActive(true);
+
+      // Exit edit mode
+      setIsEditMode(false);
+    } else {
+      // Enter edit mode
+      setIsEditMode(true);
     }
-    setIsEditMode(!isEditMode);
   };
 
   return (
@@ -138,6 +144,7 @@ const GameButtons = () => {
         title={isEditMode ? "Save" : "Edit"}
         Icon={isEditMode ? FaSave : FaPencil}
         onClick={handleEditSaveClick}
+        disabled={isEditMode && !positionIsValid}
       />
       <GameButton
         title="Reset"

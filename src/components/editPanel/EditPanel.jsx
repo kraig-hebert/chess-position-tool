@@ -5,6 +5,7 @@ import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
 import ColorSelector from "./colorSelector/ColorSelector";
 import EnPassantSelector from "./enPassantSelector/EnPassantSelector";
+import PositionValidator from "./positionValidator/PositionValidator";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
@@ -51,6 +52,7 @@ const EditPanel = () => {
         />
         <ColorSelector />
         <EnPassantSelector />
+        <PositionValidator />
         <BoardControls
           onClearBoard={handleClearBoard}
           onResetBoard={setInitialBoard}
