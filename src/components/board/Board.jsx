@@ -47,6 +47,8 @@ const Board = () => {
     activeFilters,
     isEditMode,
     activeAction,
+    selectedMoveSquare,
+    setSelectedMoveSquare,
   } = useGameState();
 
   // { row, col, piece }
@@ -85,6 +87,23 @@ const Board = () => {
 
         setBoard(newBoard);
         setCapturedPieces({ ...tempCapturedPieces });
+        return;
+      }
+
+      if (activeAction === "move") {
+        if (selectedMoveSquare) {
+          // Second click - only move to empty square
+          if (!clickedPiece) {
+            const newBoard = copyBoard(board);
+            newBoard[row][col] = selectedMoveSquare.piece;
+            newBoard[selectedMoveSquare.row][selectedMoveSquare.col] = null;
+            setBoard(newBoard);
+            setSelectedMoveSquare(null);
+          }
+        } else if (clickedPiece) {
+          // First click - select the piece
+          setSelectedMoveSquare({ row, col, piece: clickedPiece });
+        }
         return;
       }
       return;
@@ -248,10 +267,15 @@ const Board = () => {
       row.map((piece, colIndex) => {
         const isDark = (rowIndex + colIndex) % 2 !== 0;
         const isSelected =
-          !isEditMode &&
-          tempSelectedPiece &&
-          tempSelectedPiece.row === rowIndex &&
-          tempSelectedPiece.col === colIndex;
+          (!isEditMode &&
+            tempSelectedPiece &&
+            tempSelectedPiece.row === rowIndex &&
+            tempSelectedPiece.col === colIndex) ||
+          (isEditMode &&
+            activeAction === "move" &&
+            selectedMoveSquare &&
+            selectedMoveSquare.row === rowIndex &&
+            selectedMoveSquare.col === colIndex);
 
         return (
           <Square
