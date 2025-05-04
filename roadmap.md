@@ -59,6 +59,11 @@
 - ✓ Improve piece selection in move mode:
   - ✓ Allow switching selected piece by clicking on another piece
   - ✓ Make piece selection more intuitive and consistent
+- ✓ Add Edit Panel Navigation Controls:
+  - ✓ Add "Flip Board" button to flip the board in edit mode
+  - ✓ Save original position when entering edit mode
+  - ✓ Add "Return to Position" button to return to the original position
+  - ✓ Reorganize BoardControls component for better UX
 
 \*BUGS
 

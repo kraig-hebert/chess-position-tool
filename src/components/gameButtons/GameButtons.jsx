@@ -40,6 +40,9 @@ const GameButtons = () => {
     setEnPassantTarget,
     positionIsValid,
     tempHasMoved,
+    setTempHasMoved,
+    setOriginalPosition,
+    initialHasMoved,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -152,6 +155,10 @@ const GameButtons = () => {
       setIsEditMode(false);
     } else {
       // Enter edit mode
+      // Save the current position before entering edit mode
+      setOriginalPosition(copyBoard(board));
+      // Reset tempHasMoved to initial state to allow fresh castling rights selection
+      setTempHasMoved(initialHasMoved);
       setIsEditMode(true);
     }
   };

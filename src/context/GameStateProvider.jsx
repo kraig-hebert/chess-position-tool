@@ -7,7 +7,6 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
-import { findPossibleEnPassantTargets } from "../logic/chessUtils";
 
 const initialActiveColor = "white";
 const initialPov = "white";
@@ -71,6 +70,9 @@ export const GameStateProvider = ({ children }) => {
 
   // Rename to tempHasMoved for clarity
   const [tempHasMoved, setTempHasMoved] = useState(initialHasMoved);
+
+  // Add state for storing the original position before entering edit mode
+  const [originalPosition, setOriginalPosition] = useState(null);
 
   const pieceIcons = {
     p: { icon: FaChessPawn, className: "piece black" },
@@ -242,6 +244,9 @@ export const GameStateProvider = ({ children }) => {
         setPositionIsValid,
         tempHasMoved,
         setTempHasMoved,
+        originalPosition,
+        setOriginalPosition,
+        initialHasMoved,
       }}
     >
       {children}
