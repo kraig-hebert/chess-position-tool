@@ -130,13 +130,12 @@ const GameButtons = () => {
       if (nextMoveColor === "black") {
         // If black to move, add a placeholder move for white to maintain the move list structure
         const placeholderMove = {
-          moveNotation: "...",
-          board: copyBoard(board), // Use copyBoard utility function
+          moveNotation: "XXX",
+          board: copyBoard(board),
           capturedPieces: captured,
         };
         setMovesList([placeholderMove]);
 
-        // Set active move to point to the placeholder
         setActiveMove({ groupIndex: 0, moveIndex: 1 });
       } else {
         // If white to move, just reset the moves list
