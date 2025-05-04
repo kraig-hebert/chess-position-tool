@@ -400,3 +400,31 @@ export const calculateCapturedPieces = (currentBoard, initialBoard) => {
 
   return captured;
 };
+
+// Calculate castling rights based on piece positions
+export const calculateCastlingRights = (board) => {
+  const castlingRights = {
+    whiteKing: false,
+    whiteRookKingside: false,
+    whiteRookQueenside: false,
+    blackKing: false,
+    blackRookKingside: false,
+    blackRookQueenside: false,
+  };
+
+  // Check white pieces
+  if (board[7][4] === "K") {
+    castlingRights.whiteKing = true;
+    if (board[7][7] === "R") castlingRights.whiteRookKingside = true;
+    if (board[7][0] === "R") castlingRights.whiteRookQueenside = true;
+  }
+
+  // Check black pieces
+  if (board[0][4] === "k") {
+    castlingRights.blackKing = true;
+    if (board[0][7] === "r") castlingRights.blackRookKingside = true;
+    if (board[0][0] === "r") castlingRights.blackRookQueenside = true;
+  }
+
+  return castlingRights;
+};

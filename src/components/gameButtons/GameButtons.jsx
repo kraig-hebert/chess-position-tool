@@ -10,7 +10,10 @@ import {
 import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
-import { calculateCapturedPieces } from "../../logic/chessUtils";
+import {
+  calculateCapturedPieces,
+  calculateCastlingRights,
+} from "../../logic/chessUtils";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -30,6 +33,7 @@ const GameButtons = () => {
     setMovesList,
     board,
     initialBoard,
+    setHasMoved,
   } = useGameState();
 
   const groupedMovesList = getGroupedMovesList();
@@ -87,6 +91,17 @@ const GameButtons = () => {
       // Calculate and set captured pieces
       const captured = calculateCapturedPieces(board, initialBoard);
       setCapturedPieces(captured);
+
+      // Set castling rights based on piece positions
+      const castlingRights = calculateCastlingRights(board);
+      setHasMoved({
+        whiteKing: !castlingRights.whiteKing,
+        whiteRookKingside: !castlingRights.whiteRookKingside,
+        whiteRookQueenside: !castlingRights.whiteRookQueenside,
+        blackKing: !castlingRights.blackKing,
+        blackRookKingside: !castlingRights.blackRookKingside,
+        blackRookQueenside: !castlingRights.blackRookQueenside,
+      });
     }
     setIsEditMode(!isEditMode);
   };
