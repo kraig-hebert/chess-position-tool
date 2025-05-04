@@ -69,12 +69,6 @@ const EnPassantSelector = () => {
           </div>
         </div>
       )}
-
-      {enPassantEnabled && possibleEnPassantTargets.length === 0 && (
-        <div className="no-targets">
-          No potential en passant captures available
-        </div>
-      )}
     </div>
   );
 };
