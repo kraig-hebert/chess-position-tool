@@ -73,7 +73,18 @@ const Board = () => {
       if (activeAction === "trash" && clickedPiece) {
         const newBoard = copyBoard(board);
         newBoard[row][col] = null;
+
+        // Handle captured pieces
+        const deletedPieceColor = getPieceColor(clickedPiece);
+        const capturingColor =
+          deletedPieceColor === "white" ? "black" : "white";
+        tempCapturedPieces[capturingColor] = [
+          ...tempCapturedPieces[capturingColor],
+          clickedPiece,
+        ];
+
         setBoard(newBoard);
+        setCapturedPieces({ ...tempCapturedPieces });
         return;
       }
       return;
