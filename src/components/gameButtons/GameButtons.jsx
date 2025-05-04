@@ -13,6 +13,7 @@ import { useGameState } from "../../context/GameStateProvider";
 import {
   calculateCapturedPieces,
   calculateCastlingRights,
+  copyBoard,
 } from "../../logic/chessUtils";
 
 import GameButton from "./gameButton/GameButton";
@@ -27,6 +28,7 @@ const GameButtons = () => {
     setBoard,
     setActiveMove,
     getGroupedMovesList,
+
     setCapturedPieces,
     isEditMode,
     setIsEditMode,
@@ -93,9 +95,6 @@ const GameButtons = () => {
 
   const handleEditSaveClick = () => {
     if (isEditMode) {
-      // Reset moves list when saving from edit mode
-      setMovesList([]);
-
       // Calculate and set captured pieces
       const captured = calculateCapturedPieces(board, initialBoard);
       setCapturedPieces(captured);
@@ -125,6 +124,24 @@ const GameButtons = () => {
       } else {
         // Clear any existing en passant target
         setEnPassantTarget(null);
+      }
+
+      // Handle moves list
+      if (nextMoveColor === "black") {
+        // If black to move, add a placeholder move for white to maintain the move list structure
+        const placeholderMove = {
+          moveNotation: "...",
+          board: copyBoard(board), // Use copyBoard utility function
+          capturedPieces: captured,
+        };
+        setMovesList([placeholderMove]);
+
+        // Set active move to point to the placeholder
+        setActiveMove({ groupIndex: 0, moveIndex: 1 });
+      } else {
+        // If white to move, just reset the moves list
+        setMovesList([]);
+        setActiveMove(null);
       }
 
       // Set game to active
