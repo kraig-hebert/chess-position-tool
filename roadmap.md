@@ -34,12 +34,31 @@
 
 - ✓ Reset moves list (new starting position)
 - ✓ Calculate and set captured pieces based on missing pieces from initial position
-- ✓ Set castling rights based on piece positions:
-- ✓ White king on e1 + rook on h1 -> kingside castling allowed
-- ✓ White king on e1 + rook on a1 -> queenside castling allowed
-- ✓ Black king on e8 + rook on h8 -> kingside castling allowed
-- ✓ Black king on e8 + rook on a8 -> queenside castling allowed
 - ✓ Set `gameIsActive` to true
+- ✓ Add special handling for black-to-move starting positions:
+  - ✓ Create placeholder move with "XXX" notation
+  - ✓ Set the initial board state and captured pieces
+  - ✓ Set activeMove to reference the correct group/index
+
+## 5. Castling Rights UI
+
+- ✓ Create CastlingSelector component:
+  - ✓ Add UI for selecting which castling rights are available
+  - ✓ Create checkboxes for kingside and queenside castling for both colors
+- ✓ Add tempHasMoved state to GameStateProvider
+- ✓ Initialize with initialHasMoved state
+- ✓ Validate piece positions when saving:
+  - ✓ Force castling rights to be disabled if pieces aren't in position
+  - ✓ Don't show errors - silently update the settings
+
+## 6. Edit Mode UX Improvements
+
+- ✓ Fix piece selection in edit mode when board is flipped:
+  - ✓ Properly transform selectedMoveSquare coordinates based on board orientation
+  - ✓ Use temporary local transform for rendering
+- ✓ Improve piece selection in move mode:
+  - ✓ Allow switching selected piece by clicking on another piece
+  - ✓ Make piece selection more intuitive and consistent
 
 \*BUGS
 
