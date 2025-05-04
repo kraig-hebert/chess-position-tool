@@ -11,10 +11,21 @@ When saving/exiting edit mode:
 ✓ Black king on e8 + rook on a8 -> queenside castling allowed
 
 - Check for potential en passant:
-  - Look for pawns on rank 3 (white) or rank 6 (black)
-  - Check if enemy pawns are adjacent and could capture
-  - Set `enPassantTarget` if conditions are met
+  - Create dedicated EnPassantSelector component with:
+    - Checkbox to enable/disable en passant captures
+    - List of potential targets based on board position
+    - Selection mechanism for choosing active target
+  - Add state variables to GameStateProvider:
+    - enPassantEnabled toggle
+    - possibleEnPassantTargets array
+    - selectedEnPassantTarget index
+  - Calculate potential targets based on pawn positions and next move color
+  - Update targets when board position or next move color changes
+  - When saving, set enPassantTarget based on selection
     ✓ Add UI for selecting which color moves next
+    ✓ Created standalone ColorSelector component with dedicated styles
+    ✓ Implemented in the EditPanel with context-based state management
+    ✓ Fixed CSS class naming conflicts with chess board highlighting
     ✓ Set `gameIsActive` to true
 - Validate position before saving:
   - Each side must have exactly one king

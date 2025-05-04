@@ -1,0 +1,58 @@
+.en-passant-selector {
+  display: flex;
+  flex-direction: column;
+}
+
+.en-passant-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.en-passant-toggle input {
+  margin-right: 8px;
+}
+
+.en-passant-toggle label {
+  font-size: 0.9em;
+  user-select: none;
+  cursor: pointer;
+}
+
+.en-passant-targets {
+  display: flex;
+  flex-direction: column;
+  margin-left: 24px;
+}
+
+.targets-label {
+  font-size: 0.85em;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.targets-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.target-option {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background-color: #f0f0f0;
+  border: 2px solid #ccc;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.target-option:hover {
+  background-color: #e6e6e6;
+}
+
+.target-option.target-selected {
+  border-color: #007bff;
+  background-color: #e6f3ff;
+  transform: scale(1.05);
+}

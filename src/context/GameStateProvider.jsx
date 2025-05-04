@@ -57,6 +57,11 @@ export const GameStateProvider = ({ children }) => {
   const [selectedPieceType, setSelectedPieceType] = useState(null);
   const [nextMoveColor, setNextMoveColor] = useState("white");
 
+  // New state variables for en passant in edit mode
+  const [enPassantEnabled, setEnPassantEnabled] = useState(false);
+  const [possibleEnPassantTargets, setPossibleEnPassantTargets] = useState([]);
+  const [selectedEnPassantTarget, setSelectedEnPassantTarget] = useState(0); // Index of selected target
+
   // Track whether the king and rooks have moved
   const [hasMoved, setHasMoved] = useState(initialHasMoved);
 
@@ -220,6 +225,12 @@ export const GameStateProvider = ({ children }) => {
         initialBoard,
         nextMoveColor,
         setNextMoveColor,
+        enPassantEnabled,
+        setEnPassantEnabled,
+        possibleEnPassantTargets,
+        setPossibleEnPassantTargets,
+        selectedEnPassantTarget,
+        setSelectedEnPassantTarget,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
 import ColorSelector from "./colorSelector/ColorSelector";
+import EnPassantSelector from "./enPassantSelector/EnPassantSelector";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
@@ -49,6 +50,7 @@ const EditPanel = () => {
           onPieceSelect={handlePieceSelect}
         />
         <ColorSelector />
+        <EnPassantSelector />
         <BoardControls
           onClearBoard={handleClearBoard}
           onResetBoard={setInitialBoard}
