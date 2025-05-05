@@ -1,145 +1,137 @@
-\*COMPLETED - Edit Mode Save Logic
+# Chess Position Tool Roadmap
 
-## 1. Position Validation
+## Bugs to Fix
 
-- ✓ Validate position before saving:
-- ✓ Each side must have exactly one king
-- ✓ No pawns can be on first/last rank
-- ✓ Each piece type cannot exceed its initial count (8 pawns, 2 bishops, etc.)
-- ✓ Check for illegal positions where non-moving side's king is in check
-- ✓ Allow promoted pieces (more than standard piece counts)
-- ✓ Show error message if position is invalid
+- Add isKingInCheck and isCheckmate to promotionPieceSelect after piece is chosen
 
-## 2. Color Selection for Next Move
+## Architecture & Foundation (Priority)
 
-- ✓ Add UI for selecting which color moves next
-- ✓ Created standalone ColorSelector component with dedicated styles
-- ✓ Implemented in the EditPanel with context-based state management
-- ✓ Fixed CSS class naming conflicts with chess board highlighting
+- **Redux Migration**
+  - Replace context with Redux for state management
+  - Set up folder structure for actions, reducers, and selectors
+  - Consider using Redux Toolkit for simplification
+- Move pieceIcons from gamestate to chessUtils
+- **Component Library**
+  - Establish reusable UI components with consistent styling
+  - Document component props and behaviors
+- **Testing Infrastructure**
+  - Set up unit tests for chess logic
+  - Implement component tests for UI
 
-## 3. En Passant Functionality
+## Board Enhancements
 
-- ✓ Check for potential en passant:
-- ✓ Create dedicated EnPassantSelector component with:
-- ✓ Checkbox to enable/disable en passant captures
-- ✓ List of potential targets based on board position
-- ✓ Selection mechanism for choosing active target
-- ✓ Add state variables to GameStateProvider:
-- ✓ enPassantEnabled toggle
-- ✓ possibleEnPassantTargets array
-- ✓ selectedEnPassantTarget index
-- ✓ Calculate potential targets based on pawn positions and next move color
-- ✓ Update targets when board position or next move color changes
-- ✓ When saving, set enPassantTarget based on selection
-- ✓ Improved validation of en passant targets:
-  - ✓ Check that squares behind and two squares behind enemy pawn are empty
-  - ✓ Prevent duplicate targets when multiple pawns could capture the same square
-- ✓ Add visual blue highlight for the selected en passant target on the board
-- ✓ Match styling with yellow text for consistent UI appearance
+- Show controlled squares using color filters of different gradients for amount of control on square
+  - Create button that turns cursor into a pressure selector and when you click a square it highlights which pieces are pressuring the square
+  - Allow user to choose between types of pressures
+    - Immediate: only show primary pressure
+      - Pinned pieces and the like don't show pressure status
+    - Total: show all piece pressures even when pinned
+  - Allow different versions of filters(DIRECT/INDIRECT)
+  - Indirect control could have filters for secondary and tertiary control if a bishop is behind a piece but attacking secondarily
+    - Ex: square pressures can show board sides pressure or combine to only show who has control of the square
+      - Have counter for each color on dark and light square color control
+      - When showing square control take piece value into account as well...maybe show control by total pieces but also asterix if queen involved or minor piece and pawn totals are mismatched
+- Add replay button to walk step by step through the position
+  - For memorization
+  - Allow user to control replay speed, and select which information will show at each position
+  - Spacebar for pause/play
+  - Plus/minus for speed
+  - Stop at forks to allow user choice which line to go into
+  - Allow users to input PGN and FEN
+    - Create simple translators for this
+  - Add status location for checks, checkmate, etc.
+  - Add arrows when right click and swipe happens
+  - Use article https://www.chess.com/forum/view/general/how-to-get-the-pieces-more-as-png to get piece icons for themes and such
 
-## 4. Game State Management
+## Study Details
 
-- ✓ Reset moves list (new starting position)
-- ✓ Calculate and set captured pieces based on missing pieces from initial position
-- ✓ Set `gameIsActive` to true
-- ✓ Add special handling for black-to-move starting positions:
-  - ✓ Create placeholder move with "XXX" notation
-  - ✓ Set the initial board state and captured pieces
-  - ✓ Set activeMove to reference the correct group/index
+- Add way to add different lines to a position
+- Possibly integrate chess engine API calls
+  - Get best moves
+  - Get threats
+- Possibly integrate chatgpt API calls for position explanation
+  - Only use very direct questions to lower confusion
+  - Why is Nb3 the best move in this position?....GOOD
+  - What is the best move in this position?....BAD - confuses them
+- Allow user to add comments to certain positions
+- Allow to build custom position by selecting piece and setting it on the board
+  - Helps when studying puzzle positions
+- Allow user to set replays of positions
+  - Allow start and end move to rotate through
+  - Speed control
+  - etc.
+- **Opening/Endgame Database Integration**
+  - Connect to established opening databases
 
-## 5. Castling Rights UI
+## Game Filters
 
-- ✓ Create CastlingSelector component:
-  - ✓ Add UI for selecting which castling rights are available
-  - ✓ Create checkboxes for kingside and queenside castling for both colors
-- ✓ Add tempHasMoved state to GameStateProvider
-- ✓ Initialize with initialHasMoved state
-- ✓ Validate piece positions when saving:
-  - ✓ Force castling rights to be disabled if pieces aren't in position
-  - ✓ Don't show errors - silently update the settings
-- ✓ Fix reset of castling rights when entering edit mode
+- Add selectors for different filters
+  - Allow selection for all pieces or each side
+    - Possibly only showing the side of whose move it is
+    - Possibly swapping color to red for attacking side or something along those lines
+  - Attacking
+  - Best move arrow
+  - Threats arrow
+  - Allow custom color selection
+  - Add arrows on right click for showing moves
+    - Allow user to turn this on when studying to show move order visually to help calculations
 
-## 6. Edit Mode UX Improvements
+## User Experience
 
-- ✓ Fix piece selection in edit mode when board is flipped:
-  - ✓ Properly transform selectedMoveSquare coordinates based on board orientation
-  - ✓ Use temporary local transform for rendering
-- ✓ Improve piece selection in move mode:
-  - ✓ Allow switching selected piece by clicking on another piece
-  - ✓ Make piece selection more intuitive and consistent
-- ✓ Add Edit Panel Navigation Controls:
-  - ✓ Add "Flip Board" button to flip the board in edit mode
-  - ✓ Save original position when entering edit mode
-  - ✓ Add "Return to Position" button to return to the original position
-  - ✓ Reorganize BoardControls component for better UX
-- ✓ Ensure selected en passant target is not reset when modifying the board
+- **Keyboard Navigation**
+  - Support for all actions without mouse
+  - Shortcuts for common operations
 
-\*BUGS
+## User Data
 
-- add isKingInCheck and isCheckmate to promotionPieceSelect after piece
-  is chosen
+- **User Profiles & Saving**
+  - Save study progress
+  - Track improvement metrics over time
+- **Backend Integration** (Future)
+  - User authentication
+  - Cloud storage for positions and studies
 
-\*REFRACTOR
+## Magnum Opus
 
-- swap context for redux....if constant rendering on context change becomes an issue
-- move pieceIcons from gamestate to chessUtils
+- Add ability to create studies
 
-\*BOARD
+## Timeline
 
-- show controlled squares using color filters of different gradients for amount of control on square
-  - create button that turns cursor into a pressure selector and when you click a square it highlights which pieces are pressuring the square
-  - allow user to choose between types of pressures
-    - immediate: only show primary pressure
-      - pinned pieces and the like don't show pressure status
-    - total: show all piece pressures even when pinned
-  - allow different versions of filters(DIRECT/INDIRECT)
-  - indirect control could have filters for secondary and tertiary control if a bishop is behind a piece but attacking secondarily
-    - ex: square pressures can show board sides pressure or combine to only show who has control of the square
-      - have counter for each color on dark and light square color control
-      - when showing square control take piece value into account as well...maybe show control by total pieces but also asterix if queen involed or minor piece and pawn totals are mismatched
-- add replay button to walk step by step through the position.
-  - for memorization.
-  - allow user to control replay speed, and select which information will show at each position
-  - spacebar for pause/ play?
-  - plus/minus for speed?
-  - stop at forks to allow user choice which line to go into
-  - allow users to input PGN and FEN
-    - create simple translators for this
-  - add status location for checks, checkmate, ect.....
-  - add arrows when right click and swipe happens
-  - use article https://www.chess.com/forum/view/general/how-to-get-the-pieces-more-as-png to get piece icons for themes and such
+### Phase 1: Foundation (Highest Priority)
 
-\*STUDY DETAILS
+- **Redux Migration** - Start with this since it affects the entire architecture
+- Fix existing bugs
+- Set up component library structure
+- Implement basic testing framework
 
-- add way to add different lines to a position
-- possibly integrate chess engine API calls
-  - get best moves
-  - get threats
-- possibly integrate chatgpt API calls for position explanation
-  - only use very direct questions to lower confusion.
-  - why is Nb3 the best move in this position?....GOOD
-  - what is the best move in this position?....BAD - confuses them
-- allow user to add comments to certain positions
-- allow to build custom position by selecting piece and setting it on the board
-  - helps when studying puzzle positions
-- allow user to set replays of positions
-  - allow start and end move to rotate through
-  - speed control
-  - ect.....
+### Phase 2: Core Functionality
 
-\*GAME FILTERS
+- Basic board enhancements:
+  - Square control visualization
+  - PGN/FEN input/output support
+- Keyboard navigation
+- Add replay functionality
 
-- add selectors for different filters
-  - allow secetion for all pieces or each side
-    - possibly only showing the side of whose move it is
-    - possibly swapping color to red for attacking side or something along those lines
-  - attacking
-  - best move arrow
-  - threats arrow
-  - allow custom color selection
-  - add arrows on right click for showing moves
-    - allow user to turn this on when studying to show move order visually to help calculations
+### Phase 3: Study & Analysis Features
 
-\*MAGNUM OPUS
+- Position saving/loading
+- Basic opening database integration
+- Add ability to create different lines for a position
 
-- add ability to create studies
+### Phase 4: User Interface Improvements
+
+- Game filters implementation
+- Position replay controls
+- Arrow drawing functionality
+
+### Phase 5: User Data & Backend
+
+- User profiles & saving
+- Basic backend integration
+- Authentication system
+
+### Phase 6: Integration & Completion
+
+- Chess engine API integration
+- ChatGPT integration for position explanations
+- Full study creation system (Magnum Opus)
