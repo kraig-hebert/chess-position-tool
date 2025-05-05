@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   toggleFiltersByColor,
   selectFilterColors,
-  selectFormattedFilterType,
+  selectuppercaseFormattedFIlterType,
 } from "../../store/slices/uiSlice";
 import FilterToggle from "./filterToggle/FilterToggle";
 
 const GameFilters = () => {
   const dispatch = useDispatch();
   const filterColors = useSelector(selectFilterColors);
-  const activeFilterType = useSelector(selectFormattedFilterType);
+  const activeFilterType = useSelector(selectuppercaseFormattedFIlterType);
 
   const handleCheckboxClick = (color) => dispatch(toggleFiltersByColor(color));
 

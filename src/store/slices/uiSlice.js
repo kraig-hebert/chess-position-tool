@@ -31,7 +31,7 @@ export const selectActiveFilterType = (state) =>
 export const selectFilterColors = (state) => state.ui.activeFilters.colors;
 
 // Format the filter type for display (capitalize first letter)
-export const selectFormattedFilterType = (state) => {
+export const selectuppercaseFormattedFIlterType = (state) => {
   const filterType = selectActiveFilterType(state);
   return filterType.charAt(0).toUpperCase() + filterType.slice(1);
 };
