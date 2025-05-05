@@ -12,6 +12,7 @@ const Square = (props) => {
     isDark,
     isLegal,
     isSelected,
+    isEnPassantTarget,
     onClick,
     piece,
     whitePressure,
@@ -87,7 +88,7 @@ const Square = (props) => {
     <div
       className={`square ${isDark ? "dark" : "light"} ${
         isSelected ? "selected" : ""
-      }`}
+      } ${isEnPassantTarget ? "en-passant-target" : ""}`}
       onClick={onClick}
     >
       {piece && <PieceIcon Icon={piece.icon} className={piece.className} />}

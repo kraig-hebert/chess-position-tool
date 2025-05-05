@@ -431,6 +431,8 @@ export const calculateCastlingRights = (board) => {
 
 export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
   const targets = [];
+  // Track target squares to avoid duplicates
+  const targetSquares = new Set();
 
   if (nextMoveColor === "white") {
     // If white moves next, look for white pawns on the 5th rank (index 3)
@@ -438,19 +440,36 @@ export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
       if (board[3][col] === "P") {
         // Check if there are adjacent black pawns
         if (col > 0 && board[3][col - 1] === "p") {
-          targets.push({
-            row: 2,
-            col: col - 1,
-            notation: `${letterNotation[col]}6`,
-          });
+          // For en passant to be valid:
+          // 1. Square behind the black pawn (row 2) must be empty
+          // 2. Square two ranks behind (row 1) must also be empty
+          if (board[2][col - 1] === null && board[1][col - 1] === null) {
+            const targetKey = `2-${col - 1}`;
+            if (!targetSquares.has(targetKey)) {
+              targetSquares.add(targetKey);
+              targets.push({
+                row: 2,
+                col: col - 1,
+                notation: `${letterNotation[col]}6`,
+              });
+            }
+          }
         }
         if (col < 7 && board[3][col + 1] === "p") {
-          // Black pawn on the right
-          targets.push({
-            row: 2,
-            col: col + 1,
-            notation: `${letterNotation[col + 2]}6`,
-          });
+          // For en passant to be valid:
+          // 1. Square behind the black pawn (row 2) must be empty
+          // 2. Square two ranks behind (row 1) must also be empty
+          if (board[2][col + 1] === null && board[1][col + 1] === null) {
+            const targetKey = `2-${col + 1}`;
+            if (!targetSquares.has(targetKey)) {
+              targetSquares.add(targetKey);
+              targets.push({
+                row: 2,
+                col: col + 1,
+                notation: `${letterNotation[col + 2]}6`,
+              });
+            }
+          }
         }
       }
     }
@@ -460,20 +479,36 @@ export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
       if (board[4][col] === "p") {
         // Check if there are adjacent white pawns
         if (col > 0 && board[4][col - 1] === "P") {
-          // White pawn on the left
-          targets.push({
-            row: 5,
-            col: col - 1,
-            notation: `${letterNotation[col]}3`,
-          });
+          // For en passant to be valid:
+          // 1. Square behind the white pawn (row 5) must be empty
+          // 2. Square two ranks behind (row 6) must also be empty
+          if (board[5][col - 1] === null && board[6][col - 1] === null) {
+            const targetKey = `5-${col - 1}`;
+            if (!targetSquares.has(targetKey)) {
+              targetSquares.add(targetKey);
+              targets.push({
+                row: 5,
+                col: col - 1,
+                notation: `${letterNotation[col]}3`,
+              });
+            }
+          }
         }
         if (col < 7 && board[4][col + 1] === "P") {
-          // White pawn on the right
-          targets.push({
-            row: 5,
-            col: col + 1,
-            notation: `${letterNotation[col + 2]}3`,
-          });
+          // For en passant to be valid:
+          // 1. Square behind the white pawn (row 5) must be empty
+          // 2. Square two ranks behind (row 6) must also be empty
+          if (board[5][col + 1] === null && board[6][col + 1] === null) {
+            const targetKey = `5-${col + 1}`;
+            if (!targetSquares.has(targetKey)) {
+              targetSquares.add(targetKey);
+              targets.push({
+                row: 5,
+                col: col + 1,
+                notation: `${letterNotation[col + 2]}3`,
+              });
+            }
+          }
         }
       }
     }

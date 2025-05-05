@@ -44,12 +44,14 @@ const Board = () => {
     toggleActiveColor,
     setActiveMove,
     getNextGroupedMovesListIndex,
-    activeFilters,
     isEditMode,
     activeAction,
     selectedMoveSquare,
     setSelectedMoveSquare,
     selectedPieceType,
+    enPassantEnabled,
+    possibleEnPassantTargets,
+    selectedEnPassantTarget,
   } = useGameState();
 
   // { row, col, piece }
@@ -235,6 +237,13 @@ const Board = () => {
     let whitePressure = board.map((row) => row.map((col) => 0));
     let blackPressure = board.map((row) => row.map((col) => 0));
 
+    // For en passant target highlighting
+    let enPassantTargetSquare = null;
+    if (isEditMode && enPassantEnabled && possibleEnPassantTargets.length > 0) {
+      const target = possibleEnPassantTargets[selectedEnPassantTarget];
+      enPassantTargetSquare = { row: target.row, col: target.col };
+    }
+
     if (!isEditMode) {
       if (selectedPiece) {
         possibleMoves = getPossibleMoves(
@@ -269,6 +278,12 @@ const Board = () => {
         tempSelectedMoveSquare.row = Math.abs(tempSelectedMoveSquare.row - 7);
         tempSelectedMoveSquare.col = Math.abs(tempSelectedMoveSquare.col - 7);
       }
+
+      // Adjust en passant target coordinates if board is flipped
+      if (enPassantTargetSquare) {
+        enPassantTargetSquare.row = Math.abs(enPassantTargetSquare.row - 7);
+        enPassantTargetSquare.col = Math.abs(enPassantTargetSquare.col - 7);
+      }
     }
 
     return boardForRender.map((row, rowIndex) =>
@@ -285,6 +300,13 @@ const Board = () => {
             tempSelectedMoveSquare.row === rowIndex &&
             tempSelectedMoveSquare.col === colIndex);
 
+        // Check if this square is the selected en passant target
+        const isEnPassantTarget =
+          isEditMode &&
+          enPassantTargetSquare &&
+          enPassantTargetSquare.row === rowIndex &&
+          enPassantTargetSquare.col === colIndex;
+
         return (
           <Square
             key={`${rowIndex}-${colIndex}`}
@@ -297,6 +319,7 @@ const Board = () => {
               )
             }
             isSelected={isSelected}
+            isEnPassantTarget={isEnPassantTarget}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}
             whitePressure={whitePressure}

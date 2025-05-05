@@ -22,7 +22,9 @@ const EnPassantSelector = () => {
 
     // Reset the selected target if there are targets available
     if (targets.length > 0) {
-      setSelectedEnPassantTarget(0);
+      setSelectedEnPassantTarget(
+        selectedEnPassantTarget ? selectedEnPassantTarget : 0
+      );
     }
   }, [
     board,
