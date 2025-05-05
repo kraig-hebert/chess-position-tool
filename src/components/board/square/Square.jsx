@@ -1,8 +1,9 @@
 import React from "react";
-
+import { useSelector } from "react-redux";
 import { useGameState } from "../../../context/GameStateProvider";
 import { letterNotation } from "../../../logic/chessUtils";
 import { getSquareControl } from "../../../logic/filterUtils";
+import { selectActiveFilters } from "../../../store/slices/uiSlice";
 
 import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
@@ -20,9 +21,12 @@ const Square = (props) => {
     row,
     col,
   } = props;
-  const { activeFilters, pov } = useGameState();
-  const leftNotation = col === 0 ? true : false;
-  const bottomNotation = row === 7 ? true : false;
+
+  const { pov } = useGameState();
+  const activeFilters = useSelector(selectActiveFilters);
+
+  const leftNotation = col === 0;
+  const bottomNotation = row === 7;
   const squareControl = getSquareControl(
     row,
     col,

@@ -1,9 +1,17 @@
 import React from "react";
 import "./filterToggleStyles.css";
-import { useGameState } from "../../../context/GameStateProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleActiveFilterType,
+  selectActiveFilterType,
+} from "../../../store/slices/uiSlice";
 
 const FilterToggle = () => {
-  const { activeFilters, toggleActiveFilterType } = useGameState();
+  const dispatch = useDispatch();
+  const activeFilterType = useSelector(selectActiveFilterType);
+
+  const handleToggle = () => dispatch(toggleActiveFilterType());
+
   return (
     <div className="filter-toggle-container">
       <div className="filter-toggle">
@@ -11,9 +19,9 @@ const FilterToggle = () => {
         <span>Control</span>
         <div
           className={`selector-thumb ${
-            activeFilters.activeFilterType === "pressure" ? "bottom" : "top"
+            activeFilterType === "pressure" ? "bottom" : "top"
           }`}
-          onClick={toggleActiveFilterType}
+          onClick={handleToggle}
         ></div>
       </div>
     </div>

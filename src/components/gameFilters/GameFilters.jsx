@@ -1,16 +1,20 @@
 import React from "react";
-
 import "./gameFiltersStyles.css";
-import { useGameState } from "../../context/GameStateProvider";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleFiltersByColor,
+  selectFilterColors,
+  selectFormattedFilterType,
+} from "../../store/slices/uiSlice";
 import FilterToggle from "./filterToggle/FilterToggle";
 
 const GameFilters = () => {
-  const { activeFilters, toggleFiltersByColor } = useGameState();
-  const handleCheckboxClick = (color) => toggleFiltersByColor(color);
-  const activeFilterType =
-    String(activeFilters.activeFilterType).charAt(0).toUpperCase() +
-    activeFilters.activeFilterType.slice(1);
+  const dispatch = useDispatch();
+  const filterColors = useSelector(selectFilterColors);
+  const activeFilterType = useSelector(selectFormattedFilterType);
+
+  const handleCheckboxClick = (color) => dispatch(toggleFiltersByColor(color));
+
   return (
     <div className="game-filters-container">
       <div className="game-filters-content">
@@ -21,7 +25,7 @@ const GameFilters = () => {
             {activeFilterType}
             <span
               className={`checkbox ${
-                activeFilters.colors.white ? "checkbox-active" : ""
+                filterColors.white ? "checkbox-active" : ""
               }`}
               onClick={() => handleCheckboxClick("white")}
             ></span>
@@ -33,7 +37,7 @@ const GameFilters = () => {
             {activeFilterType}
             <span
               className={`checkbox ${
-                activeFilters.colors.black ? "checkbox-active" : ""
+                filterColors.black ? "checkbox-active" : ""
               }`}
               onClick={() => handleCheckboxClick("black")}
             ></span>
