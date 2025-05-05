@@ -6,6 +6,8 @@
 - ✓ Each side must have exactly one king
 - ✓ No pawns can be on first/last rank
 - ✓ Each piece type cannot exceed its initial count (8 pawns, 2 bishops, etc.)
+- ✓ Check for illegal positions where non-moving side's king is in check
+- ✓ Allow promoted pieces (more than standard piece counts)
 - ✓ Show error message if position is invalid
 
 ## 2. Color Selection for Next Move
@@ -29,6 +31,11 @@
 - ✓ Calculate potential targets based on pawn positions and next move color
 - ✓ Update targets when board position or next move color changes
 - ✓ When saving, set enPassantTarget based on selection
+- ✓ Improved validation of en passant targets:
+  - ✓ Check that squares behind and two squares behind enemy pawn are empty
+  - ✓ Prevent duplicate targets when multiple pawns could capture the same square
+- ✓ Add visual blue highlight for the selected en passant target on the board
+- ✓ Match styling with yellow text for consistent UI appearance
 
 ## 4. Game State Management
 
@@ -50,6 +57,7 @@
 - ✓ Validate piece positions when saving:
   - ✓ Force castling rights to be disabled if pieces aren't in position
   - ✓ Don't show errors - silently update the settings
+- ✓ Fix reset of castling rights when entering edit mode
 
 ## 6. Edit Mode UX Improvements
 
@@ -64,10 +72,11 @@
   - ✓ Save original position when entering edit mode
   - ✓ Add "Return to Position" button to return to the original position
   - ✓ Reorganize BoardControls component for better UX
+- ✓ Ensure selected en passant target is not reset when modifying the board
 
 \*BUGS
 
-- add isKingInCHeck and isCheckmate to promotionPieceSelect afyer piece
+- add isKingInCheck and isCheckmate to promotionPieceSelect after piece
   is chosen
 
 \*REFRACTOR

@@ -4,20 +4,20 @@ import { validatePosition } from "../../../logic/chessUtils";
 import "./positionValidatorStyles.css";
 
 const PositionValidator = () => {
-  const { board, setPositionIsValid } = useGameState();
+  const { board, setPositionIsValid, nextMoveColor } = useGameState();
   const [validationResult, setValidationResult] = useState({
     isValid: true,
     errors: [],
   });
 
-  // Re-validate whenever the board changes
+  // Re-validate whenever the board changes or nextMoveColor changes
   useEffect(() => {
-    const result = validatePosition(board);
+    const result = validatePosition(board, nextMoveColor);
     setValidationResult(result);
 
     // Update the global positionIsValid state
     setPositionIsValid(result.isValid);
-  }, [board, setPositionIsValid]);
+  }, [board, nextMoveColor, setPositionIsValid]);
 
   // If there are no errors, don't render anything
   if (validationResult.isValid) {

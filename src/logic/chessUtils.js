@@ -253,6 +253,16 @@ export const isCheckmate = (board, color, hasMoved) => {
   if (!isKingInCheck(board, color, hasMoved)) return false;
   const kingPosition = getKingPostion(board, color);
 
+  // Use default/empty hasMoved state if not provided
+  const castlingState = hasMoved || {
+    whiteKing: false,
+    whiteRookQueenside: false,
+    whiteRookKingside: false,
+    blackKing: false,
+    blackRookKingside: false,
+    blackRookQueenside: false,
+  };
+
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       const piece = board[row][col];
@@ -263,13 +273,15 @@ export const isCheckmate = (board, color, hasMoved) => {
         for (let targetRow = 0; targetRow < 8; targetRow++) {
           for (let targetCol = 0; targetCol < 8; targetCol++) {
             if (
-              makePieceMove(row, col, targetRow, targetCol, board, { hasMoved })
+              makePieceMove(row, col, targetRow, targetCol, board, {
+                hasMoved: castlingState,
+              })
             ) {
               // Simulate the move
               const newBoard = board.map((row) => [...row]);
               newBoard[targetRow][targetCol] = piece;
               newBoard[row][col] = null;
-              if (!isKingInCheck(newBoard, color)) {
+              if (!isKingInCheck(newBoard, color, castlingState)) {
                 return false; // The king can escape, so not checkmate
               }
             }
@@ -517,7 +529,7 @@ export const findPossibleEnPassantTargets = (board, nextMoveColor) => {
   return targets;
 };
 
-export const validatePosition = (board) => {
+export const validatePosition = (board, nextMoveColor) => {
   const errors = [];
 
   let whiteKingCount = 0;
@@ -567,6 +579,20 @@ export const validatePosition = (board) => {
   // Validate pawn positions
   if (pawnsOnInvalidRanks) {
     errors.push("Pawns cannot be placed on the first or last rank");
+  }
+
+  // Skip check validation if we don't have exactly one king of each color or nextMoveColor isn't provided
+  if (whiteKingCount === 1 && blackKingCount === 1 && nextMoveColor) {
+    // Check if the non-moving side's king is in check (illegal position)
+    const oppositeColor = nextMoveColor === "white" ? "black" : "white";
+
+    if (isKingInCheck(board, oppositeColor)) {
+      errors.push(
+        `${
+          oppositeColor === "white" ? "White" : "Black"
+        } king is in check but it's ${nextMoveColor}'s turn to move (illegal position)`
+      );
+    }
   }
 
   return {
