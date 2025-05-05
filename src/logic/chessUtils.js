@@ -522,28 +522,10 @@ export const validatePosition = (board) => {
 
   let whiteKingCount = 0;
   let blackKingCount = 0;
+  let whitePawnCount = 0;
+  let blackPawnCount = 0;
 
   let pawnsOnInvalidRanks = false;
-
-  const pieceCounts = {
-    white: { P: 0, R: 0, N: 0, B: 0, Q: 0, K: 0 },
-    black: { p: 0, r: 0, n: 0, b: 0, q: 0, k: 0 },
-  };
-
-  const maxPieceCounts = {
-    P: 8,
-    R: 2,
-    N: 2,
-    B: 2,
-    Q: 1,
-    K: 1,
-    p: 8,
-    r: 2,
-    n: 2,
-    b: 2,
-    q: 1,
-    k: 1,
-  };
 
   // Analyze the board
   for (let row = 0; row < 8; row++) {
@@ -551,13 +533,11 @@ export const validatePosition = (board) => {
       const piece = board[row][col];
       if (!piece) continue;
 
-      // Count the piece
-      const color = getPieceColor(piece);
-      pieceCounts[color][piece]++;
-
-      // Check kings
+      // Count kings and pawns
       if (piece === "K") whiteKingCount++;
-      if (piece === "k") blackKingCount++;
+      else if (piece === "k") blackKingCount++;
+      else if (piece === "P") whitePawnCount++;
+      else if (piece === "p") blackPawnCount++;
 
       // Check pawns on first/last rank
       if ((piece === "P" || piece === "p") && (row === 0 || row === 7)) {
@@ -566,25 +546,27 @@ export const validatePosition = (board) => {
     }
   }
 
+  // Validate king counts
+  if (whiteKingCount !== 1) {
+    errors.push(`White must have exactly one king (found ${whiteKingCount})`);
+  }
+
+  if (blackKingCount !== 1) {
+    errors.push(`Black must have exactly one king (found ${blackKingCount})`);
+  }
+
+  // Validate pawn counts
+  if (whitePawnCount > 8) {
+    errors.push(`White has too many pawns (${whitePawnCount}/8)`);
+  }
+
+  if (blackPawnCount > 8) {
+    errors.push(`Black has too many pawns (${blackPawnCount}/8)`);
+  }
+
   // Validate pawn positions
   if (pawnsOnInvalidRanks) {
     errors.push("Pawns cannot be placed on the first or last rank");
-  }
-
-  // Validate piece counts
-  for (const color of ["white", "black"]) {
-    for (const pieceType in pieceCounts[color]) {
-      const count = pieceCounts[color][pieceType];
-      const maxCount = maxPieceCounts[pieceType];
-
-      if (count > maxCount) {
-        const colorName = color.charAt(0).toUpperCase() + color.slice(1);
-        const pieceName = getPieceName(pieceType);
-        errors.push(
-          `${colorName} has too many ${pieceName}s (${count}/${maxCount})`
-        );
-      }
-    }
   }
 
   return {
