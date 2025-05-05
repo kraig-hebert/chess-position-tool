@@ -1,13 +1,14 @@
 import React from "react";
-
+import { useSelector } from "react-redux";
 import { useGameState } from "../../../context/GameStateProvider";
 import { pieceValues } from "../../../logic/chessUtils";
-
+import { selectPieceIcons } from "../../../store/slices/uiSlice";
 import "./scoreboardStyles.css";
 import PieceIcon from "../../board/pieceIcon/PieceIcon";
 
 const Scoreboard = () => {
-  const { capturedPieces, pieceIcons } = useGameState();
+  const { capturedPieces } = useGameState();
+  const pieceIcons = useSelector(selectPieceIcons);
   let whiteScore = 0;
   let blackScore = 0;
   capturedPieces.white.forEach((piece) => {
@@ -22,26 +23,23 @@ const Scoreboard = () => {
     const pieceList = [];
     capturedPieces[color].forEach((piece, index) => {
       if (piece === "P" || piece === "p") pawnTotal += 1;
-      else
+      else {
+        const { icon: Icon, className } = pieceIcons[piece];
         pieceList.push(
-          <PieceIcon
-            key={index}
-            Icon={pieceIcons[piece].icon}
-            className={`${pieceIcons[piece].className} + small`}
-          />
+          <PieceIcon key={index} Icon={Icon} className={`${className} small`} />
         );
+      }
     });
     const pawnIconType = color === "white" ? "p" : "P";
-    if (pawnTotal > 0)
+    if (pawnTotal > 0) {
+      const { icon: Icon, className } = pieceIcons[pawnIconType];
       pieceList.unshift(
-        <div key={17} className="pawn-list">
-          <PieceIcon
-            Icon={pieceIcons[pawnIconType].icon}
-            className={`${pieceIcons[pawnIconType].className} + small`}
-          />
-          x {pawnTotal}
+        <div key="pawn-list" className="pawn-list">
+          <PieceIcon Icon={Icon} className={`${className} small`} />x{" "}
+          {pawnTotal}
         </div>
       );
+    }
     return pieceList;
   };
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { useGameState } from "../../../context/GameStateProvider";
+import { useSelector } from "react-redux";
+import { selectPieceIcons } from "../../../store/slices/uiSlice";
 import "./pieceButtonsStyles.css";
 
 const PieceButtons = (props) => {
   const { onPieceSelect, selectedPieceType } = props;
-  const { pieceIcons } = useGameState();
+  const pieceIcons = useSelector(selectPieceIcons);
 
   const whitePieces = ["K", "Q", "R", "B", "N", "P"];
   const blackPieces = ["k", "q", "r", "b", "n", "p"];

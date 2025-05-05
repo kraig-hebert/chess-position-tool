@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { useGameState } from "../../context/GameStateProvider";
 
 import { makePieceMove } from "../../logic/moveValidation";
@@ -12,6 +13,7 @@ import {
   copyBoard,
 } from "../../logic/chessUtils";
 import { getSquarePressures } from "../../logic/filterUtils";
+import { selectPieceIcons } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
 import Square from "./square/Square";
@@ -38,7 +40,6 @@ const Board = () => {
     pov,
     capturedPieces,
     setCapturedPieces,
-    pieceIcons,
     movesList,
     setMovesList,
     toggleActiveColor,
@@ -53,6 +54,8 @@ const Board = () => {
     possibleEnPassantTargets,
     selectedEnPassantTarget,
   } = useGameState();
+
+  const pieceIcons = useSelector(selectPieceIcons);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
