@@ -16,6 +16,7 @@
   font-size: 0.9em;
   user-select: none;
   cursor: pointer;
+  color: #ffd700;
 }
 
 .en-passant-targets {
@@ -28,7 +29,7 @@
 .targets-label {
   font-size: 0.85em;
   margin-bottom: 5px;
-  color: #555;
+  color: #ffd700;
 }
 
 .targets-list {
