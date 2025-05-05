@@ -1,5 +1,9 @@
 import React from "react";
-
+import { useDispatch } from "react-redux";
+import {
+  resetGame as resetGameAction,
+  setGameIsActive,
+} from "../../store/slices/gameSlice";
 import {
   FaBackward,
   FaForward,
@@ -17,8 +21,8 @@ import GameButton from "./gameButton/GameButton";
 import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
+  const dispatch = useDispatch();
   const {
-    resetGame,
     togglePov,
     activeMove,
     setBoard,
@@ -32,7 +36,6 @@ const GameButtons = () => {
     initialBoard,
     setHasMoved,
     setActiveColor,
-    setGameIsActive,
     nextMoveColor,
     enPassantEnabled,
     possibleEnPassantTargets,
@@ -43,7 +46,15 @@ const GameButtons = () => {
     setTempHasMoved,
     setOriginalPosition,
     initialHasMoved,
+    resetGame,
   } = useGameState();
+
+  const handleReset = () => {
+    // Reset Redux state
+    dispatch(resetGameAction());
+    // Reset context state
+    resetGame();
+  };
 
   const groupedMovesList = getGroupedMovesList();
 
@@ -149,7 +160,7 @@ const GameButtons = () => {
       }
 
       // Set game to active
-      setGameIsActive(true);
+      dispatch(setGameIsActive(true));
 
       // Exit edit mode
       setIsEditMode(false);
@@ -174,7 +185,7 @@ const GameButtons = () => {
       <GameButton
         title="Reset"
         Icon={FaRecycle}
-        onClick={resetGame}
+        onClick={handleReset}
         disabled={isEditMode}
       />
       <GameButton

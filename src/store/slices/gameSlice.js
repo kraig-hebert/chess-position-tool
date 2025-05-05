@@ -1,17 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // We'll add state properties one by one
+  gameIsActive: true,
 };
 
 export const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    // We'll add reducers as we need them
+    setGameIsActive: (state, action) => {
+      const isActive = action.payload;
+      state.gameIsActive = action.payload;
+    },
+    resetGame: (state) => {
+      state.gameIsActive = true;
+    },
   },
 });
 
-export const {} = gameSlice.actions; // We'll add action exports as we create them
+// Selectors
+export const selectGameIsActive = (state) => state.game.gameIsActive;
+
+// Actions
+export const { setGameIsActive, resetGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

@@ -1,13 +1,11 @@
 import React from "react";
-
-import { useGameState } from "../../../context/GameStateProvider";
-
+import { useSelector } from "react-redux";
+import { selectGameIsActive } from "../../../store/slices/gameSlice";
 import "./gameButtonStyles.css";
 
 const GameButton = (props) => {
   const { title, Icon, onClick, disabled } = props;
-
-  const { gameIsActive } = useGameState();
+  const gameIsActive = useSelector(selectGameIsActive);
 
   return (
     <div

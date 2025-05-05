@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useGameState } from "../../context/GameStateProvider";
-
+import {
+  selectGameIsActive,
+  setGameIsActive,
+} from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
   getPieceColor,
@@ -35,8 +38,6 @@ const Board = () => {
     enPassantTarget,
     setEnPassantTarget,
     updateHasMovedForCastling,
-    gameIsActive,
-    setGameIsActive,
     pov,
     capturedPieces,
     setCapturedPieces,
@@ -55,6 +56,8 @@ const Board = () => {
     selectedEnPassantTarget,
   } = useGameState();
 
+  const dispatch = useDispatch();
+  const gameIsActive = useSelector(selectGameIsActive);
   const pieceIcons = useSelector(selectPieceIcons);
 
   // { row, col, piece }
@@ -196,7 +199,7 @@ const Board = () => {
           piece: selectedPiece.piece,
           moveNotation,
         });
-        setGameIsActive(false);
+        dispatch(setGameIsActive(false));
         return; // Stop the move until promotion is chosen
       }
 
@@ -207,7 +210,7 @@ const Board = () => {
       if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
       if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
         console.log("Checkmate!");
-        setGameIsActive(false);
+        dispatch(setGameIsActive(false));
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
@@ -354,7 +357,7 @@ const Board = () => {
     setBoard(newBoard);
     setPromotionSquare(null);
     setSelectedPiece(null);
-    setGameIsActive(true);
+    dispatch(setGameIsActive(true));
     toggleActiveColor();
   };
 

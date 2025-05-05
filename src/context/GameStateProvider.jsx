@@ -39,7 +39,6 @@ export const GameStateProvider = ({ children }) => {
   const [activeFilters, setActiveFilters] = useState(initialActiveFilters);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
-  const [gameIsActive, setGameIsActive] = useState(true);
   const [pov, setPov] = useState(initialPov);
   const [capturedPieces, setCapturedPieces] = useState(initialCapturedPieces);
   const [movesList, setMovesList] = useState(initialMovesList);
@@ -127,7 +126,6 @@ export const GameStateProvider = ({ children }) => {
     setBoard(initialBoard);
     setHasMoved(initialHasMoved);
     setMovesList(initialMovesList);
-    setGameIsActive(true);
     setIsEditMode(false);
   };
 
@@ -159,9 +157,6 @@ export const GameStateProvider = ({ children }) => {
     console.log("hasMoved", hasMoved);
   }, [hasMoved]);
   useEffect(() => {
-    console.log("gameIsActive", gameIsActive);
-  }, [gameIsActive]);
-  useEffect(() => {
     console.log("activeFilters", activeFilters);
   }, [activeFilters]);
 
@@ -180,8 +175,6 @@ export const GameStateProvider = ({ children }) => {
         enPassantTarget,
         setEnPassantTarget,
         updateHasMovedForCastling,
-        gameIsActive,
-        setGameIsActive,
         resetGame,
         pov,
         setPov,
