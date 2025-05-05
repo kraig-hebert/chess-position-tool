@@ -22,19 +22,19 @@ const BoardControls = (props) => {
     <div className="board-controls">
       <button className="board-control-button" onClick={onResetBoard}>
         <FaRotateLeft />
-        <span>Reset Board</span>
+        <span>Reset</span>
       </button>
       <button className="board-control-button" onClick={handleReturnToPosition}>
         <FaReply />
-        <span>Return to Position</span>
+        <span>Return</span>
       </button>
       <button className="board-control-button" onClick={togglePov}>
         <FaArrowDownUpAcrossLine />
-        <span>Flip Board</span>
+        <span>Flip</span>
       </button>
       <button className="board-control-button" onClick={onClearBoard}>
         <FaTrashCan />
-        <span>Clear Board</span>
+        <span>Clear</span>
       </button>
     </div>
   );
