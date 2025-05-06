@@ -11,6 +11,8 @@ import {
   setActiveMove,
   selectActiveMove,
   selectGroupedMovesList,
+  setActiveColor,
+  setEnPassantTarget,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -52,8 +54,6 @@ const GameButtons = () => {
     setIsEditMode,
     board,
     initialBoard,
-    setActiveColor,
-    setEnPassantTarget,
     positionIsValid,
     setOriginalPosition,
     resetGame,
@@ -152,19 +152,21 @@ const GameButtons = () => {
       dispatch(setHasMoved(validatedHasMoved));
 
       // Set the active color based on the nextMoveColor from Redux
-      setActiveColor(nextMoveColor);
+      dispatch(setActiveColor(nextMoveColor));
 
       // Set en passant target if enabled and a valid target is selected
       if (enPassantEnabled && possibleEnPassantTargets.length > 0) {
         const target = possibleEnPassantTargets[selectedEnPassantTarget];
-        setEnPassantTarget({
-          row: target.row,
-          col: target.col,
-          color: nextMoveColor, // The color that can make the en passant capture
-        });
+        dispatch(
+          setEnPassantTarget({
+            row: target.row,
+            col: target.col,
+            color: nextMoveColor, // The color that can make the en passant capture
+          })
+        );
       } else {
         // Clear any existing en passant target
-        setEnPassantTarget(null);
+        dispatch(setEnPassantTarget(null));
       }
 
       // Handle moves list

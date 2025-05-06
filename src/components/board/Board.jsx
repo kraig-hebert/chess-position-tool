@@ -12,6 +12,10 @@ import {
   setActiveMove,
   selectMovesList,
   selectNextGroupedMovesListIndex,
+  selectActiveColor,
+  toggleActiveColor,
+  selectEnPassantTarget,
+  setEnPassantTarget,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -44,18 +48,8 @@ import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
-  const {
-    activeColor,
-    board,
-    setBoard,
-    selectedPiece,
-    setSelectedPiece,
-    enPassantTarget,
-    setEnPassantTarget,
-    pov,
-    toggleActiveColor,
-    isEditMode,
-  } = useGameState();
+  const { board, setBoard, selectedPiece, setSelectedPiece, pov, isEditMode } =
+    useGameState();
 
   const dispatch = useDispatch();
   const gameIsActive = useSelector(selectGameIsActive);
@@ -70,6 +64,8 @@ const Board = () => {
   const movesList = useSelector(selectMovesList);
   const nextIndex = useSelector(selectNextGroupedMovesListIndex);
   const selectedMoveSquare = useSelector(selectSelectedMoveSquare);
+  const activeColor = useSelector(selectActiveColor);
+  const enPassantTarget = useSelector(selectEnPassantTarget);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -160,7 +156,8 @@ const Board = () => {
       }
 
       // handle setting enPassantTarget
-      if (move.enPassantTarget) setEnPassantTarget(move.enPassantTarget);
+      if (move.enPassantTarget)
+        dispatch(setEnPassantTarget(move.enPassantTarget));
       // store captured pieces temporarily for immediate use
       if (move.capturedPiece) {
         tempCapturedPieces[activeColor] = [
@@ -242,7 +239,7 @@ const Board = () => {
         ])
       );
 
-      toggleActiveColor();
+      dispatch(toggleActiveColor());
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
       setSelectedPiece({ row, col, piece: nextMove });
     }
@@ -371,7 +368,7 @@ const Board = () => {
     setPromotionSquare(null);
     setSelectedPiece(null);
     dispatch(setGameIsActive(true));
-    toggleActiveColor();
+    dispatch(toggleActiveColor());
   };
 
   return (

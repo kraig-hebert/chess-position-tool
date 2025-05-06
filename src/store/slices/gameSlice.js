@@ -23,6 +23,8 @@ const initialState = {
   capturedPieces: initialCapturedPieces,
   movesList: [],
   activeMove: null,
+  activeColor: "white",
+  enPassantTarget: null,
 };
 
 export const gameSlice = createSlice({
@@ -53,8 +55,22 @@ export const gameSlice = createSlice({
     setActiveMove: (state, action) => {
       state.activeMove = action.payload;
     },
+    setActiveColor: (state, action) => {
+      state.activeColor = action.payload;
+    },
+    toggleActiveColor: (state) => {
+      if (
+        state.enPassantTarget &&
+        state.enPassantTarget.color !== state.activeColor
+      ) {
+        state.enPassantTarget = null;
+      }
+      state.activeColor = state.activeColor === "white" ? "black" : "white";
+    },
+    setEnPassantTarget: (state, action) => {
+      state.enPassantTarget = action.payload;
+    },
     resetGame: (state) => {
-      // stop updateing this function and and adding each piece of state
       state = initialState;
     },
   },
@@ -67,6 +83,8 @@ export const selectTempHasMoved = (state) => state.game.tempHasMoved;
 export const selectCapturedPieces = (state) => state.game.capturedPieces;
 export const selectMovesList = (state) => state.game.movesList;
 export const selectActiveMove = (state) => state.game.activeMove;
+export const selectActiveColor = (state) => state.game.activeColor;
+export const selectEnPassantTarget = (state) => state.game.enPassantTarget;
 
 // Memoized selectors
 export const selectGroupedMovesList = createSelector(
@@ -89,6 +107,9 @@ export const {
   resetCapturedPieces,
   setMovesList,
   setActiveMove,
+  setActiveColor,
+  toggleActiveColor,
+  setEnPassantTarget,
   resetGame,
 } = gameSlice.actions;
 
