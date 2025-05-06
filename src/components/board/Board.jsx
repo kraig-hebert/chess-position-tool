@@ -16,6 +16,8 @@ import {
   toggleActiveColor,
   selectEnPassantTarget,
   setEnPassantTarget,
+  selectBoard,
+  setBoard,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -48,10 +50,10 @@ import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
-  const { board, setBoard, selectedPiece, setSelectedPiece, pov, isEditMode } =
-    useGameState();
+  const { selectedPiece, setSelectedPiece, pov, isEditMode } = useGameState();
 
   const dispatch = useDispatch();
+  const board = useSelector(selectBoard);
   const gameIsActive = useSelector(selectGameIsActive);
   const pieceIcons = useSelector(selectPieceIcons);
   const hasMoved = useSelector(selectHasMoved);
@@ -91,7 +93,7 @@ const Board = () => {
       if (activeEditAction === "trash" && clickedPiece) {
         const newBoard = copyBoard(board);
         newBoard[row][col] = null;
-        setBoard(newBoard);
+        dispatch(setBoard(newBoard));
         return;
       }
 
@@ -103,7 +105,7 @@ const Board = () => {
             newBoard[row][col] = selectedEditMoveSquare.piece;
             newBoard[selectedEditMoveSquare.row][selectedEditMoveSquare.col] =
               null;
-            setBoard(newBoard);
+            dispatch(setBoard(newBoard));
             dispatch(setSelectedEditMoveSquare(null));
           } else if (clickedPiece) {
             // First click - select the piece
@@ -125,7 +127,7 @@ const Board = () => {
       ) {
         const newBoard = copyBoard(board);
         newBoard[row][col] = selectedPieceTypeForEdit;
-        setBoard(newBoard);
+        dispatch(setBoard(newBoard));
         return;
       }
       return;
@@ -225,7 +227,7 @@ const Board = () => {
         return; // Stop the move until promotion is chosen
       }
 
-      setBoard(move.newBoard);
+      dispatch(setBoard(move.newBoard));
       setSelectedPiece(null);
       // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
@@ -355,7 +357,7 @@ const Board = () => {
   };
 
   const promotionPieceSelect = (piece) => {
-    const newBoard = board.map((row) => [...row]);
+    const newBoard = copyBoard(board);
     newBoard[promotionSquare.row][promotionSquare.col] =
       promotionSquare.piece === "P" ? piece.toUpperCase() : piece.toLowerCase();
     newBoard[selectedPiece.row][selectedPiece.col] = null;
@@ -373,7 +375,7 @@ const Board = () => {
         },
       ])
     );
-    setBoard(newBoard);
+    dispatch(setBoard(newBoard));
     setPromotionSquare(null);
     setSelectedPiece(null);
     dispatch(setGameIsActive(true));

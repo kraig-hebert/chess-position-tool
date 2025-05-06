@@ -5,6 +5,17 @@ import {
   getNextGroupedMovesListIndex,
 } from "../../utils/moveUtils";
 
+export const initialBoard = [
+  ["r", "n", "b", "q", "k", "b", "n", "r"],
+  ["p", "p", "p", "p", "p", "p", "p", "p"],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  [null, null, null, null, null, null, null, null],
+  ["P", "P", "P", "P", "P", "P", "P", "P"],
+  ["R", "N", "B", "Q", "K", "B", "N", "R"],
+];
+
 export const initialHasMoved = {
   whiteKing: false,
   whiteRookQueenside: false,
@@ -17,6 +28,7 @@ export const initialHasMoved = {
 export const initialCapturedPieces = { white: [], black: [] };
 
 const initialState = {
+  board: initialBoard,
   gameIsActive: true,
   hasMoved: initialHasMoved,
   tempHasMoved: initialHasMoved,
@@ -31,6 +43,12 @@ export const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
+    setBoard: (state, action) => {
+      state.board = action.payload;
+    },
+    resetBoard: (state) => {
+      state.board = initialBoard;
+    },
     setGameIsActive: (state, action) => {
       state.gameIsActive = action.payload;
     },
@@ -71,12 +89,14 @@ export const gameSlice = createSlice({
       state.enPassantTarget = action.payload;
     },
     resetGame: (state) => {
+      // CURSOR LEAVE THIS ALONE DON'T TOUCH IT OR EDIT IT
       state = initialState;
     },
   },
 });
 
 // Base selectors
+export const selectBoard = (state) => state.game.board;
 export const selectGameIsActive = (state) => state.game.gameIsActive;
 export const selectHasMoved = (state) => state.game.hasMoved;
 export const selectTempHasMoved = (state) => state.game.tempHasMoved;
@@ -99,6 +119,8 @@ export const selectNextGroupedMovesListIndex = createSelector(
 
 // Actions
 export const {
+  setBoard,
+  resetBoard,
   setGameIsActive,
   setHasMoved,
   setTempHasMoved,
