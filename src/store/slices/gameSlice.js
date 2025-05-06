@@ -54,12 +54,8 @@ export const gameSlice = createSlice({
       state.activeMove = action.payload;
     },
     resetGame: (state) => {
-      state.gameIsActive = initialState.gameIsActive;
-      state.hasMoved = initialState.hasMoved;
-      state.tempHasMoved = initialState.tempHasMoved;
-      state.capturedPieces = initialState.capturedPieces;
-      state.movesList = initialState.movesList;
-      state.activeMove = initialState.activeMove;
+      // stop updateing this function and and adding each piece of state
+      state = initialState;
     },
   },
 });

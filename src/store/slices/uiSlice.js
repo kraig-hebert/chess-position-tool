@@ -34,6 +34,7 @@ const initialState = {
   enPassantEnabled: false,
   possibleEnPassantTargets: [],
   selectedEnPassantTarget: 0, // Index of selected target
+  selectedMoveSquare: null, // { row, col, piece }
 };
 
 const iconMap = {
@@ -81,7 +82,11 @@ export const uiSlice = createSlice({
     setSelectedEnPassantTarget: (state, action) => {
       state.selectedEnPassantTarget = action.payload;
     },
+    setSelectedMoveSquare: (state, action) => {
+      state.selectedMoveSquare = action.payload;
+    },
     resetEditMode: (state) => {
+      // stop updateing this function and and adding each piece of state
       state = initialState;
     },
   },
@@ -126,6 +131,7 @@ export const selectPossibleEnPassantTargets = (state) =>
   state.ui.possibleEnPassantTargets;
 export const selectSelectedEnPassantTarget = (state) =>
   state.ui.selectedEnPassantTarget;
+export const selectSelectedMoveSquare = (state) => state.ui.selectedMoveSquare;
 
 export const {
   toggleFiltersByColor,
@@ -136,6 +142,7 @@ export const {
   toggleEnPassant,
   setPossibleEnPassantTargets,
   setSelectedEnPassantTarget,
+  setSelectedMoveSquare,
   resetEditMode,
 } = uiSlice.actions;
 

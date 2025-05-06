@@ -31,6 +31,8 @@ import {
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
+  selectSelectedMoveSquare,
+  setSelectedMoveSquare,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -53,8 +55,6 @@ const Board = () => {
     pov,
     toggleActiveColor,
     isEditMode,
-    selectedMoveSquare,
-    setSelectedMoveSquare,
   } = useGameState();
 
   const dispatch = useDispatch();
@@ -69,6 +69,7 @@ const Board = () => {
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
   const movesList = useSelector(selectMovesList);
   const nextIndex = useSelector(selectNextGroupedMovesListIndex);
+  const selectedMoveSquare = useSelector(selectSelectedMoveSquare);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -106,12 +107,13 @@ const Board = () => {
             newBoard[row][col] = selectedMoveSquare.piece;
             newBoard[selectedMoveSquare.row][selectedMoveSquare.col] = null;
             setBoard(newBoard);
-            setSelectedMoveSquare(null);
+            dispatch(setSelectedMoveSquare(null));
           } else if (clickedPiece) {
             // First click - select the piece
-            setSelectedMoveSquare({ row, col, piece: clickedPiece });
+            dispatch(setSelectedMoveSquare({ row, col, piece: clickedPiece }));
           }
-        } else setSelectedMoveSquare({ row, col, piece: clickedPiece });
+        } else
+          dispatch(setSelectedMoveSquare({ row, col, piece: clickedPiece }));
         return;
       }
 
@@ -249,10 +251,6 @@ const Board = () => {
   const renderBoard = () => {
     let tempSelectedPiece = { ...selectedPiece };
     let boardForRender = structuredClone(board);
-    // Make a copy of the selectedMoveSquare for rendering
-    let tempSelectedMoveSquare = selectedMoveSquare
-      ? { ...selectedMoveSquare }
-      : null;
     let possibleMoves = [];
     // Initialize as 8x8 arrays filled with zeros
     let whitePressure = board.map((row) => row.map((col) => 0));
@@ -294,12 +292,6 @@ const Board = () => {
         });
       }
 
-      // Also adjust the selectedMoveSquare coordinates when in edit mode
-      if (isEditMode && tempSelectedMoveSquare) {
-        tempSelectedMoveSquare.row = Math.abs(tempSelectedMoveSquare.row - 7);
-        tempSelectedMoveSquare.col = Math.abs(tempSelectedMoveSquare.col - 7);
-      }
-
       // Adjust en passant target coordinates if board is flipped
       if (enPassantTargetSquare) {
         enPassantTargetSquare.row = Math.abs(enPassantTargetSquare.row - 7);
@@ -317,9 +309,12 @@ const Board = () => {
             tempSelectedPiece.col === colIndex) ||
           (isEditMode &&
             activeAction === "move" &&
-            tempSelectedMoveSquare &&
-            tempSelectedMoveSquare.row === rowIndex &&
-            tempSelectedMoveSquare.col === colIndex);
+            selectedMoveSquare &&
+            (pov === "black"
+              ? Math.abs(selectedMoveSquare.row - 7) === rowIndex &&
+                Math.abs(selectedMoveSquare.col - 7) === colIndex
+              : selectedMoveSquare.row === rowIndex &&
+                selectedMoveSquare.col === colIndex));
 
         // Check if this square is the selected en passant target
         const isEnPassantTarget =
