@@ -9,10 +9,13 @@ export const initialHasMoved = {
   blackRookQueenside: false,
 };
 
+export const initialCapturedPieces = { white: [], black: [] };
+
 const initialState = {
   gameIsActive: true,
   hasMoved: initialHasMoved,
   tempHasMoved: initialHasMoved,
+  capturedPieces: initialCapturedPieces,
 };
 
 export const gameSlice = createSlice({
@@ -31,10 +34,14 @@ export const gameSlice = createSlice({
     resetTempHasMoved: (state) => {
       state.tempHasMoved = initialHasMoved;
     },
+    setCapturedPieces: (state, action) => {
+      state.capturedPieces = action.payload;
+    },
+    resetCapturedPieces: (state) => {
+      state.capturedPieces = initialCapturedPieces;
+    },
     resetGame: (state) => {
-      state.gameIsActive = true;
-      state.hasMoved = initialHasMoved;
-      state.tempHasMoved = initialHasMoved;
+      state = initialState;
     },
   },
 });
@@ -43,6 +50,7 @@ export const gameSlice = createSlice({
 export const selectGameIsActive = (state) => state.game.gameIsActive;
 export const selectHasMoved = (state) => state.game.hasMoved;
 export const selectTempHasMoved = (state) => state.game.tempHasMoved;
+export const selectCapturedPieces = (state) => state.game.capturedPieces;
 
 // Actions
 export const {
@@ -50,6 +58,8 @@ export const {
   setHasMoved,
   setTempHasMoved,
   resetTempHasMoved,
+  setCapturedPieces,
+  resetCapturedPieces,
   resetGame,
 } = gameSlice.actions;
 

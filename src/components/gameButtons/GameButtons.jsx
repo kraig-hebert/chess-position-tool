@@ -6,6 +6,7 @@ import {
   setHasMoved,
   resetTempHasMoved,
   selectTempHasMoved,
+  setCapturedPieces,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -33,7 +34,6 @@ const GameButtons = () => {
     setBoard,
     setActiveMove,
     getGroupedMovesList,
-    setCapturedPieces,
     isEditMode,
     setIsEditMode,
     setMovesList,
@@ -47,7 +47,6 @@ const GameButtons = () => {
     setEnPassantTarget,
     positionIsValid,
     setOriginalPosition,
-    initialHasMoved,
     resetGame,
   } = useGameState();
 
@@ -67,14 +66,18 @@ const GameButtons = () => {
         groupIndex: activeMove.groupIndex,
         moveIndex: 0,
       });
-      setCapturedPieces(
-        groupedMovesList[activeMove.groupIndex][0].capturedPieces
+      dispatch(
+        setCapturedPieces(
+          groupedMovesList[activeMove.groupIndex][0].capturedPieces
+        )
       );
       setBoard(groupedMovesList[activeMove.groupIndex][0].board);
     } else {
       setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 });
-      setCapturedPieces(
-        groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
+      dispatch(
+        setCapturedPieces(
+          groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
+        )
       );
       setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board);
     }
@@ -93,14 +96,18 @@ const GameButtons = () => {
         groupIndex: activeMove.groupIndex + 1,
         moveIndex: 0,
       });
-      setCapturedPieces(
-        groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
+      dispatch(
+        setCapturedPieces(
+          groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
+        )
       );
       setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board);
     } else {
       setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 });
-      setCapturedPieces(
-        groupedMovesList[activeMove.groupIndex][1].capturedPieces
+      dispatch(
+        setCapturedPieces(
+          groupedMovesList[activeMove.groupIndex][1].capturedPieces
+        )
       );
       setBoard(groupedMovesList[activeMove.groupIndex][1].board);
     }
@@ -123,7 +130,7 @@ const GameButtons = () => {
     if (isEditMode) {
       // Calculate and set captured pieces
       const captured = calculateCapturedPieces(board, initialBoard);
-      setCapturedPieces(captured);
+      dispatch(setCapturedPieces(captured));
 
       // Validate and update hasMoved based on piece positions
       const validatedHasMoved = validateCastlingPositions();

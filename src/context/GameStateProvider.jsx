@@ -16,22 +16,15 @@ const initialBoard = [
   ["R", "N", "B", "Q", "K", "B", "N", "R"],
 ];
 
-const initialActiveFilters = {
-  colors: { white: true, black: true },
-  activeFilterType: "pressure", // pressure or control
-};
-
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
   const [activeColor, setActiveColor] = useState(initialActiveColor);
   const [activeMove, setActiveMove] = useState(null);
   const [board, setBoard] = useState(initialBoard);
-  const [activeFilters, setActiveFilters] = useState(initialActiveFilters);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
   const [pov, setPov] = useState(initialPov);
-  const [capturedPieces, setCapturedPieces] = useState(initialCapturedPieces);
   const [movesList, setMovesList] = useState(initialMovesList);
   const [isEditMode, setIsEditMode] = useState(false);
   const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
@@ -62,30 +55,11 @@ export const GameStateProvider = ({ children }) => {
     else setActiveColor("white");
   };
 
-  const toggleFiltersByColor = (color) => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      colors: {
-        ...prev.colors,
-        [color]: !prev.colors[color],
-      },
-    }));
-  };
-
-  const toggleActiveFilterType = () => {
-    setActiveFilters((prev) => ({
-      ...prev,
-      activeFilterType:
-        prev.activeFilterType === "pressure" ? "control" : "pressure",
-    }));
-  };
-
   const setInitialBoard = () => {
     setBoard(initialBoard);
   };
 
   const resetGame = () => {
-    setCapturedPieces(initialCapturedPieces);
     setSelectedPiece(null);
     setEnPassantTarget(null);
     setActiveColor(initialActiveColor);
@@ -135,18 +109,12 @@ export const GameStateProvider = ({ children }) => {
         pov,
         setPov,
         togglePov,
-        capturedPieces,
-        setCapturedPieces,
         movesList,
         setMovesList,
         getGroupedMovesList,
         activeMove,
         setActiveMove,
         getNextGroupedMovesListIndex,
-        activeFilters,
-        setActiveFilters,
-        toggleFiltersByColor,
-        toggleActiveFilterType,
         isEditMode,
         setIsEditMode,
         setInitialBoard,

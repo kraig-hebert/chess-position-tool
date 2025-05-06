@@ -6,6 +6,8 @@ import {
   setGameIsActive,
   selectHasMoved,
   setHasMoved,
+  selectCapturedPieces,
+  setCapturedPieces,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -38,8 +40,6 @@ const Board = () => {
     enPassantTarget,
     setEnPassantTarget,
     pov,
-    capturedPieces,
-    setCapturedPieces,
     movesList,
     setMovesList,
     toggleActiveColor,
@@ -59,6 +59,7 @@ const Board = () => {
   const gameIsActive = useSelector(selectGameIsActive);
   const pieceIcons = useSelector(selectPieceIcons);
   const hasMoved = useSelector(selectHasMoved);
+  const capturedPieces = useSelector(selectCapturedPieces);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -156,7 +157,7 @@ const Board = () => {
           move.capturedPiece,
         ];
       }
-      setCapturedPieces({ ...tempCapturedPieces });
+      dispatch(setCapturedPieces({ ...tempCapturedPieces }));
 
       // handle castling
       if (move.castlingSide) {

@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useGameState } from "../../../context/GameStateProvider";
 import { pieceValues } from "../../../logic/chessUtils";
 import { selectPieceIcons } from "../../../store/slices/uiSlice";
+import { selectCapturedPieces } from "../../../store/slices/gameSlice";
 import "./scoreboardStyles.css";
 import PieceIcon from "../../board/pieceIcon/PieceIcon";
 
 const Scoreboard = () => {
-  const { capturedPieces } = useGameState();
+  const capturedPieces = useSelector(selectCapturedPieces);
   const pieceIcons = useSelector(selectPieceIcons);
   let whiteScore = 0;
   let blackScore = 0;
