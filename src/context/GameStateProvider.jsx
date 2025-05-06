@@ -21,15 +21,6 @@ const initialActiveFilters = {
   activeFilterType: "pressure", // pressure or control
 };
 
-const initialHasMoved = {
-  whiteKing: false,
-  whiteRookQueenside: false,
-  whiteRookKingside: false,
-  blackKing: false,
-  blackRookKingside: false,
-  blackRookQueenside: false,
-};
-
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
@@ -53,35 +44,11 @@ export const GameStateProvider = ({ children }) => {
   const [possibleEnPassantTargets, setPossibleEnPassantTargets] = useState([]);
   const [selectedEnPassantTarget, setSelectedEnPassantTarget] = useState(0); // Index of selected target
 
-  // Track whether the king and rooks have moved
-  const [hasMoved, setHasMoved] = useState(initialHasMoved);
-
   // Add position validation state
   const [positionIsValid, setPositionIsValid] = useState(true);
 
-  // Rename to tempHasMoved for clarity
-  const [tempHasMoved, setTempHasMoved] = useState(initialHasMoved);
-
   // Add state for storing the original position before entering edit mode
   const [originalPosition, setOriginalPosition] = useState(null);
-
-  const updateHasMovedForCastling = () => {
-    if (activeColor === "white") {
-      setHasMoved({
-        ...hasMoved,
-        whiteKing: true,
-        whiteRookQueenside: true,
-        whiteRookKingside: true,
-      });
-    } else {
-      setHasMoved({
-        ...hasMoved,
-        blackKing: true,
-        blackRookKingside: true,
-        blackRookQueenside: true,
-      });
-    }
-  };
 
   const togglePov = () => {
     if (pov === "white") setPov("black");
@@ -124,7 +91,6 @@ export const GameStateProvider = ({ children }) => {
     setActiveColor(initialActiveColor);
     setPov(initialPov);
     setBoard(initialBoard);
-    setHasMoved(initialHasMoved);
     setMovesList(initialMovesList);
     setIsEditMode(false);
   };
@@ -153,13 +119,6 @@ export const GameStateProvider = ({ children }) => {
     return { groupIndex, moveIndex: moveIndex + 1 };
   };
 
-  useEffect(() => {
-    console.log("hasMoved", hasMoved);
-  }, [hasMoved]);
-  useEffect(() => {
-    console.log("activeFilters", activeFilters);
-  }, [activeFilters]);
-
   return (
     <GameStateContext.Provider
       value={{
@@ -170,11 +129,8 @@ export const GameStateProvider = ({ children }) => {
         setBoard,
         selectedPiece,
         setSelectedPiece,
-        hasMoved,
-        setHasMoved,
         enPassantTarget,
         setEnPassantTarget,
-        updateHasMovedForCastling,
         resetGame,
         pov,
         setPov,
@@ -211,11 +167,8 @@ export const GameStateProvider = ({ children }) => {
         setSelectedEnPassantTarget,
         positionIsValid,
         setPositionIsValid,
-        tempHasMoved,
-        setTempHasMoved,
         originalPosition,
         setOriginalPosition,
-        initialHasMoved,
       }}
     >
       {children}

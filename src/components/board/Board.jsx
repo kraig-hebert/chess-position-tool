@@ -4,6 +4,8 @@ import { useGameState } from "../../context/GameStateProvider";
 import {
   selectGameIsActive,
   setGameIsActive,
+  selectHasMoved,
+  setHasMoved,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -33,11 +35,8 @@ const Board = () => {
     setBoard,
     selectedPiece,
     setSelectedPiece,
-    hasMoved,
-    setHasMoved,
     enPassantTarget,
     setEnPassantTarget,
-    updateHasMovedForCastling,
     pov,
     capturedPieces,
     setCapturedPieces,
@@ -59,6 +58,7 @@ const Board = () => {
   const dispatch = useDispatch();
   const gameIsActive = useSelector(selectGameIsActive);
   const pieceIcons = useSelector(selectPieceIcons);
+  const hasMoved = useSelector(selectHasMoved);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -159,7 +159,11 @@ const Board = () => {
       setCapturedPieces({ ...tempCapturedPieces });
 
       // handle castling
-      if (move.castlingSide) updateHasMovedForCastling(activeColor);
+      if (move.castlingSide) {
+        if (activeColor === "white")
+          dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
+        else dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
+      }
 
       let moveNotation = createNotation(
         row,
@@ -173,20 +177,20 @@ const Board = () => {
       // Update hasMoved state for castling if rook or king moves by itself
       if (selectedPiece.piece === "R") {
         if (selectedPiece.row === 7 && selectedPiece.col === 0) {
-          setHasMoved({ ...hasMoved, whiteRookQueenside: true });
+          dispatch(setHasMoved({ ...hasMoved, whiteRookQueenside: true }));
         } else if (selectedPiece.row === 7 && selectedPiece.col === 7) {
-          setHasMoved({ ...hasMoved, whiteRookKingside: true });
+          dispatch(setHasMoved({ ...hasMoved, whiteRookKingside: true }));
         }
       } else if (selectedPiece.piece === "r") {
         if (selectedPiece.row === 0 && selectedPiece.col === 0) {
-          setHasMoved({ ...hasMoved, blackRookQueenside: true });
+          dispatch(setHasMoved({ ...hasMoved, blackRookQueenside: true }));
         } else if (selectedPiece.row === 0 && selectedPiece.col === 7) {
-          setHasMoved({ ...hasMoved, blackRookKingside: true });
+          dispatch(setHasMoved({ ...hasMoved, blackRookKingside: true }));
         }
       } else if (selectedPiece.piece === "K" && !move.castlingSide) {
-        setHasMoved({ ...hasMoved, whiteKing: true });
+        dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
       } else if (selectedPiece.piece === "k" && !move.castlingSide) {
-        setHasMoved({ ...hasMoved, blackKing: true });
+        dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
       }
 
       // Check for Pawn Promotion

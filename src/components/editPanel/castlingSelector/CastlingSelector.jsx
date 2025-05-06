@@ -1,15 +1,23 @@
 import React from "react";
-import { useGameState } from "../../../context/GameStateProvider";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectTempHasMoved,
+  setTempHasMoved,
+  initialHasMoved,
+} from "../../../store/slices/gameSlice";
 import "./castlingSelectorStyles.css";
 
 const CastlingSelector = () => {
-  const { tempHasMoved, setTempHasMoved } = useGameState();
+  const dispatch = useDispatch();
+  const tempHasMoved = useSelector(selectTempHasMoved) || initialHasMoved;
 
   const handleCastlingChange = (key) => {
-    setTempHasMoved({
-      ...tempHasMoved,
-      [key]: !tempHasMoved[key],
-    });
+    dispatch(
+      setTempHasMoved({
+        ...tempHasMoved,
+        [key]: !tempHasMoved[key],
+      })
+    );
   };
 
   return (

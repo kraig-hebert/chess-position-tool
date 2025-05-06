@@ -1,8 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   resetGame as resetGameAction,
   setGameIsActive,
+  setHasMoved,
+  resetTempHasMoved,
+  selectTempHasMoved,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -22,6 +25,8 @@ import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
   const dispatch = useDispatch();
+  const tempHasMoved = useSelector(selectTempHasMoved);
+
   const {
     togglePov,
     activeMove,
@@ -34,7 +39,6 @@ const GameButtons = () => {
     setMovesList,
     board,
     initialBoard,
-    setHasMoved,
     setActiveColor,
     nextMoveColor,
     enPassantEnabled,
@@ -42,8 +46,6 @@ const GameButtons = () => {
     selectedEnPassantTarget,
     setEnPassantTarget,
     positionIsValid,
-    tempHasMoved,
-    setTempHasMoved,
     setOriginalPosition,
     initialHasMoved,
     resetGame,
@@ -77,6 +79,7 @@ const GameButtons = () => {
       setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board);
     }
   };
+
   const handleMoveForwards = () => {
     const groupIndex = groupedMovesList.length - 1;
     const moveIndex = groupedMovesList[groupIndex].length - 1;
@@ -124,7 +127,7 @@ const GameButtons = () => {
 
       // Validate and update hasMoved based on piece positions
       const validatedHasMoved = validateCastlingPositions();
-      setHasMoved(validatedHasMoved);
+      dispatch(setHasMoved(validatedHasMoved));
 
       // Set the active color based on the nextMoveColor from context
       setActiveColor(nextMoveColor);
@@ -151,7 +154,6 @@ const GameButtons = () => {
           capturedPieces: captured,
         };
         setMovesList([placeholderMove]);
-
         setActiveMove({ groupIndex: 0, moveIndex: 1 });
       } else {
         // If white to move, just reset the moves list
@@ -169,7 +171,7 @@ const GameButtons = () => {
       // Save the current position before entering edit mode
       setOriginalPosition(copyBoard(board));
       // Reset tempHasMoved to initial state to allow fresh castling rights selection
-      setTempHasMoved(initialHasMoved);
+      dispatch(resetTempHasMoved());
       setIsEditMode(true);
     }
   };
