@@ -26,7 +26,7 @@ import { FaSave } from "react-icons/fa";
 import { useGameState } from "../../context/GameStateProvider";
 import { calculateCapturedPieces, copyBoard } from "../../logic/chessUtils";
 import {
-  selectNextMoveColor,
+  selectNextMoveColorAfterEdit,
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
@@ -40,7 +40,7 @@ import "./gameButtonsStyles.css";
 const GameButtons = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved);
-  const nextMoveColor = useSelector(selectNextMoveColor);
+  const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
@@ -151,8 +151,8 @@ const GameButtons = () => {
       const validatedHasMoved = validateCastlingPositions();
       dispatch(setHasMoved(validatedHasMoved));
 
-      // Set the active color based on the nextMoveColor from Redux
-      dispatch(setActiveColor(nextMoveColor));
+      // Set the active color based on the nextMoveColorAfterEdit from Redux
+      dispatch(setActiveColor(nextMoveColorAfterEdit));
 
       // Set en passant target if enabled and a valid target is selected
       if (enPassantEnabled && possibleEnPassantTargets.length > 0) {
@@ -161,7 +161,7 @@ const GameButtons = () => {
           setEnPassantTarget({
             row: target.row,
             col: target.col,
-            color: nextMoveColor, // The color that can make the en passant capture
+            color: nextMoveColorAfterEdit, // The color that can make the en passant capture
           })
         );
       } else {
@@ -170,7 +170,7 @@ const GameButtons = () => {
       }
 
       // Handle moves list
-      if (nextMoveColor === "black") {
+      if (nextMoveColorAfterEdit === "black") {
         // If black to move, add a placeholder move for white to maintain the move list structure
         const placeholderMove = {
           moveNotation: "XXX",

@@ -4,7 +4,7 @@ import {
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
-  selectNextMoveColor,
+  selectNextMoveColorAfterEdit,
   toggleEnPassant,
   setPossibleEnPassantTargets,
   setSelectedEnPassantTarget,
@@ -16,14 +16,14 @@ import "./enPassantSelectorStyles.css";
 const EnPassantSelector = () => {
   const { board } = useGameState();
   const dispatch = useDispatch();
-  const nextMoveColor = useSelector(selectNextMoveColor);
+  const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
 
   // Calculate possible en passant targets when board or next move color changes
   useEffect(() => {
-    const targets = findPossibleEnPassantTargets(board, nextMoveColor);
+    const targets = findPossibleEnPassantTargets(board, nextMoveColorAfterEdit);
     dispatch(setPossibleEnPassantTargets(targets));
 
     // Reset the selected target if there are targets available
@@ -34,7 +34,7 @@ const EnPassantSelector = () => {
         )
       );
     }
-  }, [board, nextMoveColor, dispatch, selectedEnPassantTarget]);
+  }, [board, nextMoveColorAfterEdit, dispatch, selectedEnPassantTarget]);
 
   const handleEnPassantToggle = () => dispatch(toggleEnPassant());
 

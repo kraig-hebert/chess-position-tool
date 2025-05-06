@@ -1,14 +1,14 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectNextMoveColor,
-  setNextMoveColor,
+  selectNextMoveColorAfterEdit,
+  setNextMoveColorAfterEdit,
 } from "../../../store/slices/uiSlice";
 import "./colorSelectorStyles.css";
 
 const ColorSelector = () => {
   const dispatch = useDispatch();
-  const nextMoveColor = useSelector(selectNextMoveColor);
+  const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
 
   return (
     <div className="color-selector">
@@ -16,17 +16,17 @@ const ColorSelector = () => {
       <div className="color-options">
         <div
           className={`color-option white ${
-            nextMoveColor === "white" ? "color-selected" : ""
+            nextMoveColorAfterEdit === "white" ? "color-selected" : ""
           }`}
-          onClick={() => dispatch(setNextMoveColor("white"))}
+          onClick={() => dispatch(setNextMoveColorAfterEdit("white"))}
         >
           White
         </div>
         <div
           className={`color-option black ${
-            nextMoveColor === "black" ? "color-selected" : ""
+            nextMoveColorAfterEdit === "black" ? "color-selected" : ""
           }`}
-          onClick={() => dispatch(setNextMoveColor("black"))}
+          onClick={() => dispatch(setNextMoveColorAfterEdit("black"))}
         >
           Black
         </div>

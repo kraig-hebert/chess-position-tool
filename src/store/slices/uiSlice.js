@@ -28,13 +28,13 @@ const initialState = {
     Q: { iconName: "queen", className: "piece white" },
     K: { iconName: "king", className: "piece white" },
   },
-  selectedPieceType: null,
-  activeAction: "add", // "add", "move", "trash"
-  nextMoveColor: "white",
+  selectedPieceTypeForEdit: null,
+  activeEditAction: "add", // "add", "move", "trash"
+  nextMoveColorAfterEdit: "white",
   enPassantEnabled: false,
   possibleEnPassantTargets: [],
   selectedEnPassantTarget: 0, // Index of selected target
-  selectedMoveSquare: null, // { row, col, piece }
+  selectedEditMoveSquare: null, // { row, col, piece }
 };
 
 const iconMap = {
@@ -60,18 +60,18 @@ export const uiSlice = createSlice({
           ? "control"
           : "pressure";
     },
-    setSelectedPieceType: (state, action) => {
-      state.selectedPieceType = action.payload;
+    setSelectedPieceTypeForEdit: (state, action) => {
+      state.selectedPieceTypeForEdit = action.payload;
     },
-    setActiveAction: (state, action) => {
-      state.activeAction = action.payload;
+    setActiveEditAction: (state, action) => {
+      state.activeEditAction = action.payload;
       // Clear selected piece when switching to move or trash actions
       if (action.payload !== "add") {
-        state.selectedPieceType = null;
+        state.selectedPieceTypeForEdit = null;
       }
     },
-    setNextMoveColor: (state, action) => {
-      state.nextMoveColor = action.payload;
+    setNextMoveColorAfterEdit: (state, action) => {
+      state.nextMoveColorAfterEdit = action.payload;
     },
     toggleEnPassant: (state) => {
       state.enPassantEnabled = !state.enPassantEnabled;
@@ -82,12 +82,11 @@ export const uiSlice = createSlice({
     setSelectedEnPassantTarget: (state, action) => {
       state.selectedEnPassantTarget = action.payload;
     },
-    setSelectedMoveSquare: (state, action) => {
-      state.selectedMoveSquare = action.payload;
+    setSelectedEditMoveSquare: (state, action) => {
+      state.selectedEditMoveSquare = action.payload;
     },
     resetEditMode: (state) => {
-      // stop updateing this function and and adding each piece of state
-      state = initialState;
+      return initialState;
     },
   },
 });
@@ -123,26 +122,29 @@ export const selectuppercaseFormattedFIlterType = (state) => {
 };
 
 // Edit mode selectors
-export const selectSelectedPieceType = (state) => state.ui.selectedPieceType;
-export const selectActiveAction = (state) => state.ui.activeAction;
-export const selectNextMoveColor = (state) => state.ui.nextMoveColor;
+export const selectSelectedPieceTypeForEdit = (state) =>
+  state.ui.selectedPieceTypeForEdit;
+export const selectActiveEditAction = (state) => state.ui.activeEditAction;
+export const selectNextMoveColorAfterEdit = (state) =>
+  state.ui.nextMoveColorAfterEdit;
 export const selectEnPassantEnabled = (state) => state.ui.enPassantEnabled;
 export const selectPossibleEnPassantTargets = (state) =>
   state.ui.possibleEnPassantTargets;
 export const selectSelectedEnPassantTarget = (state) =>
   state.ui.selectedEnPassantTarget;
-export const selectSelectedMoveSquare = (state) => state.ui.selectedMoveSquare;
+export const selectSelectedEditMoveSquare = (state) =>
+  state.ui.selectedEditMoveSquare;
 
 export const {
   toggleFiltersByColor,
   toggleActiveFilterType,
-  setSelectedPieceType,
-  setActiveAction,
-  setNextMoveColor,
+  setSelectedPieceTypeForEdit,
+  setActiveEditAction,
+  setNextMoveColorAfterEdit,
   toggleEnPassant,
   setPossibleEnPassantTargets,
   setSelectedEnPassantTarget,
-  setSelectedMoveSquare,
+  setSelectedEditMoveSquare,
   resetEditMode,
 } = uiSlice.actions;
 

@@ -4,7 +4,7 @@ import { selectPieceIcons } from "../../../store/slices/uiSlice";
 import "./pieceButtonsStyles.css";
 
 const PieceButtons = (props) => {
-  const { onPieceSelect, selectedPieceType } = props;
+  const { onPieceSelect, selectedPieceTypeForEdit } = props;
   const pieceIcons = useSelector(selectPieceIcons);
 
   const whitePieces = ["K", "Q", "R", "B", "N", "P"];
@@ -17,7 +17,7 @@ const PieceButtons = (props) => {
         <button
           key={index}
           className={`piece-button ${
-            selectedPieceType === piece ? "active" : ""
+            selectedPieceTypeForEdit === piece ? "active" : ""
           }`}
           onClick={() => onPieceSelect(piece)}
         >

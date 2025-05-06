@@ -30,13 +30,13 @@ import {
 import { getSquarePressures } from "../../logic/filterUtils";
 import {
   selectPieceIcons,
-  selectActiveAction,
-  selectSelectedPieceType,
+  selectActiveEditAction,
+  selectSelectedPieceTypeForEdit,
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
-  selectSelectedMoveSquare,
-  setSelectedMoveSquare,
+  selectSelectedEditMoveSquare,
+  setSelectedEditMoveSquare,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -56,14 +56,14 @@ const Board = () => {
   const pieceIcons = useSelector(selectPieceIcons);
   const hasMoved = useSelector(selectHasMoved);
   const capturedPieces = useSelector(selectCapturedPieces);
-  const activeAction = useSelector(selectActiveAction);
-  const selectedPieceType = useSelector(selectSelectedPieceType);
+  const activeEditAction = useSelector(selectActiveEditAction);
+  const selectedPieceTypeForEdit = useSelector(selectSelectedPieceTypeForEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
   const movesList = useSelector(selectMovesList);
   const nextIndex = useSelector(selectNextGroupedMovesListIndex);
-  const selectedMoveSquare = useSelector(selectSelectedMoveSquare);
+  const selectedEditMoveSquare = useSelector(selectSelectedEditMoveSquare);
   const activeColor = useSelector(selectActiveColor);
   const enPassantTarget = useSelector(selectEnPassantTarget);
 
@@ -88,34 +88,43 @@ const Board = () => {
     if (isEditMode) {
       const clickedPiece = board[row][col];
 
-      if (activeAction === "trash" && clickedPiece) {
+      if (activeEditAction === "trash" && clickedPiece) {
         const newBoard = copyBoard(board);
         newBoard[row][col] = null;
         setBoard(newBoard);
         return;
       }
 
-      if (activeAction === "move") {
-        if (selectedMoveSquare) {
+      if (activeEditAction === "move") {
+        if (selectedEditMoveSquare) {
           // Second click - only move to empty square
           if (!clickedPiece) {
             const newBoard = copyBoard(board);
-            newBoard[row][col] = selectedMoveSquare.piece;
-            newBoard[selectedMoveSquare.row][selectedMoveSquare.col] = null;
+            newBoard[row][col] = selectedEditMoveSquare.piece;
+            newBoard[selectedEditMoveSquare.row][selectedEditMoveSquare.col] =
+              null;
             setBoard(newBoard);
-            dispatch(setSelectedMoveSquare(null));
+            dispatch(setSelectedEditMoveSquare(null));
           } else if (clickedPiece) {
             // First click - select the piece
-            dispatch(setSelectedMoveSquare({ row, col, piece: clickedPiece }));
+            dispatch(
+              setSelectedEditMoveSquare({ row, col, piece: clickedPiece })
+            );
           }
         } else
-          dispatch(setSelectedMoveSquare({ row, col, piece: clickedPiece }));
+          dispatch(
+            setSelectedEditMoveSquare({ row, col, piece: clickedPiece })
+          );
         return;
       }
 
-      if (activeAction === "add" && selectedPieceType && !clickedPiece) {
+      if (
+        activeEditAction === "add" &&
+        selectedPieceTypeForEdit &&
+        !clickedPiece
+      ) {
         const newBoard = copyBoard(board);
-        newBoard[row][col] = selectedPieceType;
+        newBoard[row][col] = selectedPieceTypeForEdit;
         setBoard(newBoard);
         return;
       }
@@ -305,13 +314,13 @@ const Board = () => {
             tempSelectedPiece.row === rowIndex &&
             tempSelectedPiece.col === colIndex) ||
           (isEditMode &&
-            activeAction === "move" &&
-            selectedMoveSquare &&
+            activeEditAction === "move" &&
+            selectedEditMoveSquare &&
             (pov === "black"
-              ? Math.abs(selectedMoveSquare.row - 7) === rowIndex &&
-                Math.abs(selectedMoveSquare.col - 7) === colIndex
-              : selectedMoveSquare.row === rowIndex &&
-                selectedMoveSquare.col === colIndex));
+              ? Math.abs(selectedEditMoveSquare.row - 7) === rowIndex &&
+                Math.abs(selectedEditMoveSquare.col - 7) === colIndex
+              : selectedEditMoveSquare.row === rowIndex &&
+                selectedEditMoveSquare.col === colIndex));
 
         // Check if this square is the selected en passant target
         const isEnPassantTarget =

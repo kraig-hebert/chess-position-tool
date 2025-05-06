@@ -2,10 +2,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGameState } from "../../context/GameStateProvider";
 import {
-  selectActiveAction,
-  selectSelectedPieceType,
-  setActiveAction,
-  setSelectedPieceType,
+  selectActiveEditAction,
+  selectSelectedPieceTypeForEdit,
+  setActiveEditAction,
+  setSelectedPieceTypeForEdit,
 } from "../../store/slices/uiSlice";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
@@ -19,16 +19,18 @@ import "./editPanelStyles.css";
 const EditPanel = () => {
   const { setBoard, board, setInitialBoard } = useGameState();
   const dispatch = useDispatch();
-  const activeAction = useSelector(selectActiveAction);
-  const selectedPieceType = useSelector(selectSelectedPieceType);
+  const activeEditAction = useSelector(selectActiveEditAction);
+  const selectedPieceTypeForEdit = useSelector(selectSelectedPieceTypeForEdit);
 
-  const handleActionClick = (action) => dispatch(setActiveAction(action));
+  const handleActionClick = (action) => dispatch(setActiveEditAction(action));
 
   const handlePieceSelect = (piece) => {
     // Only allow piece selection in add mode
-    if (activeAction === "add") {
+    if (activeEditAction === "add") {
       dispatch(
-        setSelectedPieceType(selectedPieceType === piece ? null : piece)
+        setSelectedPieceTypeForEdit(
+          selectedPieceTypeForEdit === piece ? null : piece
+        )
       );
     }
   };
@@ -42,11 +44,11 @@ const EditPanel = () => {
     <div className="edit-panel-container">
       <div className="edit-panel-content">
         <ActionButtons
-          activeAction={activeAction}
+          activeEditAction={activeEditAction}
           onActionClick={handleActionClick}
         />
         <PieceButtons
-          selectedPieceType={selectedPieceType}
+          selectedPieceTypeForEdit={selectedPieceTypeForEdit}
           onPieceSelect={handlePieceSelect}
         />
         <ColorSelector />
