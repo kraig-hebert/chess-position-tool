@@ -1,9 +1,14 @@
 import React from "react";
-import { useGameState } from "../../../context/GameStateProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectNextMoveColor,
+  setNextMoveColor,
+} from "../../../store/slices/uiSlice";
 import "./colorSelectorStyles.css";
 
 const ColorSelector = () => {
-  const { nextMoveColor, setNextMoveColor } = useGameState();
+  const dispatch = useDispatch();
+  const nextMoveColor = useSelector(selectNextMoveColor);
 
   return (
     <div className="color-selector">
@@ -13,7 +18,7 @@ const ColorSelector = () => {
           className={`color-option white ${
             nextMoveColor === "white" ? "color-selected" : ""
           }`}
-          onClick={() => setNextMoveColor("white")}
+          onClick={() => dispatch(setNextMoveColor("white"))}
         >
           White
         </div>
@@ -21,7 +26,7 @@ const ColorSelector = () => {
           className={`color-option black ${
             nextMoveColor === "black" ? "color-selected" : ""
           }`}
-          onClick={() => setNextMoveColor("black")}
+          onClick={() => dispatch(setNextMoveColor("black"))}
         >
           Black
         </div>

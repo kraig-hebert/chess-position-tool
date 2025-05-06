@@ -27,10 +27,7 @@ export const GameStateProvider = ({ children }) => {
   const [pov, setPov] = useState(initialPov);
   const [movesList, setMovesList] = useState(initialMovesList);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [activeAction, setActiveAction] = useState("add"); // "add", "move", "trash"
   const [selectedMoveSquare, setSelectedMoveSquare] = useState(null); // { row, col, piece }
-  const [selectedPieceType, setSelectedPieceType] = useState(null);
-  const [nextMoveColor, setNextMoveColor] = useState("white");
 
   // New state variables for en passant in edit mode
   const [enPassantEnabled, setEnPassantEnabled] = useState(false);
@@ -118,15 +115,9 @@ export const GameStateProvider = ({ children }) => {
         isEditMode,
         setIsEditMode,
         setInitialBoard,
-        activeAction,
-        setActiveAction,
         selectedMoveSquare,
         setSelectedMoveSquare,
-        selectedPieceType,
-        setSelectedPieceType,
         initialBoard,
-        nextMoveColor,
-        setNextMoveColor,
         enPassantEnabled,
         setEnPassantEnabled,
         possibleEnPassantTargets,

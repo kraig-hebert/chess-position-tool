@@ -20,7 +20,12 @@ import {
   copyBoard,
 } from "../../logic/chessUtils";
 import { getSquarePressures } from "../../logic/filterUtils";
-import { selectPieceIcons } from "../../store/slices/uiSlice";
+import {
+  selectPieceIcons,
+  selectActiveAction,
+  selectSelectedPieceType,
+  selectNextMoveColor,
+} from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
 import Square from "./square/Square";
@@ -46,10 +51,8 @@ const Board = () => {
     setActiveMove,
     getNextGroupedMovesListIndex,
     isEditMode,
-    activeAction,
     selectedMoveSquare,
     setSelectedMoveSquare,
-    selectedPieceType,
     enPassantEnabled,
     possibleEnPassantTargets,
     selectedEnPassantTarget,
@@ -60,6 +63,9 @@ const Board = () => {
   const pieceIcons = useSelector(selectPieceIcons);
   const hasMoved = useSelector(selectHasMoved);
   const capturedPieces = useSelector(selectCapturedPieces);
+  const activeAction = useSelector(selectActiveAction);
+  const selectedPieceType = useSelector(selectSelectedPieceType);
+  const nextMoveColor = useSelector(selectNextMoveColor);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);

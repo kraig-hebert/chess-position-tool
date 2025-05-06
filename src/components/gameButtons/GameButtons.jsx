@@ -19,6 +19,7 @@ import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
 import { calculateCapturedPieces, copyBoard } from "../../logic/chessUtils";
+import { selectNextMoveColor } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -27,6 +28,7 @@ import "./gameButtonsStyles.css";
 const GameButtons = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved);
+  const nextMoveColor = useSelector(selectNextMoveColor);
 
   const {
     togglePov,
@@ -40,7 +42,6 @@ const GameButtons = () => {
     board,
     initialBoard,
     setActiveColor,
-    nextMoveColor,
     enPassantEnabled,
     possibleEnPassantTargets,
     selectedEnPassantTarget,
@@ -136,7 +137,7 @@ const GameButtons = () => {
       const validatedHasMoved = validateCastlingPositions();
       dispatch(setHasMoved(validatedHasMoved));
 
-      // Set the active color based on the nextMoveColor from context
+      // Set the active color based on the nextMoveColor from Redux
       setActiveColor(nextMoveColor);
 
       // Set en passant target if enabled and a valid target is selected

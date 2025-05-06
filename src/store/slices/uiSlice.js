@@ -28,6 +28,9 @@ const initialState = {
     Q: { iconName: "queen", className: "piece white" },
     K: { iconName: "king", className: "piece white" },
   },
+  selectedPieceType: null,
+  activeAction: "add", // "add", "move", "trash"
+  nextMoveColor: "white",
 };
 
 const iconMap = {
@@ -52,6 +55,22 @@ export const uiSlice = createSlice({
         state.activeFilters.activeFilterType === "pressure"
           ? "control"
           : "pressure";
+    },
+    setSelectedPieceType: (state, action) => {
+      state.selectedPieceType = action.payload;
+    },
+    setActiveAction: (state, action) => {
+      state.activeAction = action.payload;
+      // Clear selected piece when switching to move or trash actions
+      if (action.payload !== "add") {
+        state.selectedPieceType = null;
+      }
+    },
+    setNextMoveColor: (state, action) => {
+      state.nextMoveColor = action.payload;
+    },
+    resetEditMode: (state) => {
+      state = initialState;
     },
   },
 });
@@ -86,6 +105,18 @@ export const selectuppercaseFormattedFIlterType = (state) => {
   return filterType.charAt(0).toUpperCase() + filterType.slice(1);
 };
 
-export const { toggleFiltersByColor, toggleActiveFilterType } = uiSlice.actions;
+// Edit mode selectors
+export const selectSelectedPieceType = (state) => state.ui.selectedPieceType;
+export const selectActiveAction = (state) => state.ui.activeAction;
+export const selectNextMoveColor = (state) => state.ui.nextMoveColor;
+
+export const {
+  toggleFiltersByColor,
+  toggleActiveFilterType,
+  setSelectedPieceType,
+  setActiveAction,
+  setNextMoveColor,
+  resetEditMode,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

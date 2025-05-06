@@ -1,5 +1,12 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useGameState } from "../../context/GameStateProvider";
+import {
+  selectActiveAction,
+  selectSelectedPieceType,
+  setActiveAction,
+  setSelectedPieceType,
+} from "../../store/slices/uiSlice";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
@@ -10,28 +17,19 @@ import PositionValidator from "./positionValidator/PositionValidator";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const {
-    setBoard,
-    board,
-    setInitialBoard,
-    activeAction,
-    setActiveAction,
-    selectedPieceType,
-    setSelectedPieceType,
-  } = useGameState();
+  const { setBoard, board, setInitialBoard } = useGameState();
+  const dispatch = useDispatch();
+  const activeAction = useSelector(selectActiveAction);
+  const selectedPieceType = useSelector(selectSelectedPieceType);
 
-  const handleActionClick = (action) => {
-    setActiveAction(action);
-    // Clear selected piece when switching to move or trash actions
-    if (action !== "add") {
-      setSelectedPieceType(null);
-    }
-  };
+  const handleActionClick = (action) => dispatch(setActiveAction(action));
 
   const handlePieceSelect = (piece) => {
     // Only allow piece selection in add mode
     if (activeAction === "add") {
-      setSelectedPieceType(selectedPieceType === piece ? null : piece);
+      dispatch(
+        setSelectedPieceType(selectedPieceType === piece ? null : piece)
+      );
     }
   };
 
