@@ -19,7 +19,12 @@ import { FaSave } from "react-icons/fa";
 
 import { useGameState } from "../../context/GameStateProvider";
 import { calculateCapturedPieces, copyBoard } from "../../logic/chessUtils";
-import { selectNextMoveColor } from "../../store/slices/uiSlice";
+import {
+  selectNextMoveColor,
+  selectEnPassantEnabled,
+  selectPossibleEnPassantTargets,
+  selectSelectedEnPassantTarget,
+} from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -29,6 +34,9 @@ const GameButtons = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved);
   const nextMoveColor = useSelector(selectNextMoveColor);
+  const enPassantEnabled = useSelector(selectEnPassantEnabled);
+  const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
+  const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
 
   const {
     togglePov,
@@ -42,9 +50,6 @@ const GameButtons = () => {
     board,
     initialBoard,
     setActiveColor,
-    enPassantEnabled,
-    possibleEnPassantTargets,
-    selectedEnPassantTarget,
     setEnPassantTarget,
     positionIsValid,
     setOriginalPosition,

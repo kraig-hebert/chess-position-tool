@@ -1,45 +1,45 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectEnPassantEnabled,
+  selectPossibleEnPassantTargets,
+  selectSelectedEnPassantTarget,
+  selectNextMoveColor,
+  toggleEnPassant,
+  setPossibleEnPassantTargets,
+  setSelectedEnPassantTarget,
+} from "../../../store/slices/uiSlice";
 import { useGameState } from "../../../context/GameStateProvider";
 import { findPossibleEnPassantTargets } from "../../../logic/chessUtils";
 import "./enPassantSelectorStyles.css";
 
 const EnPassantSelector = () => {
-  const {
-    board,
-    nextMoveColor,
-    enPassantEnabled,
-    setEnPassantEnabled,
-    possibleEnPassantTargets,
-    setPossibleEnPassantTargets,
-    selectedEnPassantTarget,
-    setSelectedEnPassantTarget,
-  } = useGameState();
+  const { board } = useGameState();
+  const dispatch = useDispatch();
+  const nextMoveColor = useSelector(selectNextMoveColor);
+  const enPassantEnabled = useSelector(selectEnPassantEnabled);
+  const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
+  const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
 
   // Calculate possible en passant targets when board or next move color changes
   useEffect(() => {
     const targets = findPossibleEnPassantTargets(board, nextMoveColor);
-    setPossibleEnPassantTargets(targets);
+    dispatch(setPossibleEnPassantTargets(targets));
 
     // Reset the selected target if there are targets available
     if (targets.length > 0) {
-      setSelectedEnPassantTarget(
-        selectedEnPassantTarget ? selectedEnPassantTarget : 0
+      dispatch(
+        setSelectedEnPassantTarget(
+          selectedEnPassantTarget ? selectedEnPassantTarget : 0
+        )
       );
     }
-  }, [
-    board,
-    nextMoveColor,
-    setPossibleEnPassantTargets,
-    setSelectedEnPassantTarget,
-  ]);
+  }, [board, nextMoveColor, dispatch, selectedEnPassantTarget]);
 
-  const handleEnPassantToggle = () => {
-    setEnPassantEnabled(!enPassantEnabled);
-  };
+  const handleEnPassantToggle = () => dispatch(toggleEnPassant());
 
-  const handleTargetSelect = (index) => {
-    setSelectedEnPassantTarget(index);
-  };
+  const handleTargetSelect = (index) =>
+    dispatch(setSelectedEnPassantTarget(index));
 
   return (
     <div className="en-passant-selector">

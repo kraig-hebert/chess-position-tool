@@ -25,6 +25,9 @@ import {
   selectActiveAction,
   selectSelectedPieceType,
   selectNextMoveColor,
+  selectEnPassantEnabled,
+  selectPossibleEnPassantTargets,
+  selectSelectedEnPassantTarget,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -53,9 +56,6 @@ const Board = () => {
     isEditMode,
     selectedMoveSquare,
     setSelectedMoveSquare,
-    enPassantEnabled,
-    possibleEnPassantTargets,
-    selectedEnPassantTarget,
   } = useGameState();
 
   const dispatch = useDispatch();
@@ -66,6 +66,9 @@ const Board = () => {
   const activeAction = useSelector(selectActiveAction);
   const selectedPieceType = useSelector(selectSelectedPieceType);
   const nextMoveColor = useSelector(selectNextMoveColor);
+  const enPassantEnabled = useSelector(selectEnPassantEnabled);
+  const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
+  const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);

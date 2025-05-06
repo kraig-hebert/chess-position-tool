@@ -31,6 +31,9 @@ const initialState = {
   selectedPieceType: null,
   activeAction: "add", // "add", "move", "trash"
   nextMoveColor: "white",
+  enPassantEnabled: false,
+  possibleEnPassantTargets: [],
+  selectedEnPassantTarget: 0, // Index of selected target
 };
 
 const iconMap = {
@@ -68,6 +71,15 @@ export const uiSlice = createSlice({
     },
     setNextMoveColor: (state, action) => {
       state.nextMoveColor = action.payload;
+    },
+    toggleEnPassant: (state) => {
+      state.enPassantEnabled = !state.enPassantEnabled;
+    },
+    setPossibleEnPassantTargets: (state, action) => {
+      state.possibleEnPassantTargets = action.payload;
+    },
+    setSelectedEnPassantTarget: (state, action) => {
+      state.selectedEnPassantTarget = action.payload;
     },
     resetEditMode: (state) => {
       state = initialState;
@@ -109,6 +121,11 @@ export const selectuppercaseFormattedFIlterType = (state) => {
 export const selectSelectedPieceType = (state) => state.ui.selectedPieceType;
 export const selectActiveAction = (state) => state.ui.activeAction;
 export const selectNextMoveColor = (state) => state.ui.nextMoveColor;
+export const selectEnPassantEnabled = (state) => state.ui.enPassantEnabled;
+export const selectPossibleEnPassantTargets = (state) =>
+  state.ui.possibleEnPassantTargets;
+export const selectSelectedEnPassantTarget = (state) =>
+  state.ui.selectedEnPassantTarget;
 
 export const {
   toggleFiltersByColor,
@@ -116,6 +133,9 @@ export const {
   setSelectedPieceType,
   setActiveAction,
   setNextMoveColor,
+  toggleEnPassant,
+  setPossibleEnPassantTargets,
+  setSelectedEnPassantTarget,
   resetEditMode,
 } = uiSlice.actions;
 
