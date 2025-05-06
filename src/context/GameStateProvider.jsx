@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 
 const initialActiveColor = "white";
 const initialPov = "white";
-const initialCapturedPieces = { white: [], black: [] };
-const initialMovesList = [];
 
 const initialBoard = [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
@@ -20,19 +18,12 @@ const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
   const [activeColor, setActiveColor] = useState(initialActiveColor);
-  const [activeMove, setActiveMove] = useState(null);
   const [board, setBoard] = useState(initialBoard);
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [enPassantTarget, setEnPassantTarget] = useState(null);
   const [pov, setPov] = useState(initialPov);
-  const [movesList, setMovesList] = useState(initialMovesList);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedMoveSquare, setSelectedMoveSquare] = useState(null); // { row, col, piece }
-
-  // New state variables for en passant in edit mode
-  const [enPassantEnabled, setEnPassantEnabled] = useState(false);
-  const [possibleEnPassantTargets, setPossibleEnPassantTargets] = useState([]);
-  const [selectedEnPassantTarget, setSelectedEnPassantTarget] = useState(0); // Index of selected target
 
   // Add position validation state
   const [positionIsValid, setPositionIsValid] = useState(true);
@@ -66,30 +57,6 @@ export const GameStateProvider = ({ children }) => {
     setIsEditMode(false);
   };
 
-  const getGroupedMovesList = () => {
-    const groupedMoves = [];
-    let moveGroup = [];
-    movesList.forEach((move, index) => {
-      if (index % 2 === 0) moveGroup.push(move);
-      else {
-        moveGroup.push(move);
-        groupedMoves.push(moveGroup);
-        moveGroup = [];
-      }
-      if (index === movesList.length - 1) groupedMoves.push(moveGroup);
-    });
-    return groupedMoves;
-  };
-
-  const getNextGroupedMovesListIndex = () => {
-    const groupedMovesList = getGroupedMovesList();
-    if (groupedMovesList.length === 0) return { groupIndex: 0, moveIndex: 0 };
-    const groupIndex = groupedMovesList.length - 1;
-    const moveIndex = groupedMovesList[groupIndex].length - 1;
-    if (moveIndex === 1) return { groupIndex: groupIndex + 1, moveIndex: 0 };
-    return { groupIndex, moveIndex: moveIndex + 1 };
-  };
-
   return (
     <GameStateContext.Provider
       value={{
@@ -106,24 +73,12 @@ export const GameStateProvider = ({ children }) => {
         pov,
         setPov,
         togglePov,
-        movesList,
-        setMovesList,
-        getGroupedMovesList,
-        activeMove,
-        setActiveMove,
-        getNextGroupedMovesListIndex,
         isEditMode,
         setIsEditMode,
         setInitialBoard,
         selectedMoveSquare,
         setSelectedMoveSquare,
         initialBoard,
-        enPassantEnabled,
-        setEnPassantEnabled,
-        possibleEnPassantTargets,
-        setPossibleEnPassantTargets,
-        selectedEnPassantTarget,
-        setSelectedEnPassantTarget,
         positionIsValid,
         setPositionIsValid,
         originalPosition,

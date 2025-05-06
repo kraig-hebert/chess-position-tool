@@ -1,25 +1,31 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGameState } from "../../../context/GameStateProvider";
-import { setCapturedPieces } from "../../../store/slices/gameSlice";
+import {
+  setCapturedPieces,
+  setActiveMove,
+  selectActiveMove,
+  selectGroupedMovesList,
+} from "../../../store/slices/gameSlice";
 
 import "./movesListStyles.css";
 
 const MovesList = () => {
-  const { getGroupedMovesList, setBoard, activeMove, setActiveMove } =
-    useGameState();
+  const { setBoard } = useGameState();
   const dispatch = useDispatch();
-  const groupedMovesList = getGroupedMovesList();
+  const activeMove = useSelector(selectActiveMove);
+  const groupedMovesList = useSelector(selectGroupedMovesList);
 
   const handleClick = (groupIndex, moveIndex) => {
     const move = groupedMovesList[groupIndex][moveIndex];
-    setActiveMove({ groupIndex, moveIndex });
+    dispatch(setActiveMove({ groupIndex, moveIndex }));
     setBoard(move.board);
     dispatch(setCapturedPieces(move.capturedPieces));
   };
 
   const checkIfActiveMove = (groupIndex, moveIndex) => {
     if (
+      activeMove &&
       activeMove.groupIndex === groupIndex &&
       activeMove.moveIndex === moveIndex
     )

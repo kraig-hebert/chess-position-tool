@@ -8,6 +8,10 @@ import {
   setHasMoved,
   selectCapturedPieces,
   setCapturedPieces,
+  setMovesList,
+  setActiveMove,
+  selectMovesList,
+  selectNextGroupedMovesListIndex,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -24,7 +28,6 @@ import {
   selectPieceIcons,
   selectActiveAction,
   selectSelectedPieceType,
-  selectNextMoveColor,
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
@@ -48,11 +51,7 @@ const Board = () => {
     enPassantTarget,
     setEnPassantTarget,
     pov,
-    movesList,
-    setMovesList,
     toggleActiveColor,
-    setActiveMove,
-    getNextGroupedMovesListIndex,
     isEditMode,
     selectedMoveSquare,
     setSelectedMoveSquare,
@@ -65,10 +64,11 @@ const Board = () => {
   const capturedPieces = useSelector(selectCapturedPieces);
   const activeAction = useSelector(selectActiveAction);
   const selectedPieceType = useSelector(selectSelectedPieceType);
-  const nextMoveColor = useSelector(selectNextMoveColor);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
+  const movesList = useSelector(selectMovesList);
+  const nextIndex = useSelector(selectNextGroupedMovesListIndex);
 
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -228,16 +228,17 @@ const Board = () => {
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
-      const { groupIndex, moveIndex } = getNextGroupedMovesListIndex();
-      setActiveMove({ groupIndex, moveIndex });
-      setMovesList([
-        ...movesList,
-        {
-          moveNotation,
-          board: move.newBoard,
-          capturedPieces: tempCapturedPieces,
-        },
-      ]);
+      dispatch(setActiveMove(nextIndex));
+      dispatch(
+        setMovesList([
+          ...movesList,
+          {
+            moveNotation,
+            board: move.newBoard,
+            capturedPieces: tempCapturedPieces,
+          },
+        ])
+      );
 
       toggleActiveColor();
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
@@ -358,16 +359,19 @@ const Board = () => {
       promotionSquare.piece === "P" ? piece.toUpperCase() : piece.toLowerCase();
     newBoard[selectedPiece.row][selectedPiece.col] = null;
 
-    const { groupIndex, moveIndex } = getNextGroupedMovesListIndex();
-    setActiveMove({ groupIndex, moveIndex });
-    setMovesList([
-      ...movesList,
-      {
-        moveNotation: `${promotionSquare.moveNotation}=${piece.toUpperCase()}`,
-        board: newBoard,
-        capturedPieces: tempCapturedPieces,
-      },
-    ]);
+    dispatch(setActiveMove(nextIndex));
+    dispatch(
+      setMovesList([
+        ...movesList,
+        {
+          moveNotation: `${
+            promotionSquare.moveNotation
+          }=${piece.toUpperCase()}`,
+          board: newBoard,
+          capturedPieces: tempCapturedPieces,
+        },
+      ])
+    );
     setBoard(newBoard);
     setPromotionSquare(null);
     setSelectedPiece(null);

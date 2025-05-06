@@ -7,6 +7,10 @@ import {
   resetTempHasMoved,
   selectTempHasMoved,
   setCapturedPieces,
+  setMovesList,
+  setActiveMove,
+  selectActiveMove,
+  selectGroupedMovesList,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -24,6 +28,7 @@ import {
   selectEnPassantEnabled,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
+  resetEditMode,
 } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
@@ -37,16 +42,14 @@ const GameButtons = () => {
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
+  const activeMove = useSelector(selectActiveMove);
+  const groupedMovesList = useSelector(selectGroupedMovesList);
 
   const {
     togglePov,
-    activeMove,
     setBoard,
-    setActiveMove,
-    getGroupedMovesList,
     isEditMode,
     setIsEditMode,
-    setMovesList,
     board,
     initialBoard,
     setActiveColor,
@@ -63,15 +66,15 @@ const GameButtons = () => {
     resetGame();
   };
 
-  const groupedMovesList = getGroupedMovesList();
-
   const handleMoveBackwards = () => {
     if (activeMove.groupIndex === 0 && activeMove.moveIndex === 0) return;
     if (activeMove.moveIndex === 1) {
-      setActiveMove({
-        groupIndex: activeMove.groupIndex,
-        moveIndex: 0,
-      });
+      dispatch(
+        setActiveMove({
+          groupIndex: activeMove.groupIndex,
+          moveIndex: 0,
+        })
+      );
       dispatch(
         setCapturedPieces(
           groupedMovesList[activeMove.groupIndex][0].capturedPieces
@@ -79,7 +82,9 @@ const GameButtons = () => {
       );
       setBoard(groupedMovesList[activeMove.groupIndex][0].board);
     } else {
-      setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 });
+      dispatch(
+        setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 })
+      );
       dispatch(
         setCapturedPieces(
           groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
@@ -98,10 +103,12 @@ const GameButtons = () => {
     )
       return;
     if (activeMove.moveIndex === 1) {
-      setActiveMove({
-        groupIndex: activeMove.groupIndex + 1,
-        moveIndex: 0,
-      });
+      dispatch(
+        setActiveMove({
+          groupIndex: activeMove.groupIndex + 1,
+          moveIndex: 0,
+        })
+      );
       dispatch(
         setCapturedPieces(
           groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
@@ -109,7 +116,9 @@ const GameButtons = () => {
       );
       setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board);
     } else {
-      setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 });
+      dispatch(
+        setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 })
+      );
       dispatch(
         setCapturedPieces(
           groupedMovesList[activeMove.groupIndex][1].capturedPieces
@@ -166,16 +175,19 @@ const GameButtons = () => {
           board: copyBoard(board),
           capturedPieces: captured,
         };
-        setMovesList([placeholderMove]);
-        setActiveMove({ groupIndex: 0, moveIndex: 1 });
+        dispatch(setMovesList([placeholderMove]));
+        dispatch(setActiveMove({ groupIndex: 0, moveIndex: 1 }));
       } else {
         // If white to move, just reset the moves list
-        setMovesList([]);
-        setActiveMove(null);
+        dispatch(setMovesList([]));
+        dispatch(setActiveMove(null));
       }
 
       // Set game to active
       dispatch(setGameIsActive(true));
+
+      // Reset all UI edit mode states
+      dispatch(resetEditMode());
 
       // Exit edit mode
       setIsEditMode(false);
