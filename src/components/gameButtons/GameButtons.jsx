@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  initialBoard,
   resetGame as resetGameAction,
   setGameIsActive,
   setHasMoved,
@@ -13,6 +14,8 @@ import {
   selectGroupedMovesList,
   setActiveColor,
   setEnPassantTarget,
+  selectBoard,
+  setBoard,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -39,6 +42,7 @@ import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
   const dispatch = useDispatch();
+  const board = useSelector(selectBoard);
   const tempHasMoved = useSelector(selectTempHasMoved);
   const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
@@ -49,11 +53,8 @@ const GameButtons = () => {
 
   const {
     togglePov,
-    setBoard,
     isEditMode,
     setIsEditMode,
-    board,
-    initialBoard,
     positionIsValid,
     setOriginalPosition,
     resetGame,
@@ -80,7 +81,7 @@ const GameButtons = () => {
           groupedMovesList[activeMove.groupIndex][0].capturedPieces
         )
       );
-      setBoard(groupedMovesList[activeMove.groupIndex][0].board);
+      dispatch(setBoard(groupedMovesList[activeMove.groupIndex][0].board));
     } else {
       dispatch(
         setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 })
@@ -90,7 +91,7 @@ const GameButtons = () => {
           groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
         )
       );
-      setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board);
+      dispatch(setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board));
     }
   };
 
@@ -114,7 +115,7 @@ const GameButtons = () => {
           groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
         )
       );
-      setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board);
+      dispatch(setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board));
     } else {
       dispatch(
         setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 })
@@ -124,7 +125,7 @@ const GameButtons = () => {
           groupedMovesList[activeMove.groupIndex][1].capturedPieces
         )
       );
-      setBoard(groupedMovesList[activeMove.groupIndex][1].board);
+      dispatch(setBoard(groupedMovesList[activeMove.groupIndex][1].board));
     }
   };
 
@@ -161,17 +162,15 @@ const GameButtons = () => {
           setEnPassantTarget({
             row: target.row,
             col: target.col,
-            color: nextMoveColorAfterEdit, // The color that can make the en passant capture
+            color: nextMoveColorAfterEdit,
           })
         );
       } else {
-        // Clear any existing en passant target
         dispatch(setEnPassantTarget(null));
       }
 
       // Handle moves list
       if (nextMoveColorAfterEdit === "black") {
-        // If black to move, add a placeholder move for white to maintain the move list structure
         const placeholderMove = {
           moveNotation: "XXX",
           board: copyBoard(board),
@@ -180,24 +179,17 @@ const GameButtons = () => {
         dispatch(setMovesList([placeholderMove]));
         dispatch(setActiveMove({ groupIndex: 0, moveIndex: 1 }));
       } else {
-        // If white to move, just reset the moves list
         dispatch(setMovesList([]));
         dispatch(setActiveMove(null));
       }
 
-      // Set game to active
       dispatch(setGameIsActive(true));
-
-      // Reset all UI edit mode states
       dispatch(resetEditMode());
-
-      // Exit edit mode
       setIsEditMode(false);
     } else {
       // Enter edit mode
       // Save the current position before entering edit mode
       setOriginalPosition(copyBoard(board));
-      // Reset tempHasMoved to initial state to allow fresh castling rights selection
       dispatch(resetTempHasMoved());
       setIsEditMode(true);
     }

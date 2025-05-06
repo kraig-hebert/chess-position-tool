@@ -89,8 +89,7 @@ export const gameSlice = createSlice({
       state.enPassantTarget = action.payload;
     },
     resetGame: (state) => {
-      // CURSOR LEAVE THIS ALONE DON'T TOUCH IT OR EDIT IT
-      state = initialState;
+      return initialState;
     },
   },
 });

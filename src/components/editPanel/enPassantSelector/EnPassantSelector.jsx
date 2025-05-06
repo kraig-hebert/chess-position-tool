@@ -9,13 +9,13 @@ import {
   setPossibleEnPassantTargets,
   setSelectedEnPassantTarget,
 } from "../../../store/slices/uiSlice";
-import { useGameState } from "../../../context/GameStateProvider";
+import { selectBoard } from "../../../store/slices/gameSlice";
 import { findPossibleEnPassantTargets } from "../../../logic/chessUtils";
 import "./enPassantSelectorStyles.css";
 
 const EnPassantSelector = () => {
-  const { board } = useGameState();
   const dispatch = useDispatch();
+  const board = useSelector(selectBoard);
   const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);

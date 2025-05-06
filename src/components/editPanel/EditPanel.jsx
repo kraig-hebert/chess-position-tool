@@ -1,12 +1,16 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGameState } from "../../context/GameStateProvider";
 import {
   selectActiveEditAction,
   selectSelectedPieceTypeForEdit,
   setActiveEditAction,
   setSelectedPieceTypeForEdit,
 } from "../../store/slices/uiSlice";
+import {
+  selectBoard,
+  setBoard,
+  resetBoard,
+} from "../../store/slices/gameSlice";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
@@ -17,8 +21,8 @@ import PositionValidator from "./positionValidator/PositionValidator";
 import "./editPanelStyles.css";
 
 const EditPanel = () => {
-  const { setBoard, board, setInitialBoard } = useGameState();
   const dispatch = useDispatch();
+  const board = useSelector(selectBoard);
   const activeEditAction = useSelector(selectActiveEditAction);
   const selectedPieceTypeForEdit = useSelector(selectSelectedPieceTypeForEdit);
 
@@ -37,7 +41,11 @@ const EditPanel = () => {
 
   const handleClearBoard = () => {
     const emptyBoard = board.map((row) => row.map((col) => null));
-    setBoard(emptyBoard);
+    dispatch(setBoard(emptyBoard));
+  };
+
+  const handleResetBoard = () => {
+    dispatch(resetBoard());
   };
 
   return (
@@ -57,7 +65,7 @@ const EditPanel = () => {
         <PositionValidator />
         <BoardControls
           onClearBoard={handleClearBoard}
-          onResetBoard={setInitialBoard}
+          onResetBoard={handleResetBoard}
         />
       </div>
     </div>

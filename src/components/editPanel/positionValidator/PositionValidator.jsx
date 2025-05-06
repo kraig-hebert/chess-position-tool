@@ -4,9 +4,11 @@ import { validatePosition } from "../../../logic/chessUtils";
 import "./positionValidatorStyles.css";
 import { useSelector } from "react-redux";
 import { selectNextMoveColorAfterEdit } from "../../../store/slices/uiSlice";
+import { selectBoard } from "../../../store/slices/gameSlice";
 
 const PositionValidator = () => {
-  const { board, setPositionIsValid } = useGameState();
+  const { setPositionIsValid } = useGameState();
+  const board = useSelector(selectBoard);
   const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const [validationResult, setValidationResult] = useState({
     isValid: true,
