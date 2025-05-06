@@ -18,6 +18,9 @@ import {
   setEnPassantTarget,
   selectBoard,
   setBoard,
+  selectSelectedPiece,
+  setSelectedPiece,
+  resetSelectedPiece,
 } from "../../store/slices/gameSlice";
 import { makePieceMove } from "../../logic/moveValidation";
 import {
@@ -50,7 +53,7 @@ import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
-  const { selectedPiece, setSelectedPiece, pov, isEditMode } = useGameState();
+  const { pov, isEditMode } = useGameState();
 
   const dispatch = useDispatch();
   const board = useSelector(selectBoard);
@@ -68,7 +71,7 @@ const Board = () => {
   const selectedEditMoveSquare = useSelector(selectSelectedEditMoveSquare);
   const activeColor = useSelector(selectActiveColor);
   const enPassantTarget = useSelector(selectEnPassantTarget);
-
+  const selectedPiece = useSelector(selectSelectedPiece);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
@@ -148,7 +151,7 @@ const Board = () => {
         (selectedPiece.row === row && selectedPiece.col === col) ||
         isSameColor(selectedPiece.piece, nextMove)
       ) {
-        setSelectedPiece(null);
+        dispatch(resetSelectedPiece());
         return; // return and block move
       }
 
@@ -162,7 +165,7 @@ const Board = () => {
       );
 
       if (!move || isKingInCheck(move.newBoard, activeColor)) {
-        setSelectedPiece(null);
+        dispatch(resetSelectedPiece());
         return;
       }
 
@@ -228,13 +231,12 @@ const Board = () => {
       }
 
       dispatch(setBoard(move.newBoard));
-      setSelectedPiece(null);
+      dispatch(resetSelectedPiece());
       // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
       if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
       if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
         console.log("Checkmate!");
-        dispatch(setGameIsActive(false));
         moveNotation = moveNotation.slice(0, -1); // remove + from initial check
         moveNotation += "#";
       }
@@ -252,7 +254,7 @@ const Board = () => {
 
       dispatch(toggleActiveColor());
     } else if (nextMove && getPieceColor(nextMove) === activeColor) {
-      setSelectedPiece({ row, col, piece: nextMove });
+      dispatch(setSelectedPiece({ row, col, piece: nextMove }));
     }
   };
 
@@ -381,7 +383,7 @@ const Board = () => {
     );
     dispatch(setBoard(newBoard));
     setPromotionSquare(null);
-    setSelectedPiece(null);
+    dispatch(resetSelectedPiece());
     dispatch(setGameIsActive(true));
     dispatch(toggleActiveColor());
   };
