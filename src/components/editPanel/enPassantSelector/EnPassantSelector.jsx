@@ -26,15 +26,10 @@ const EnPassantSelector = () => {
     const targets = findPossibleEnPassantTargets(board, nextMoveColorAfterEdit);
     dispatch(setPossibleEnPassantTargets(targets));
 
-    // Reset the selected target if there are targets available
     if (targets.length > 0) {
-      dispatch(
-        setSelectedEnPassantTarget(
-          selectedEnPassantTarget ? selectedEnPassantTarget : 0
-        )
-      );
+      dispatch(setSelectedEnPassantTarget(0));
     }
-  }, [board, nextMoveColorAfterEdit, dispatch, selectedEnPassantTarget]);
+  }, [board, nextMoveColorAfterEdit, dispatch]);
 
   const handleEnPassantToggle = () => dispatch(toggleEnPassant());
 
