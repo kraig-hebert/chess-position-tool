@@ -26,15 +26,32 @@ const EnPassantSelector = () => {
     const targets = findPossibleEnPassantTargets(board, nextMoveColorAfterEdit);
     dispatch(setPossibleEnPassantTargets(targets));
 
-    if (targets.length > 0) {
-      dispatch(setSelectedEnPassantTarget(0));
+    // If there are no targets, clear the selection
+    if (targets.length === 0) {
+      dispatch(setSelectedEnPassantTarget(null));
+      return;
     }
-  }, [board, nextMoveColorAfterEdit, dispatch]);
+
+    // If there are targets but no selection, select the first one
+    if (selectedEnPassantTarget === null) {
+      dispatch(setSelectedEnPassantTarget(targets[0].notation));
+      return;
+    }
+
+    // Check if the currently selected target still exists in the new list
+    const targetExists = targets.some(
+      (target) => target.notation === selectedEnPassantTarget
+    );
+    if (!targetExists) {
+      // If the selected target no longer exists, select the first available target
+      dispatch(setSelectedEnPassantTarget(targets[0].notation));
+    }
+  }, [board, nextMoveColorAfterEdit, dispatch, selectedEnPassantTarget]);
 
   const handleEnPassantToggle = () => dispatch(toggleEnPassant());
 
-  const handleTargetSelect = (index) =>
-    dispatch(setSelectedEnPassantTarget(index));
+  const handleTargetSelect = (notation) =>
+    dispatch(setSelectedEnPassantTarget(notation));
 
   return (
     <div className="en-passant-selector">
@@ -52,13 +69,15 @@ const EnPassantSelector = () => {
         <div className="en-passant-targets">
           <div className="targets-label">Capture at:</div>
           <div className="targets-list">
-            {possibleEnPassantTargets.map((target, index) => (
+            {possibleEnPassantTargets.map((target) => (
               <div
-                key={`${target.row}-${target.col}`}
+                key={target.notation}
                 className={`target-option ${
-                  selectedEnPassantTarget === index ? "target-selected" : ""
+                  selectedEnPassantTarget === target.notation
+                    ? "target-selected"
+                    : ""
                 }`}
-                onClick={() => handleTargetSelect(index)}
+                onClick={() => handleTargetSelect(target.notation)}
               >
                 {target.notation}
               </div>

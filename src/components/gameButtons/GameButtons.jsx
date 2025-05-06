@@ -156,15 +156,23 @@ const GameButtons = () => {
       dispatch(setActiveColor(nextMoveColorAfterEdit));
 
       // Set en passant target if enabled and a valid target is selected
-      if (enPassantEnabled && possibleEnPassantTargets.length > 0) {
-        const target = possibleEnPassantTargets[selectedEnPassantTarget];
-        dispatch(
-          setEnPassantTarget({
-            row: target.row,
-            col: target.col,
-            color: nextMoveColorAfterEdit,
-          })
+      if (
+        enPassantEnabled &&
+        possibleEnPassantTargets.length > 0 &&
+        selectedEnPassantTarget
+      ) {
+        const target = possibleEnPassantTargets.find(
+          (target) => target.notation === selectedEnPassantTarget
         );
+        if (target) {
+          dispatch(
+            setEnPassantTarget({
+              row: target.row,
+              col: target.col,
+              color: nextMoveColorAfterEdit,
+            })
+          );
+        }
       } else {
         dispatch(setEnPassantTarget(null));
       }

@@ -267,8 +267,12 @@ const Board = () => {
     // For en passant target highlighting
     let enPassantTargetSquare = null;
     if (isEditMode && enPassantEnabled && possibleEnPassantTargets.length > 0) {
-      const target = possibleEnPassantTargets[selectedEnPassantTarget];
-      enPassantTargetSquare = { row: target.row, col: target.col };
+      const target = possibleEnPassantTargets.find(
+        (target) => target.notation === selectedEnPassantTarget
+      );
+      if (target) {
+        enPassantTargetSquare = { row: target.row, col: target.col };
+      }
     }
 
     if (!isEditMode) {
