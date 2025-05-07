@@ -87,7 +87,9 @@ export const uiSlice = createSlice({
       state.selectedEditMoveSquare = action.payload;
     },
     resetEditMode: (state) => {
-      return initialState;
+      const currentPov = state.pov;
+      const result = { ...initialState, pov: currentPov };
+      return result;
     },
     setPov: (state, action) => {
       state.pov = action.payload;
