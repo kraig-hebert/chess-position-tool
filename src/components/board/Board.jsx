@@ -42,6 +42,7 @@ import {
   selectSelectedEnPassantTarget,
   selectSelectedEditMoveSquare,
   setSelectedEditMoveSquare,
+  selectPov,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -53,7 +54,8 @@ import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
-  const { pov, isEditMode } = useGameState();
+  const { isEditMode } = useGameState();
+  const pov = useSelector(selectPov);
 
   const dispatch = useDispatch();
   const board = useSelector(selectBoard);

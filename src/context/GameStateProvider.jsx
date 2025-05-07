@@ -1,11 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-const initialPov = "white";
-
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
-  const [pov, setPov] = useState(initialPov);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // Add position validation state
@@ -14,13 +11,7 @@ export const GameStateProvider = ({ children }) => {
   // Add state for storing the original position before entering edit mode
   const [originalPosition, setOriginalPosition] = useState(null);
 
-  const togglePov = () => {
-    if (pov === "white") setPov("black");
-    else setPov("white");
-  };
-
   const resetGame = () => {
-    setPov(initialPov);
     setIsEditMode(false);
   };
 
@@ -28,9 +19,6 @@ export const GameStateProvider = ({ children }) => {
     <GameStateContext.Provider
       value={{
         resetGame,
-        pov,
-        setPov,
-        togglePov,
         isEditMode,
         setIsEditMode,
         positionIsValid,

@@ -34,6 +34,7 @@ import {
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
   resetEditMode,
+  togglePov,
 } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
@@ -52,7 +53,6 @@ const GameButtons = () => {
   const groupedMovesList = useSelector(selectGroupedMovesList);
 
   const {
-    togglePov,
     isEditMode,
     setIsEditMode,
     positionIsValid,
@@ -220,7 +220,7 @@ const GameButtons = () => {
       <GameButton
         title="Flip Board"
         Icon={FaArrowDownUpAcrossLine}
-        onClick={togglePov}
+        onClick={() => dispatch(togglePov())}
         disabled={isEditMode}
       />
       <GameButton

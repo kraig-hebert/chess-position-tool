@@ -28,6 +28,7 @@ const initialState = {
     Q: { iconName: "queen", className: "piece white" },
     K: { iconName: "king", className: "piece white" },
   },
+  pov: "white",
   selectedPieceTypeForEdit: null,
   activeEditAction: "add", // "add", "move", "trash"
   nextMoveColorAfterEdit: "white",
@@ -88,6 +89,12 @@ export const uiSlice = createSlice({
     resetEditMode: (state) => {
       return initialState;
     },
+    setPov: (state, action) => {
+      state.pov = action.payload;
+    },
+    togglePov: (state) => {
+      state.pov = state.pov === "white" ? "black" : "white";
+    },
   },
 });
 
@@ -135,6 +142,9 @@ export const selectSelectedEnPassantTarget = (state) =>
 export const selectSelectedEditMoveSquare = (state) =>
   state.ui.selectedEditMoveSquare;
 
+// Add pov selector
+export const selectPov = (state) => state.ui.pov;
+
 export const {
   toggleFiltersByColor,
   toggleActiveFilterType,
@@ -146,6 +156,8 @@ export const {
   setSelectedEnPassantTarget,
   setSelectedEditMoveSquare,
   resetEditMode,
+  setPov,
+  togglePov,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

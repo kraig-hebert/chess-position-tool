@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import {
   FaTrashCan,
   FaRotateLeft,
@@ -6,17 +7,14 @@ import {
   FaReply,
 } from "react-icons/fa6";
 import { useGameState } from "../../../context/GameStateProvider";
+import { togglePov } from "../../../store/slices/uiSlice";
+import { setBoard } from "../../../store/slices/gameSlice";
 import "./boardControlsStyles.css";
 
 const BoardControls = (props) => {
   const { onClearBoard, onResetBoard } = props;
-  const { togglePov, originalPosition, setBoard } = useGameState();
-
-  const handleReturnToPosition = () => {
-    if (originalPosition) {
-      setBoard(originalPosition);
-    }
-  };
+  const { originalPosition } = useGameState();
+  const dispatch = useDispatch();
 
   return (
     <div className="board-controls">
@@ -24,11 +22,17 @@ const BoardControls = (props) => {
         <FaRotateLeft />
         <span>Reset</span>
       </button>
-      <button className="board-control-button" onClick={handleReturnToPosition}>
+      <button
+        className="board-control-button"
+        onClick={() => dispatch(setBoard(originalPosition))}
+      >
         <FaReply />
         <span>Return</span>
       </button>
-      <button className="board-control-button" onClick={togglePov}>
+      <button
+        className="board-control-button"
+        onClick={() => dispatch(togglePov())}
+      >
         <FaArrowDownUpAcrossLine />
         <span>Flip</span>
       </button>

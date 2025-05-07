@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useGameState } from "../../../context/GameStateProvider";
 import { letterNotation } from "../../../logic/chessUtils";
 import { getSquareControl } from "../../../logic/filterUtils";
-import { selectActiveFilters } from "../../../store/slices/uiSlice";
+import { selectActiveFilters, selectPov } from "../../../store/slices/uiSlice";
 
 import "./squareStyles.css";
 import PieceIcon from "../pieceIcon/PieceIcon";
@@ -22,7 +22,7 @@ const Square = (props) => {
     col,
   } = props;
 
-  const { pov } = useGameState();
+  const pov = useSelector(selectPov);
   const activeFilters = useSelector(selectActiveFilters);
 
   const leftNotation = col === 0;
