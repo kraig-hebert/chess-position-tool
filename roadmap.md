@@ -3,6 +3,7 @@
 ## Bugs to Fix
 
 - Add isKingInCheck and isCheckmate to promotionPieceSelect after piece is chosen
+- when user is not on the latest move the state gets wonky when you select a piece or move. maybe disable the game
 
 ## Architecture & Foundation (Priority)
 

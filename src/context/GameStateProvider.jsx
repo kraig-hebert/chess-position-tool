@@ -5,7 +5,6 @@ const initialPov = "white";
 const GameStateContext = createContext();
 
 export const GameStateProvider = ({ children }) => {
-  const [selectedPiece, setSelectedPiece] = useState(null);
   const [pov, setPov] = useState(initialPov);
   const [isEditMode, setIsEditMode] = useState(false);
 
@@ -21,7 +20,6 @@ export const GameStateProvider = ({ children }) => {
   };
 
   const resetGame = () => {
-    setSelectedPiece(null);
     setPov(initialPov);
     setIsEditMode(false);
   };
@@ -29,8 +27,6 @@ export const GameStateProvider = ({ children }) => {
   return (
     <GameStateContext.Provider
       value={{
-        selectedPiece,
-        setSelectedPiece,
         resetGame,
         pov,
         setPov,
