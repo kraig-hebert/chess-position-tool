@@ -8,21 +8,26 @@
 
 ## Architecture & Foundation (Priority)
 
-- **Redux Migration**
-  - Replace context with Redux for state management
-  - Set up folder structure for actions, reducers, and selectors
-  - Consider using Redux Toolkit for simplification
-- Move pieceIcons from gamestate to chessUtils
-- **Component Library**
-  - Establish reusable UI components with consistent styling
-  - Document component props and behaviors
+- **Moves List Refactoring**
+
+  - Simplify moves list data structure
+  - Improve move navigation logic
+  - Centralize move state management
+  - Clean up notation creation
+  - Add support for variations/branches
+  - Improve move history UI
+  - Add move metadata (comments, evaluation, etc.)
+
 - **Testing Infrastructure**
   - Set up unit tests for chess logic
   - Implement component tests for UI
+  - Add integration tests for game flow
+  - Set up CI/CD pipeline
 
 ## Board Enhancements
 
 - Show controlled squares using color filters of different gradients for amount of control on square
+
   - Create button that turns cursor into a pressure selector and when you click a square it highlights which pieces are pressuring the square
   - Allow user to choose between types of pressures
     - Immediate: only show primary pressure
@@ -33,6 +38,7 @@
     - Ex: square pressures can show board sides pressure or combine to only show who has control of the square
       - Have counter for each color on dark and light square color control
       - When showing square control take piece value into account as well...maybe show control by total pieces but also asterix if queen involved or minor piece and pawn totals are mismatched
+
 - Add replay button to walk step by step through the position
   - For memorization
   - Allow user to control replay speed, and select which information will show at each position
@@ -99,12 +105,11 @@
 
 ## Timeline
 
-### Phase 1: Foundation (Highest Priority)
+### Phase 1: Foundation (Current)
 
-- **Redux Migration** - Start with this since it affects the entire architecture
 - Fix existing bugs
-- Set up component library structure
-- Implement basic testing framework
+- Implement moves list refactoring
+- Set up testing infrastructure
 
 ### Phase 2: Core Functionality
 
