@@ -1,0 +1,49 @@
+.study-variation-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+}
+
+/* Hover states */
+.study-variation-btn:hover:not(.study-variation-btn--disabled) {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #2196f3;
+}
+
+/* Active states */
+.study-variation-btn--active {
+  background-color: rgba(33, 150, 243, 0.15);
+  border-color: #ffd700;
+}
+
+/* Icon styles */
+.study-variation-btn__icon {
+  width: 18px;
+  height: 18px;
+  color: #2196f3;
+}
+
+/* Label styles */
+.study-variation-btn__label {
+  font-size: 0.9em;
+  white-space: nowrap;
+  color: #ffd700;
+}
+
+/* Disabled state */
+.study-variation-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: rgba(255, 255, 255, 0.2);
+}

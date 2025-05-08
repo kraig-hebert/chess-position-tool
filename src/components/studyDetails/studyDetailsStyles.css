@@ -4,10 +4,18 @@
   flex-direction: column;
   width: 400px;
   height: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   left: 100%;
   top: 0;
-  background-color: yellow;
+  background-color: rgb(10, 48, 110); /* Dark blue theme */
+}
+
+/* Variation buttons section */
+.study-details__variation-btns {
+  display: flex;
+  width: 95%;
+  justify-content: space-around;
+  margin-top: auto;
+  padding: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
 }

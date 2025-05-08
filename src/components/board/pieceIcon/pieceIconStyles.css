@@ -1,4 +1,5 @@
 .piece {
+  display: flex;
   font-size: 65px;
   user-select: none;
 }

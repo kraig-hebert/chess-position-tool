@@ -48,14 +48,14 @@ const Scoreboard = () => {
       <div id="scoreboard-white" className="scoreboard-side">
         <div className="side-title">White: </div>
         <div className="captured-pieces">{renderPieceIcons("white")}</div>
-        <span>
+        <span className="score-diff">
           {whiteScore - blackScore > 0 ? `+ ${whiteScore - blackScore}` : ""}
         </span>
       </div>
       <div id="scoreboard-black" className="scoreboard-side">
         <div className="side-title">Black: </div>
         <div className="captured-pieces">{renderPieceIcons("black")}</div>
-        <span>
+        <span className="score-diff">
           {blackScore - whiteScore > 0 ? `+${blackScore - whiteScore}` : ""}
         </span>
       </div>
