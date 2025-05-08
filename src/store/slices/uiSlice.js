@@ -29,6 +29,7 @@ const initialState = {
     K: { iconName: "king", className: "piece white" },
   },
   pov: "white",
+  isEditMode: false,
   selectedPieceTypeForEdit: null,
   activeEditAction: "add", // "add", "move", "trash"
   nextMoveColorAfterEdit: "white",
@@ -86,6 +87,9 @@ export const uiSlice = createSlice({
     setSelectedEditMoveSquare: (state, action) => {
       state.selectedEditMoveSquare = action.payload;
     },
+    setIsEditMode: (state, action) => {
+      state.isEditMode = action.payload;
+    },
     resetEditMode: (state) => {
       const currentPov = state.pov;
       const result = { ...initialState, pov: currentPov };
@@ -131,6 +135,7 @@ export const selectuppercaseFormattedFIlterType = (state) => {
 };
 
 // Edit mode selectors
+export const selectIsEditMode = (state) => state.ui.isEditMode;
 export const selectSelectedPieceTypeForEdit = (state) =>
   state.ui.selectedPieceTypeForEdit;
 export const selectActiveEditAction = (state) => state.ui.activeEditAction;
@@ -160,6 +165,7 @@ export const {
   resetEditMode,
   setPov,
   togglePov,
+  setIsEditMode,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { useGameState } from "../../../context/GameStateProvider";
 import { letterNotation } from "../../../logic/chessUtils";
 import { getSquareControl } from "../../../logic/filterUtils";
 import { selectActiveFilters, selectPov } from "../../../store/slices/uiSlice";

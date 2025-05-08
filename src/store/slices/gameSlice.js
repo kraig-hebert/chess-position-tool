@@ -38,6 +38,8 @@ const initialState = {
   activeColor: "white",
   enPassantTarget: null,
   selectedPiece: null,
+  positionIsValid: true,
+  originalPosition: null,
 };
 
 export const gameSlice = createSlice({
@@ -95,6 +97,12 @@ export const gameSlice = createSlice({
     resetSelectedPiece: (state) => {
       state.selectedPiece = null;
     },
+    setPositionIsValid: (state, action) => {
+      state.positionIsValid = action.payload;
+    },
+    setOriginalPosition: (state, action) => {
+      state.originalPosition = action.payload;
+    },
     resetGame: (state) => {
       return initialState;
     },
@@ -112,6 +120,8 @@ export const selectActiveMove = (state) => state.game.activeMove;
 export const selectActiveColor = (state) => state.game.activeColor;
 export const selectEnPassantTarget = (state) => state.game.enPassantTarget;
 export const selectSelectedPiece = (state) => state.game.selectedPiece;
+export const selectPositionIsValid = (state) => state.game.positionIsValid;
+export const selectOriginalPosition = (state) => state.game.originalPosition;
 
 // Memoized selectors
 export const selectGroupedMovesList = createSelector(
@@ -141,6 +151,8 @@ export const {
   setEnPassantTarget,
   setSelectedPiece,
   resetSelectedPiece,
+  setPositionIsValid,
+  setOriginalPosition,
   resetGame,
 } = gameSlice.actions;
 

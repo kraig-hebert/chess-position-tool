@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useGameState } from "../../../context/GameStateProvider";
+import { useDispatch, useSelector } from "react-redux";
+import { selectNextMoveColorAfterEdit } from "../../../store/slices/uiSlice";
+import {
+  setPositionIsValid,
+  selectBoard,
+} from "../../../store/slices/gameSlice";
 import { validatePosition } from "../../../logic/chessUtils";
 import "./positionValidatorStyles.css";
-import { useSelector } from "react-redux";
-import { selectNextMoveColorAfterEdit } from "../../../store/slices/uiSlice";
-import { selectBoard } from "../../../store/slices/gameSlice";
 
 const PositionValidator = () => {
-  const { setPositionIsValid } = useGameState();
+  const dispatch = useDispatch();
   const board = useSelector(selectBoard);
   const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const [validationResult, setValidationResult] = useState({
@@ -20,9 +22,9 @@ const PositionValidator = () => {
     const result = validatePosition(board, nextMoveColorAfterEdit);
     setValidationResult(result);
 
-    // Update the global positionIsValid state
-    setPositionIsValid(result.isValid);
-  }, [board, nextMoveColorAfterEdit, setPositionIsValid]);
+    // Update the global positionIsValid state in Redux
+    dispatch(setPositionIsValid(result.isValid));
+  }, [board, nextMoveColorAfterEdit, dispatch]);
 
   // If there are no errors, don't render anything
   if (validationResult.isValid) {

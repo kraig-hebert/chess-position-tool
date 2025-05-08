@@ -1,20 +1,22 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   FaTrashCan,
   FaRotateLeft,
   FaArrowDownUpAcrossLine,
   FaReply,
 } from "react-icons/fa6";
-import { useGameState } from "../../../context/GameStateProvider";
 import { togglePov } from "../../../store/slices/uiSlice";
-import { setBoard } from "../../../store/slices/gameSlice";
+import {
+  setBoard,
+  selectOriginalPosition,
+} from "../../../store/slices/gameSlice";
 import "./boardControlsStyles.css";
 
 const BoardControls = (props) => {
   const { onClearBoard, onResetBoard } = props;
-  const { originalPosition } = useGameState();
   const dispatch = useDispatch();
+  const originalPosition = useSelector(selectOriginalPosition);
 
   return (
     <div className="board-controls">

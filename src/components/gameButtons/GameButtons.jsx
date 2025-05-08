@@ -16,6 +16,8 @@ import {
   setEnPassantTarget,
   selectBoard,
   setBoard,
+  selectPositionIsValid,
+  setOriginalPosition,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -26,7 +28,6 @@ import {
 } from "react-icons/fa6";
 import { FaSave } from "react-icons/fa";
 
-import { useGameState } from "../../context/GameStateProvider";
 import { calculateCapturedPieces, copyBoard } from "../../logic/chessUtils";
 import {
   selectNextMoveColorAfterEdit,
@@ -35,6 +36,8 @@ import {
   selectSelectedEnPassantTarget,
   resetEditMode,
   togglePov,
+  selectIsEditMode,
+  setIsEditMode,
 } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
@@ -51,20 +54,11 @@ const GameButtons = () => {
   const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
   const activeMove = useSelector(selectActiveMove);
   const groupedMovesList = useSelector(selectGroupedMovesList);
-
-  const {
-    isEditMode,
-    setIsEditMode,
-    positionIsValid,
-    setOriginalPosition,
-    resetGame,
-  } = useGameState();
+  const isEditMode = useSelector(selectIsEditMode);
+  const positionIsValid = useSelector(selectPositionIsValid);
 
   const handleReset = () => {
-    // Reset Redux state
     dispatch(resetGameAction());
-    // Reset context state
-    resetGame();
   };
 
   const handleMoveBackwards = () => {
@@ -193,13 +187,13 @@ const GameButtons = () => {
 
       dispatch(setGameIsActive(true));
       dispatch(resetEditMode());
-      setIsEditMode(false);
+      dispatch(setIsEditMode(false));
     } else {
       // Enter edit mode
       // Save the current position before entering edit mode
-      setOriginalPosition(copyBoard(board));
+      dispatch(setOriginalPosition(copyBoard(board)));
       dispatch(resetTempHasMoved());
-      setIsEditMode(true);
+      dispatch(setIsEditMode(true));
     }
   };
 

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useGameState } from "../../context/GameStateProvider";
 import {
   selectGameIsActive,
   setGameIsActive,
@@ -43,6 +42,7 @@ import {
   selectSelectedEditMoveSquare,
   setSelectedEditMoveSquare,
   selectPov,
+  selectIsEditMode,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -54,10 +54,9 @@ import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
 
 const Board = () => {
-  const { isEditMode } = useGameState();
-  const pov = useSelector(selectPov);
-
   const dispatch = useDispatch();
+  const isEditMode = useSelector(selectIsEditMode);
+  const pov = useSelector(selectPov);
   const board = useSelector(selectBoard);
   const gameIsActive = useSelector(selectGameIsActive);
   const pieceIcons = useSelector(selectPieceIcons);
