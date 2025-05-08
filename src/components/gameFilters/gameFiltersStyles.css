@@ -5,7 +5,7 @@
   height: 100%;
   right: 100%;
   top: 0;
-  background-color: yellow;
+  background-color: rgb(48, 110, 10); /* Dark green theme */
 }
 
 .game-filters-content {
@@ -17,59 +17,130 @@
   justify-content: flex-start;
   align-items: center;
   padding: 15px;
+  color: #ffd700; /* Gold text color */
 }
 
-.player-filters {
+/* Color Filters Section */
+.color-filters-section {
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 95%;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 15px;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
-.player-filters:first-of-type {
-  border-bottom: 2px solid black;
-}
-
-.player-filters-title {
+.color-filter-group {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 }
 
-.player-filters-item {
+.color-filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.checkbox {
-  position: relative;
-  height: 16px;
-  width: 16px;
-  border-radius: 3px;
-  transition: 0.3s;
+.color-filter-header span {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.color-filter-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  margin-left: 10px;
-  background-color: red;
+  transition: all 0.2s ease;
 }
 
-.checkbox::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 4px;
-  width: 5px;
-  height: 10px;
-  border: solid #fff;
-  border-width: 0 3px 3px 0;
-  transform: rotate(45deg);
-  opacity: 0;
-  transition: opacity 0.2s ease;
+.filter-checkbox:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.checkbox.checkbox-active:after {
-  opacity: 1;
+.filter-checkbox.active {
+  background-color: rgba(255, 215, 0, 0.15);
+  border-color: #ffd700;
+}
+
+.filter-checkbox svg {
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.filter-checkbox.active svg {
+  color: #ffd700;
+}
+
+.filter-checkbox span {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.filter-checkbox.active span {
+  color: #ffd700;
+  font-weight: 500;
+}
+
+/* Bottom Actions */
+.filter-actions {
+  display: flex;
+  width: 95%;
+  justify-content: space-around;
+  margin-top: auto;
+  padding: 15px;
+  gap: 10px;
+}
+
+.filter-action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+}
+
+.filter-action-button:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffd700;
+}
+
+.filter-action-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.filter-action-button span {
+  font-size: 0.9em;
+  white-space: nowrap;
 }

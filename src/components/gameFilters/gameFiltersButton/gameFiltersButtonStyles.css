@@ -1,0 +1,72 @@
+.game-filters-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Default variant */
+.game-filters-button.default {
+  padding: 8px 12px;
+}
+
+/* Checkbox variant */
+.game-filters-button.checkbox {
+  padding: 8px 12px;
+  width: 100%;
+}
+
+/* Action variant */
+.game-filters-button.action {
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  flex: 1;
+  max-width: 160px;
+}
+
+/* Hover states */
+.game-filters-button:hover:not(.disabled) {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffd700;
+}
+
+/* Active states */
+.game-filters-button.active {
+  background-color: rgba(255, 215, 0, 0.15);
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.game-filters-button.active .button-icon {
+  color: #ffd700;
+}
+
+/* Icon styles */
+.game-filters-button .button-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.game-filters-button.action .button-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Label styles */
+.game-filters-button .button-label {
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+
+/* Disabled state */
+.game-filters-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
