@@ -17,6 +17,11 @@
   padding: 4px 0;
 }
 
+.move-group:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
 .move {
   display: flex;
   flex-direction: row;
@@ -29,11 +34,16 @@
   transition: all 0.2s ease;
 }
 
+.move-number {
+  min-width: 24px;
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .move:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
 .active-move {
   color: #2196f3;
-  background-color: rgba(33, 150, 243, 0.1);
 }

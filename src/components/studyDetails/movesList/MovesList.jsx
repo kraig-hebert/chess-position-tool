@@ -42,7 +42,9 @@ const MovesList = () => {
               className={`move ${checkIfActiveMove(groupIndex, moveIndex)}`}
               onClick={() => handleClick(groupIndex, moveIndex)}
             >
-              {moveIndex % 2 === 0 ? groupIndex + 1 : ""}
+              {moveIndex % 2 === 0 && (
+                <span className="move-number">{groupIndex + 1}.</span>
+              )}
               {move.moveNotation}
             </div>
           );
