@@ -38,19 +38,25 @@ const Square = (props) => {
   const renderedWhiteFilter =
     activeFilters.activeFilterType === "pressure" &&
     whitePressure[row][col] > 0 ? (
-      <div className={`white-filter level-6`}>{whitePressure[row][col]}</div>
+      <div className={`white-filter level-${whitePressure[row][col]}`}>
+        {whitePressure[row][col]}
+      </div>
     ) : null;
 
   const renderedBlackFilter =
     activeFilters.activeFilterType === "pressure" &&
     blackPressure[row][col] > 0 ? (
-      <div className={`black-filter level-6`}>{blackPressure[row][col]}</div>
+      <div className={`black-filter level-${blackPressure[row][col]}`}>
+        {blackPressure[row][col]}
+      </div>
     ) : null;
 
   const renderSquareControl = () => {
     if (squareControl.control > 0 && activeFilters.colors[squareControl.color])
       return (
-        <div className={`${squareControl.color}-filter level-6`}>
+        <div
+          className={`${squareControl.color}-filter level-${squareControl.control}`}
+        >
           {squareControl.control}
         </div>
       );
@@ -93,6 +99,7 @@ const Square = (props) => {
         isSelected ? "selected" : ""
       } ${isEnPassantTarget ? "en-passant-target" : ""}`}
       onClick={onClick}
+      data-filter-type={activeFilters.activeFilterType}
     >
       {piece && <PieceIcon Icon={piece.icon} className={piece.className} />}
       {isLegal && renderLegalMove()}
