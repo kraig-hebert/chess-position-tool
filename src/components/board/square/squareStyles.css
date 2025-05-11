@@ -89,6 +89,9 @@
   font-size: 1rem;
 }
 
+.white-filter {
+}
+
 /* Add z-index for pieces to ensure they're on top */
 .piece {
   position: relative;
@@ -97,30 +100,30 @@
 
 /* Control mode - centered circle with number at top */
 [data-filter-type="control"] .white-filter {
-  color: #fff;
+  color: white;
   align-items: flex-start;
-  padding-top: 5px;
+  border: 1px solid white;
 }
 
 [data-filter-type="control"] .black-filter {
-  color: #fff;
+  color: black;
   align-items: flex-start;
-  padding-top: 5px;
+  border: 1px solid black;
 }
 
 /* Pressure mode - split circle with numbers on sides */
 [data-filter-type="pressure"] .white-filter {
-  color: #fff;
+  color: white;
   clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
   justify-content: flex-start;
-  padding-left: 10px;
+  border: 1px solid white;
 }
 
 [data-filter-type="pressure"] .black-filter {
-  color: #fff;
+  color: black;
   clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
   justify-content: flex-end;
-  padding-right: 10px;
+  border: 1px solid black;
 }
 
 /* Ensure legal moves and notations stay on top */

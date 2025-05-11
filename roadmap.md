@@ -27,6 +27,7 @@
 ## Board Enhancements
 
 - Show controlled squares using color filters of different gradients for amount of control on square
+- show overlay for attacks that win a piece and are safe
 
   - Create button that turns cursor into a pressure selector and when you click a square it highlights which pieces are pressuring the square
   - Allow user to choose between types of pressures
