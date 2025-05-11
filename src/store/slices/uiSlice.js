@@ -33,7 +33,7 @@ const initialState = {
   selectedPieceTypeForEdit: null,
   activeEditAction: "add", // "add", "move", "trash"
   nextMoveColorAfterEdit: "white",
-  enPassantEnabled: false,
+  enPassantEnabled: true,
   possibleEnPassantTargets: [],
   selectedEnPassantTarget: 0, // Index of selected target
   selectedEditMoveSquare: null, // { row, col, piece }
