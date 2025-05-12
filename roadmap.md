@@ -69,6 +69,7 @@
   - Allow start and end move to rotate through
   - Speed control
   - etc.
+  - before each move you can show checks captures ect......
 - **Opening/Endgame Database Integration**
   - Connect to established opening databases
 
