@@ -135,24 +135,24 @@
   z-index: 3;
 }
 
-/* Color levels for white (green to blue) */
+/* Color levels for white (blue to purple) */
 .white-filter.level-1 {
-  background-color: rgb(0, 180, 0); /* bright green */
+  background-color: rgb(0, 120, 255); /* bright blue */
 }
 .white-filter.level-2 {
-  background-color: rgb(0, 150, 100); /* green-teal */
+  background-color: rgb(40, 80, 255); /* blue-purple */
 }
 .white-filter.level-3 {
-  background-color: rgb(0, 120, 180); /* teal-blue */
+  background-color: rgb(80, 40, 255); /* blue-violet */
 }
 .white-filter.level-4 {
-  background-color: rgb(0, 90, 220); /* blue */
+  background-color: rgb(120, 0, 255); /* violet */
 }
 .white-filter.level-5 {
-  background-color: rgb(0, 60, 255); /* bright blue */
+  background-color: rgb(160, 0, 240); /* bright purple */
 }
 .white-filter.level-6 {
-  background-color: rgb(0, 30, 255); /* deep blue */
+  background-color: rgb(180, 0, 220); /* deep purple */
 }
 
 /* Color levels for black (yellow to red) */
