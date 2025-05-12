@@ -14,6 +14,7 @@ const Square = (props) => {
     isSelected,
     isEnPassantTarget,
     onClick,
+    onContextMenu,
     piece,
     whitePressure,
     blackPressure,
@@ -99,6 +100,18 @@ const Square = (props) => {
         isSelected ? "selected" : ""
       } ${isEnPassantTarget ? "en-passant-target" : ""}`}
       onClick={onClick}
+      onMouseDown={(e) => {
+        if (e.button === 2) {
+          e.preventDefault();
+          e.stopPropagation();
+          onContextMenu(e);
+        }
+      }}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }}
       data-filter-type={activeFilters.activeFilterType}
     >
       {piece && <PieceIcon Icon={piece.icon} className={piece.className} />}

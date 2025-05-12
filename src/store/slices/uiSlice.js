@@ -37,6 +37,12 @@ const initialState = {
   possibleEnPassantTargets: [],
   selectedEnPassantTarget: 0, // Index of selected target
   selectedEditMoveSquare: null, // { row, col, piece }
+  arrowDrawing: {
+    isDrawing: false,
+    startSquare: null, // {row, col}
+    currentEndSquare: null, // {row, col}
+  },
+  arrows: [], // [{start: {row, col}, end: {row, col}, color: 'white'/'black'}]
 };
 
 const iconMap = {
@@ -101,6 +107,27 @@ export const uiSlice = createSlice({
     togglePov: (state) => {
       state.pov = state.pov === "white" ? "black" : "white";
     },
+    setArrowDrawing: (state, action) => {
+      state.arrowDrawing = action.payload;
+    },
+    updateArrowEndSquare: (state, action) => {
+      if (state.arrowDrawing.isDrawing) {
+        state.arrowDrawing.currentEndSquare = action.payload;
+      }
+    },
+    addArrow: (state, action) => {
+      state.arrows.push(action.payload);
+    },
+    resetArrowDrawing: (state) => {
+      state.arrowDrawing = {
+        isDrawing: false,
+        startSquare: null,
+        currentEndSquare: null,
+      };
+    },
+    clearArrows: (state) => {
+      state.arrows = [];
+    },
   },
 });
 
@@ -152,6 +179,9 @@ export const selectSelectedEditMoveSquare = (state) =>
 // Add pov selector
 export const selectPov = (state) => state.ui.pov;
 
+export const selectArrowDrawing = (state) => state.ui.arrowDrawing;
+export const selectArrows = (state) => state.ui.arrows;
+
 export const {
   toggleFiltersByColor,
   toggleActiveFilterType,
@@ -166,6 +196,11 @@ export const {
   setPov,
   togglePov,
   setIsEditMode,
+  setArrowDrawing,
+  updateArrowEndSquare,
+  addArrow,
+  resetArrowDrawing,
+  clearArrows,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

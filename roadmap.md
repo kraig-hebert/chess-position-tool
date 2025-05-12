@@ -50,6 +50,7 @@
     - Create simple translators for this
   - Add status location for checks, checkmate, etc.
   - Add arrows when right click and swipe happens
+    - add ability to control color selections with keys
   - Use article https://www.chess.com/forum/view/general/how-to-get-the-pieces-more-as-png to get piece icons for themes and such
 
 ## Study Details

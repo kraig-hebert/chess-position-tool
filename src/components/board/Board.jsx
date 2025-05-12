@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectGameIsActive,
@@ -43,15 +43,23 @@ import {
   setSelectedEditMoveSquare,
   selectPov,
   selectIsEditMode,
+  setArrowDrawing,
+  updateArrowEndSquare,
+  addArrow,
+  resetArrowDrawing,
+  selectArrowDrawing,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
 import Square from "./square/Square";
+import ArrowLayer from "./arrowLayer/ArrowLayer";
 import StudyDetails from "../studyDetails/StudyDetails";
 import GameButtons from "../gameButtons/GameButtons";
 import PromotionModal from "../promotionModal/PromotionModal";
 import GameFilters from "../gameFilters/GameFilters";
 import EditPanel from "../editPanel/EditPanel";
+
+const SQUARE_SIZE = 85; // Match the grid size in boardStyles.css
 
 const Board = () => {
   const dispatch = useDispatch();
@@ -73,6 +81,7 @@ const Board = () => {
   const activeColor = useSelector(selectActiveColor);
   const enPassantTarget = useSelector(selectEnPassantTarget);
   const selectedPiece = useSelector(selectSelectedPiece);
+  const arrowDrawing = useSelector(selectArrowDrawing);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
@@ -352,6 +361,7 @@ const Board = () => {
             isSelected={isSelected}
             isEnPassantTarget={isEnPassantTarget}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
+            onContextMenu={(e) => handleRightMouseDown(e, rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}
             whitePressure={whitePressure}
             blackPressure={blackPressure}
@@ -389,11 +399,114 @@ const Board = () => {
     dispatch(toggleActiveColor());
   };
 
+  // Function to get board coordinates from mouse event
+  const getSquareFromEvent = (e) => {
+    // Get the board element
+    const boardElement = document.querySelector(".board");
+    if (!boardElement) return null;
+
+    const boardRect = boardElement.getBoundingClientRect();
+    const x = e.clientX - boardRect.left;
+    const y = e.clientY - boardRect.top;
+
+    const col = Math.floor(x / SQUARE_SIZE);
+    const row = Math.floor(y / SQUARE_SIZE);
+
+    // Validate the coordinates are within bounds
+    if (row < 0 || row >= 8 || col < 0 || col >= 8) return null;
+
+    // Adjust coordinates if board is flipped
+    if (pov === "black") {
+      return {
+        row: Math.abs(row - 7),
+        col: Math.abs(col - 7),
+      };
+    }
+
+    return { row, col };
+  };
+
+  useEffect(() => {
+    if (!arrowDrawing.isDrawing) return;
+
+    const boardElement = document.querySelector(".board");
+    if (!boardElement) return;
+
+    const handleMouseMove = (e) => {
+      const square = getSquareFromEvent(e);
+      if (square) {
+        dispatch(updateArrowEndSquare(square));
+      }
+    };
+
+    const handleMouseUp = (e) => {
+      if (e.button === 2) {
+        const endSquare = getSquareFromEvent(e);
+
+        if (
+          endSquare &&
+          !(
+            endSquare.row === arrowDrawing.startSquare.row &&
+            endSquare.col === arrowDrawing.startSquare.col
+          )
+        ) {
+          dispatch(
+            addArrow({
+              start: arrowDrawing.startSquare,
+              end: endSquare,
+            })
+          );
+        }
+        dispatch(resetArrowDrawing());
+      }
+    };
+
+    boardElement.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      boardElement.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [arrowDrawing.isDrawing, arrowDrawing.startSquare, dispatch, pov]);
+
+  const handleRightMouseDown = (e, row, col) => {
+    if (e.button !== 2) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const piece = board[row][col];
+    if (!piece) return;
+
+    dispatch(
+      setArrowDrawing({
+        isDrawing: true,
+        startSquare: { row, col },
+        currentEndSquare: { row, col },
+      })
+    );
+  };
+
   return (
     <div className="board-container">
       {promotionSquare && <div className="board-overlay"></div>}
-      <div className="board">
+      <div
+        className="board"
+        onMouseDown={(e) => {
+          if (e.button === 2) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }}
+      >
         {renderBoard()}
+        <ArrowLayer />
         {isEditMode ? <EditPanel /> : <GameFilters />}
         <StudyDetails />
         <GameButtons />
