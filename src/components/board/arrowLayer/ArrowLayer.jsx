@@ -19,7 +19,7 @@ const drawArrow = (ctx, start, end) => {
   // Arrow styling
   ctx.strokeStyle = "rgba(255, 255, 0, 0.5)";
   ctx.fillStyle = ctx.strokeStyle;
-  ctx.lineWidth = SQUARE_SIZE / 8;
+  ctx.lineWidth = 20;
 
   // Draw arrow shaft
   ctx.beginPath();
@@ -30,17 +30,22 @@ const drawArrow = (ctx, start, end) => {
   // Calculate arrow head
   const angle = Math.atan2(endY - startY, endX - startX);
   const headLength = SQUARE_SIZE / 3;
+  const headWidth = Math.PI / 2;
 
-  // Draw arrow head
+  // Draw arrow head starting from the base at the line end
   ctx.beginPath();
-  ctx.moveTo(endX, endY);
+  ctx.moveTo(
+    endX - headLength * Math.cos(angle - headWidth),
+    endY - headLength * Math.sin(angle - headWidth)
+  );
+  // Move the tip forward by headLength
   ctx.lineTo(
-    endX - headLength * Math.cos(angle - Math.PI / 6),
-    endY - headLength * Math.sin(angle - Math.PI / 6)
+    endX + headLength * Math.cos(angle),
+    endY + headLength * Math.sin(angle)
   );
   ctx.lineTo(
-    endX - headLength * Math.cos(angle + Math.PI / 6),
-    endY - headLength * Math.sin(angle + Math.PI / 6)
+    endX - headLength * Math.cos(angle + headWidth),
+    endY - headLength * Math.sin(angle + headWidth)
   );
   ctx.closePath();
   ctx.fill();

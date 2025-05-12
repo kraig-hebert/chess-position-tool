@@ -48,6 +48,7 @@ import {
   addArrow,
   resetArrowDrawing,
   selectArrowDrawing,
+  clearArrows,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -87,6 +88,9 @@ const Board = () => {
   const tempCapturedPieces = { ...capturedPieces };
 
   const handleSquareClick = (row, col) => {
+    // Clear arrows on left click
+    dispatch(clearArrows());
+
     // ignore clicks when promotion modal is active
     if (promotionSquare) return;
 
