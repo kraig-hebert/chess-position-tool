@@ -62,6 +62,14 @@ export const uiSlice = createSlice({
       const color = action.payload;
       state.activeFilters.colors[color] = !state.activeFilters.colors[color];
     },
+    setAllFiltersToOff: (state) => {
+      state.activeFilters.colors.black = false;
+      state.activeFilters.colors.white = false;
+    },
+    setAllFiltersToOn: (state) => {
+      state.activeFilters.colors.black = true;
+      state.activeFilters.colors.white = true;
+    },
     toggleActiveFilterType: (state) => {
       state.activeFilters.activeFilterType =
         state.activeFilters.activeFilterType === "pressure"
@@ -201,6 +209,8 @@ export const {
   addArrow,
   resetArrowDrawing,
   clearArrows,
+  setAllFiltersToOff,
+  setAllFiltersToOn,
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
