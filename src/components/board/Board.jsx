@@ -497,6 +497,7 @@ const Board = () => {
       {promotionSquare && <div className="board-overlay"></div>}
       <div
         className="board"
+        data-pov={pov}
         onMouseDown={(e) => {
           if (e.button === 2) {
             e.preventDefault();

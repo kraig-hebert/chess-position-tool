@@ -89,6 +89,7 @@
   z-index: 1;
   font-weight: bold;
   font-size: 1rem;
+  opacity: 0.6;
 }
 
 /* Add z-index for pieces to ensure they're on top */
@@ -111,17 +112,35 @@
 }
 
 /* Pressure mode - split circle with numbers on sides */
-[data-filter-type="pressure"] .white-filter {
+.board[data-pov="white"] [data-filter-type="pressure"] .white-filter {
   color: white;
-  clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-  justify-content: flex-start;
+  clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%); /* bottom half */
+  justify-content: center;
+  align-items: flex-end;
   border: 1px solid white;
 }
 
-[data-filter-type="pressure"] .black-filter {
+.board[data-pov="white"] [data-filter-type="pressure"] .black-filter {
   color: black;
-  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
-  justify-content: flex-end;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); /* top half */
+  justify-content: center;
+  align-items: flex-start;
+  border: 1px solid black;
+}
+
+.board[data-pov="black"] [data-filter-type="pressure"] .white-filter {
+  color: white;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); /* top half */
+  justify-content: center;
+  align-items: flex-start;
+  border: 1px solid white;
+}
+
+.board[data-pov="black"] [data-filter-type="pressure"] .black-filter {
+  color: black;
+  clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%); /* bottom half */
+  justify-content: center;
+  align-items: flex-end;
   border: 1px solid black;
 }
 
