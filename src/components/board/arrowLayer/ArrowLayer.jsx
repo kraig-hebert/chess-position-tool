@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import {
   selectArrows,
   selectArrowDrawing,
+  selectIsEditMode,
 } from "../../../store/slices/uiSlice";
 import "./arrowLayerStyles.css";
 
@@ -55,7 +56,7 @@ const ArrowLayer = () => {
   const canvasRef = useRef(null);
   const arrows = useSelector(selectArrows);
   const arrowDrawing = useSelector(selectArrowDrawing);
-
+  const isEditMode = useSelector(selectIsEditMode);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -64,6 +65,9 @@ const ArrowLayer = () => {
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // If edit mode is active, don't draw anything
+    if (isEditMode) return;
 
     // Draw all permanent arrows
     arrows.forEach((arrow) => {

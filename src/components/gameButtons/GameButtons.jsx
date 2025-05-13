@@ -38,6 +38,7 @@ import {
   togglePov,
   selectIsEditMode,
   setIsEditMode,
+  clearArrows,
 } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
@@ -59,6 +60,7 @@ const GameButtons = () => {
 
   const handleReset = () => {
     dispatch(resetGameAction());
+    dispatch(resetEditMode());
   };
 
   const handleMoveBackwards = () => {
@@ -187,13 +189,13 @@ const GameButtons = () => {
 
       dispatch(setGameIsActive(true));
       dispatch(resetEditMode());
-      dispatch(setIsEditMode(false));
     } else {
       // Enter edit mode
       // Save the current position before entering edit mode
       dispatch(setOriginalPosition(copyBoard(board)));
       dispatch(resetTempHasMoved());
       dispatch(setIsEditMode(true));
+      dispatch(clearArrows());
     }
   };
 
