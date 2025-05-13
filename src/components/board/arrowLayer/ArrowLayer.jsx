@@ -4,13 +4,24 @@ import {
   selectArrows,
   selectArrowDrawing,
   selectIsEditMode,
+  selectPov,
 } from "../../../store/slices/uiSlice";
 import "./arrowLayerStyles.css";
 
 const SQUARE_SIZE = 85; // Match the board's grid size
 const BOARD_SIZE = SQUARE_SIZE * 8;
 
-const drawArrow = (ctx, start, end) => {
+const drawArrow = (ctx, start, end, pov) => {
+  // Save the current context state
+  ctx.save();
+
+  if (pov === "black") {
+    // Translate to center, rotate 180 degrees, translate back
+    ctx.translate(BOARD_SIZE / 2, BOARD_SIZE / 2);
+    ctx.rotate(Math.PI);
+    ctx.translate(-BOARD_SIZE / 2, -BOARD_SIZE / 2);
+  }
+
   // Convert board coordinates to canvas coordinates
   const startX = (start.col + 0.5) * SQUARE_SIZE;
   const startY = (start.row + 0.5) * SQUARE_SIZE;
@@ -50,6 +61,9 @@ const drawArrow = (ctx, start, end) => {
   );
   ctx.closePath();
   ctx.fill();
+
+  // Restore the context state
+  ctx.restore();
 };
 
 const ArrowLayer = () => {
@@ -57,6 +71,8 @@ const ArrowLayer = () => {
   const arrows = useSelector(selectArrows);
   const arrowDrawing = useSelector(selectArrowDrawing);
   const isEditMode = useSelector(selectIsEditMode);
+  const pov = useSelector(selectPov);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -71,14 +87,19 @@ const ArrowLayer = () => {
 
     // Draw all permanent arrows
     arrows.forEach((arrow) => {
-      drawArrow(ctx, arrow.start, arrow.end);
+      drawArrow(ctx, arrow.start, arrow.end, pov);
     });
 
     // Draw preview arrow if drawing
     if (arrowDrawing.isDrawing && arrowDrawing.currentEndSquare) {
-      drawArrow(ctx, arrowDrawing.startSquare, arrowDrawing.currentEndSquare);
+      drawArrow(
+        ctx,
+        arrowDrawing.startSquare,
+        arrowDrawing.currentEndSquare,
+        pov
+      );
     }
-  }, [arrows, arrowDrawing]);
+  }, [arrows, arrowDrawing, pov]);
 
   return (
     <canvas

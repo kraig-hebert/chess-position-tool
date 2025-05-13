@@ -419,8 +419,8 @@ const Board = () => {
     // Validate the coordinates are within bounds
     if (row < 0 || row >= 8 || col < 0 || col >= 8) return null;
 
-    // Adjust coordinates if board is flipped
-    if (pov === "black") {
+    // Only transform coordinates if we're not drawing an arrow
+    if (!arrowDrawing.isDrawing && pov === "black") {
       return {
         row: Math.abs(row - 7),
         col: Math.abs(col - 7),
@@ -483,6 +483,7 @@ const Board = () => {
     const piece = board[row][col];
     if (!piece) return;
 
+    // For arrow drawing start, use the raw coordinates from the Square component
     dispatch(
       setArrowDrawing({
         isDrawing: true,
