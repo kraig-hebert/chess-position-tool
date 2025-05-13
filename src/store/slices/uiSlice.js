@@ -12,7 +12,7 @@ import {
 const initialState = {
   activeFilters: {
     colors: { white: true, black: true },
-    activeFilterType: "pressure", // pressure or control
+    activeFilterType: "control", // pressure or control
   },
   pieceIcons: {
     p: { iconName: "pawn", className: "piece black" },
@@ -106,7 +106,8 @@ export const uiSlice = createSlice({
     },
     resetEditMode: (state) => {
       const currentPov = state.pov;
-      const result = { ...initialState, pov: currentPov };
+      const activeFilters = state.activeFilters;
+      const result = { ...initialState, pov: currentPov, activeFilters };
       return result;
     },
     setPov: (state, action) => {
