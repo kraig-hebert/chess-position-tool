@@ -34,7 +34,9 @@ const Square = (props) => {
     blackPressure
   );
 
-  const renderLegalMove = () => <div className="possible-move"></div>;
+  const renderLegalMove = () => (
+    <div className={`possible-move ${piece ? "capture" : ""}`}></div>
+  );
 
   const renderedWhiteFilter =
     activeFilters.activeFilterType === "pressure" &&
