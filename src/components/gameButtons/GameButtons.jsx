@@ -5,7 +5,6 @@ import {
   resetGame as resetGameAction,
   setGameIsActive,
   setHasMoved,
-  resetTempHasMoved,
   selectTempHasMoved,
   setCapturedPieces,
   setMovesList,
@@ -17,7 +16,6 @@ import {
   selectBoard,
   setBoard,
   selectPositionIsValid,
-  setOriginalPosition,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -37,8 +35,7 @@ import {
   resetEditMode,
   togglePov,
   selectIsEditMode,
-  setIsEditMode,
-  clearArrows,
+  enterEditMode,
 } from "../../store/slices/uiSlice";
 
 import GameButton from "./gameButton/GameButton";
@@ -190,12 +187,8 @@ const GameButtons = () => {
       dispatch(setGameIsActive(true));
       dispatch(resetEditMode());
     } else {
-      // Enter edit mode
-      // Save the current position before entering edit mode
-      dispatch(setOriginalPosition(copyBoard(board)));
-      dispatch(resetTempHasMoved());
-      dispatch(setIsEditMode(true));
-      dispatch(clearArrows());
+      // Enter edit mode using the centralized action
+      dispatch(enterEditMode(board));
     }
   };
 

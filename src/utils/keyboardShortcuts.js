@@ -1,4 +1,11 @@
-import { setAllFiltersToOff, setAllFiltersToOn } from "../store/slices/uiSlice";
+import {
+  setAllFiltersToOff,
+  setAllFiltersToOn,
+  setIsEditMode,
+  selectIsEditMode,
+  enterEditMode,
+} from "../store/slices/uiSlice";
+import { selectBoard } from "../store/slices/gameSlice";
 
 // Keyboard shortcut mapping
 export const SHORTCUTS = {
@@ -12,6 +19,19 @@ export const SHORTCUTS = {
         dispatch(setAllFiltersToOff());
       } else {
         dispatch(setAllFiltersToOn());
+      }
+    },
+  },
+  "Control+e": {
+    description: "Enter/exit edit mode",
+    action: (dispatch, state) => {
+      const isEditMode = selectIsEditMode(state);
+      if (!isEditMode) {
+        // Enter edit mode using the centralized action
+        dispatch(enterEditMode(selectBoard(state)));
+      } else {
+        // Exit edit mode
+        dispatch(setIsEditMode(false));
       }
     },
   },
@@ -39,9 +59,12 @@ export const handleKeyboardShortcut = (event, dispatch, state) => {
     return;
   }
 
+  // Check if any of our shortcuts match before the browser handles the event
   for (const [shortcut, { action }] of Object.entries(SHORTCUTS)) {
     if (matchesShortcut(event, shortcut)) {
+      // Prevent browser's default handling of the shortcut
       event.preventDefault();
+      event.stopPropagation();
       action(dispatch, state);
       break;
     }
