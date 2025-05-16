@@ -8,6 +8,7 @@ import {
   selectGroupedMovesList,
   selectBoard,
   selectPositionIsValid,
+  selectActiveColor,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -47,6 +48,7 @@ const GameButtons = () => {
   const groupedMovesList = useSelector(selectGroupedMovesList);
   const isEditMode = useSelector(selectIsEditMode);
   const positionIsValid = useSelector(selectPositionIsValid);
+  const activeColor = useSelector(selectActiveColor);
 
   const handleReset = () => {
     dispatch(resetGameAction());
@@ -75,7 +77,7 @@ const GameButtons = () => {
       );
     } else {
       // Enter edit mode using the centralized action
-      dispatch(enterEditMode(board));
+      dispatch(enterEditMode(board, activeColor));
     }
   };
 

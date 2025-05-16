@@ -14,12 +14,12 @@ import {
 import {
   selectBoard,
   selectActiveMove,
+  selectActiveColor,
   selectGroupedMovesList,
   selectTempHasMoved,
   initialBoard,
   clearBoard,
   returnToOriginalPosition,
-  setBoard,
   resetBoard,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
@@ -64,7 +64,7 @@ export const SHORTCUTS = {
       const isEditMode = selectIsEditMode(state);
       if (!isEditMode) {
         // Enter edit mode using the centralized action
-        dispatch(enterEditMode(selectBoard(state)));
+        dispatch(enterEditMode(selectBoard(state), selectActiveColor(state)));
       }
     },
   },
