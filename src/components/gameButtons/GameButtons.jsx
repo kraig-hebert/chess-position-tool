@@ -37,6 +37,7 @@ import {
   selectIsEditMode,
   enterEditMode,
 } from "../../store/slices/uiSlice";
+import { moveForward, moveBackward } from "../../utils/moveNavigation";
 
 import GameButton from "./gameButton/GameButton";
 
@@ -61,65 +62,11 @@ const GameButtons = () => {
   };
 
   const handleMoveBackwards = () => {
-    if (activeMove.groupIndex === 0 && activeMove.moveIndex === 0) return;
-    if (activeMove.moveIndex === 1) {
-      dispatch(
-        setActiveMove({
-          groupIndex: activeMove.groupIndex,
-          moveIndex: 0,
-        })
-      );
-      dispatch(
-        setCapturedPieces(
-          groupedMovesList[activeMove.groupIndex][0].capturedPieces
-        )
-      );
-      dispatch(setBoard(groupedMovesList[activeMove.groupIndex][0].board));
-    } else {
-      dispatch(
-        setActiveMove({ groupIndex: activeMove.groupIndex - 1, moveIndex: 1 })
-      );
-      dispatch(
-        setCapturedPieces(
-          groupedMovesList[activeMove.groupIndex - 1][1].capturedPieces
-        )
-      );
-      dispatch(setBoard(groupedMovesList[activeMove.groupIndex - 1][1].board));
-    }
+    moveBackward(dispatch, activeMove, groupedMovesList);
   };
 
   const handleMoveForwards = () => {
-    const groupIndex = groupedMovesList.length - 1;
-    const moveIndex = groupedMovesList[groupIndex].length - 1;
-    if (
-      activeMove.groupIndex === groupIndex &&
-      activeMove.moveIndex === moveIndex
-    )
-      return;
-    if (activeMove.moveIndex === 1) {
-      dispatch(
-        setActiveMove({
-          groupIndex: activeMove.groupIndex + 1,
-          moveIndex: 0,
-        })
-      );
-      dispatch(
-        setCapturedPieces(
-          groupedMovesList[activeMove.groupIndex + 1][0].capturedPieces
-        )
-      );
-      dispatch(setBoard(groupedMovesList[activeMove.groupIndex + 1][0].board));
-    } else {
-      dispatch(
-        setActiveMove({ groupIndex: activeMove.groupIndex, moveIndex: 1 })
-      );
-      dispatch(
-        setCapturedPieces(
-          groupedMovesList[activeMove.groupIndex][1].capturedPieces
-        )
-      );
-      dispatch(setBoard(groupedMovesList[activeMove.groupIndex][1].board));
-    }
+    moveForward(dispatch, activeMove, groupedMovesList);
   };
 
   const validateCastlingPositions = () => {

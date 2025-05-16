@@ -5,37 +5,19 @@ import {
   selectIsEditMode,
   enterEditMode,
   toggleFiltersByColor,
+  toggleActiveFilterType,
+  togglePov,
 } from "../store/slices/uiSlice";
-import { selectBoard } from "../store/slices/gameSlice";
+import {
+  selectBoard,
+  resetGame,
+  selectActiveMove,
+  selectGroupedMovesList,
+} from "../store/slices/gameSlice";
+import { moveForward, moveBackward } from "./moveNavigation";
 
 // Keyboard shortcut mapping
 export const SHORTCUTS = {
-  "Control+a": {
-    description: "Toggle all filters on/off",
-    action: (dispatch, state) => {
-      const { activeFilters } = state.ui;
-      const hasActiveFilters =
-        activeFilters.colors.white || activeFilters.colors.black;
-      if (hasActiveFilters) {
-        dispatch(setAllFiltersToOff());
-      } else {
-        dispatch(setAllFiltersToOn());
-      }
-    },
-  },
-  "Control+e": {
-    description: "Enter/exit edit mode",
-    action: (dispatch, state) => {
-      const isEditMode = selectIsEditMode(state);
-      if (!isEditMode) {
-        // Enter edit mode using the centralized action
-        dispatch(enterEditMode(selectBoard(state)));
-      } else {
-        // Exit edit mode
-        dispatch(setIsEditMode(false));
-      }
-    },
-  },
   1: {
     description: "Toggle white filters",
     action: (dispatch) => {
@@ -48,6 +30,66 @@ export const SHORTCUTS = {
       dispatch(toggleFiltersByColor("black"));
     },
   },
+  3: {
+    description: "Toggle between pressure and control view",
+    action: (dispatch) => {
+      dispatch(toggleActiveFilterType());
+    },
+  },
+  4: {
+    description: "Toggle all filters on/off",
+    action: (dispatch, state) => {
+      const { activeFilters } = state.ui;
+      const hasActiveFilters =
+        activeFilters.colors.white || activeFilters.colors.black;
+      if (hasActiveFilters) {
+        dispatch(setAllFiltersToOff());
+      } else {
+        dispatch(setAllFiltersToOn());
+      }
+    },
+  },
+  e: {
+    description: "Enter/exit edit mode",
+    action: (dispatch, state) => {
+      const isEditMode = selectIsEditMode(state);
+      if (!isEditMode) {
+        // Enter edit mode using the centralized action
+        dispatch(enterEditMode(selectBoard(state)));
+      } else {
+        // Exit edit mode
+        dispatch(setIsEditMode(false));
+      }
+    },
+  },
+  f: {
+    description: "Flip board",
+    action: (dispatch) => {
+      dispatch(togglePov());
+    },
+  },
+  r: {
+    description: "Reset game",
+    action: (dispatch) => {
+      dispatch(resetGame());
+    },
+  },
+  ArrowLeft: {
+    description: "Go to previous move",
+    action: (dispatch, state) => {
+      const activeMove = selectActiveMove(state);
+      const groupedMovesList = selectGroupedMovesList(state);
+      moveBackward(dispatch, activeMove, groupedMovesList);
+    },
+  },
+  ArrowRight: {
+    description: "Go to next move",
+    action: (dispatch, state) => {
+      const activeMove = selectActiveMove(state);
+      const groupedMovesList = selectGroupedMovesList(state);
+      moveForward(dispatch, activeMove, groupedMovesList);
+    },
+  },
 };
 
 // Helper to check if a keyboard event matches a shortcut
@@ -55,7 +97,6 @@ export const matchesShortcut = (event, shortcut) => {
   const parts = shortcut.toLowerCase().split("+");
   const key = parts.pop();
   const modifiers = new Set(parts);
-  console.log(event, key);
 
   return (
     event.key.toLowerCase() === key &&
