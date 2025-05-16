@@ -1,20 +1,26 @@
 import {
   setAllFiltersToOff,
   setAllFiltersToOn,
-  setIsEditMode,
+  selectEnPassantEnabled,
   selectIsEditMode,
   enterEditMode,
   toggleFiltersByColor,
   toggleActiveFilterType,
   togglePov,
+  selectNextMoveColorAfterEdit,
+  selectPossibleEnPassantTargets,
+  selectSelectedEnPassantTarget,
 } from "../store/slices/uiSlice";
 import {
   selectBoard,
   resetGame,
   selectActiveMove,
   selectGroupedMovesList,
+  selectTempHasMoved,
+  initialBoard,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
+import { saveAndExitEditMode } from "./editModeUtils";
 
 // Keyboard shortcut mapping
 export const SHORTCUTS = {
@@ -31,12 +37,6 @@ export const SHORTCUTS = {
     },
   },
   3: {
-    description: "Toggle between pressure and control view",
-    action: (dispatch) => {
-      dispatch(toggleActiveFilterType());
-    },
-  },
-  4: {
     description: "Toggle all filters on/off",
     action: (dispatch, state) => {
       const { activeFilters } = state.ui;
@@ -49,17 +49,45 @@ export const SHORTCUTS = {
       }
     },
   },
+  4: {
+    description: "Toggle between pressure and control view",
+    action: (dispatch) => {
+      dispatch(toggleActiveFilterType());
+    },
+  },
   e: {
-    description: "Enter/exit edit mode",
+    description: "Enter edit mode",
     action: (dispatch, state) => {
       const isEditMode = selectIsEditMode(state);
       if (!isEditMode) {
         // Enter edit mode using the centralized action
         dispatch(enterEditMode(selectBoard(state)));
-      } else {
-        // Exit edit mode
-        dispatch(setIsEditMode(false));
       }
+    },
+  },
+  s: {
+    description: "Save and exit edit mode",
+    action: (dispatch, state) => {
+      const isEditMode = selectIsEditMode(state);
+      if (!isEditMode) return; // Only work in edit mode
+
+      const board = selectBoard(state);
+      const tempHasMoved = selectTempHasMoved(state);
+      const nextMoveColorAfterEdit = selectNextMoveColorAfterEdit(state);
+      const enPassantEnabled = selectEnPassantEnabled(state);
+      const possibleEnPassantTargets = selectPossibleEnPassantTargets(state);
+      const selectedEnPassantTarget = selectSelectedEnPassantTarget(state);
+
+      saveAndExitEditMode(
+        dispatch,
+        board,
+        tempHasMoved,
+        nextMoveColorAfterEdit,
+        enPassantEnabled,
+        possibleEnPassantTargets,
+        selectedEnPassantTarget,
+        initialBoard
+      );
     },
   },
   f: {
