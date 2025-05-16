@@ -9,6 +9,7 @@ import {
 } from "../store/slices/gameSlice";
 import { resetEditMode } from "../store/slices/uiSlice";
 import { calculateCapturedPieces, copyBoard } from "../logic/chessUtils";
+import { isEqual } from "lodash";
 
 const validateCastlingPositions = (board, tempHasMoved) => {
   const validatedHasMoved = { ...tempHasMoved };
@@ -31,8 +32,18 @@ export const saveAndExitEditMode = (
   enPassantEnabled,
   possibleEnPassantTargets,
   selectedEnPassantTarget,
-  initialBoard
+  initialBoard,
+  originalPosition
 ) => {
+  console.log("originalPosition", originalPosition);
+  console.log("board", board);
+  if (isEqual(originalPosition, board)) {
+    console.log("Board matches original position, resetting edit mode");
+    dispatch(setGameIsActive(true));
+    dispatch(resetEditMode());
+    return;
+  }
+
   // Calculate and set captured pieces
   const captured = calculateCapturedPieces(board, initialBoard);
   dispatch(setCapturedPieces(captured));

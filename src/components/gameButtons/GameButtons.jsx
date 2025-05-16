@@ -9,6 +9,7 @@ import {
   selectBoard,
   selectPositionIsValid,
   selectActiveColor,
+  selectOriginalPosition,
 } from "../../store/slices/gameSlice";
 import {
   FaBackward,
@@ -30,8 +31,7 @@ import {
   enterEditMode,
 } from "../../store/slices/uiSlice";
 import { moveForward, moveBackward } from "../../utils/moveNavigation";
-import { saveAndExitEditMode } from "../../utils/editModeUtils";
-
+import { saveAndExitEditMode } from "../../utils/editModeUtils.js";
 import GameButton from "./gameButton/GameButton";
 
 import "./gameButtonsStyles.css";
@@ -49,6 +49,7 @@ const GameButtons = () => {
   const isEditMode = useSelector(selectIsEditMode);
   const positionIsValid = useSelector(selectPositionIsValid);
   const activeColor = useSelector(selectActiveColor);
+  const originalPosition = useSelector(selectOriginalPosition);
 
   const handleReset = () => {
     dispatch(resetGameAction());
@@ -73,7 +74,8 @@ const GameButtons = () => {
         enPassantEnabled,
         possibleEnPassantTargets,
         selectedEnPassantTarget,
-        initialBoard
+        initialBoard,
+        originalPosition
       );
     } else {
       // Enter edit mode using the centralized action

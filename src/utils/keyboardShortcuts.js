@@ -21,9 +21,10 @@ import {
   clearBoard,
   returnToOriginalPosition,
   resetBoard,
+  selectOriginalPosition,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
-import { saveAndExitEditMode } from "./editModeUtils";
+import { saveAndExitEditMode } from "./editModeUtils.js";
 
 // Keyboard shortcut mapping
 export const SHORTCUTS = {
@@ -80,6 +81,7 @@ export const SHORTCUTS = {
       const enPassantEnabled = selectEnPassantEnabled(state);
       const possibleEnPassantTargets = selectPossibleEnPassantTargets(state);
       const selectedEnPassantTarget = selectSelectedEnPassantTarget(state);
+      const originalPosition = selectOriginalPosition(state);
 
       saveAndExitEditMode(
         dispatch,
@@ -89,7 +91,8 @@ export const SHORTCUTS = {
         enPassantEnabled,
         possibleEnPassantTargets,
         selectedEnPassantTarget,
-        initialBoard
+        initialBoard,
+        originalPosition
       );
     },
   },
