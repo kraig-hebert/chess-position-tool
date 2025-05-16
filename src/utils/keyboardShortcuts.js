@@ -4,6 +4,7 @@ import {
   setIsEditMode,
   selectIsEditMode,
   enterEditMode,
+  toggleFiltersByColor,
 } from "../store/slices/uiSlice";
 import { selectBoard } from "../store/slices/gameSlice";
 
@@ -33,6 +34,18 @@ export const SHORTCUTS = {
         // Exit edit mode
         dispatch(setIsEditMode(false));
       }
+    },
+  },
+  1: {
+    description: "Toggle white filters",
+    action: (dispatch) => {
+      dispatch(toggleFiltersByColor("white"));
+    },
+  },
+  2: {
+    description: "Toggle black filters",
+    action: (dispatch) => {
+      dispatch(toggleFiltersByColor("black"));
     },
   },
 };
