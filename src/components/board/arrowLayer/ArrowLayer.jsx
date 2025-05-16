@@ -12,17 +12,7 @@ const SQUARE_SIZE = 85; // Match the board's grid size
 const BOARD_SIZE = SQUARE_SIZE * 8;
 
 const drawArrow = (ctx, start, end, pov) => {
-  // Save the current context state
-  ctx.save();
-
-  if (pov === "black") {
-    // Translate to center, rotate 180 degrees, translate back
-    ctx.translate(BOARD_SIZE / 2, BOARD_SIZE / 2);
-    ctx.rotate(Math.PI);
-    ctx.translate(-BOARD_SIZE / 2, -BOARD_SIZE / 2);
-  }
-
-  // Convert board coordinates to canvas coordinates
+  // Use coordinates directly as they are already in the correct orientation
   const startX = (start.col + 0.5) * SQUARE_SIZE;
   const startY = (start.row + 0.5) * SQUARE_SIZE;
   const endX = (end.col + 0.5) * SQUARE_SIZE;
@@ -61,9 +51,6 @@ const drawArrow = (ctx, start, end, pov) => {
   );
   ctx.closePath();
   ctx.fill();
-
-  // Restore the context state
-  ctx.restore();
 };
 
 const ArrowLayer = () => {
