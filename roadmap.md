@@ -64,13 +64,14 @@
   - Why is Nb3 the best move in this position?....GOOD
   - What is the best move in this position?....BAD - confuses them
 - Allow user to add comments to certain positions
-- Allow to build custom position by selecting piece and setting it on the board
-  - Helps when studying puzzle positions
 - Allow user to set replays of positions
   - Allow start and end move to rotate through
   - Speed control
   - etc.
   - before each move you can show checks captures ect......
+  - have toggle for only show filters for attacking side or do both so user gets half or whole picture
+  - also add toggle in the filter panel to allow user to do an auto cycle through the checks captures and threats
+    every move they do if they are moving through manually as well
 - **Opening/Endgame Database Integration**
   - Connect to established opening databases
 

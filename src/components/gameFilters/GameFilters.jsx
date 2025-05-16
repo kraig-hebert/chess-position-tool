@@ -11,6 +11,7 @@ import {
   FaArrowRightLong,
   FaTriangleExclamation,
   FaPaintbrush,
+  FaCrown,
 } from "react-icons/fa6";
 import FilterTypeToggle from "./filterTypeToggle/FilterTypeToggle";
 import GameFiltersButton from "./gameFiltersButton/GameFiltersButton";
@@ -54,7 +55,13 @@ const GameFilters = () => {
               <GameFiltersButton
                 variant="checkbox"
                 icon={FaArrowRightLong}
-                label="Best Moves"
+                label="Captures"
+                disabled={true}
+              />
+              <GameFiltersButton
+                variant="checkbox"
+                icon={FaCrown}
+                label="Checks"
                 disabled={true}
               />
             </div>
@@ -82,7 +89,13 @@ const GameFilters = () => {
               <GameFiltersButton
                 variant="checkbox"
                 icon={FaArrowRightLong}
-                label="Best Moves"
+                label="Captures"
+                disabled={true}
+              />
+              <GameFiltersButton
+                variant="checkbox"
+                icon={FaCrown}
+                label="Checks"
                 disabled={true}
               />
             </div>
