@@ -52,6 +52,14 @@ export const gameSlice = createSlice({
     resetBoard: (state) => {
       state.board = initialBoard;
     },
+    clearBoard: (state) => {
+      state.board = state.board.map((row) => row.map(() => null));
+    },
+    returnToOriginalPosition: (state) => {
+      if (state.originalPosition) {
+        state.board = state.originalPosition;
+      }
+    },
     setGameIsActive: (state, action) => {
       state.gameIsActive = action.payload;
     },
@@ -103,7 +111,7 @@ export const gameSlice = createSlice({
     setOriginalPosition: (state, action) => {
       state.originalPosition = action.payload;
     },
-    resetGame: (state) => {
+    resetGame: () => {
       return initialState;
     },
   },
@@ -138,6 +146,8 @@ export const selectNextGroupedMovesListIndex = createSelector(
 export const {
   setBoard,
   resetBoard,
+  clearBoard,
+  returnToOriginalPosition,
   setGameIsActive,
   setHasMoved,
   setTempHasMoved,

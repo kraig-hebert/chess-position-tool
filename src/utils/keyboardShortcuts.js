@@ -13,11 +13,14 @@ import {
 } from "../store/slices/uiSlice";
 import {
   selectBoard,
-  resetGame,
   selectActiveMove,
   selectGroupedMovesList,
   selectTempHasMoved,
   initialBoard,
+  clearBoard,
+  returnToOriginalPosition,
+  setBoard,
+  resetBoard,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
 import { saveAndExitEditMode } from "./editModeUtils";
@@ -90,6 +93,22 @@ export const SHORTCUTS = {
       );
     },
   },
+  c: {
+    description: "Clear board (in edit mode)",
+    action: (dispatch, state) => {
+      const isEditMode = selectIsEditMode(state);
+      if (!isEditMode) return; // Only work in edit mode
+      dispatch(clearBoard());
+    },
+  },
+  "control+r": {
+    description: "Return to original position (in edit mode)",
+    action: (dispatch, state) => {
+      const isEditMode = selectIsEditMode(state);
+      if (!isEditMode) return; // Only work in edit mode
+      dispatch(returnToOriginalPosition());
+    },
+  },
   f: {
     description: "Flip board",
     action: (dispatch) => {
@@ -99,7 +118,7 @@ export const SHORTCUTS = {
   r: {
     description: "Reset game",
     action: (dispatch) => {
-      dispatch(resetGame());
+      dispatch(resetBoard());
     },
   },
   ArrowLeft: {

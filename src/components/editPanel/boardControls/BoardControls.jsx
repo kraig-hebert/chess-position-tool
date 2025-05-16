@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   FaTrashCan,
   FaRotateLeft,
@@ -7,16 +7,12 @@ import {
   FaReply,
 } from "react-icons/fa6";
 import { togglePov } from "../../../store/slices/uiSlice";
-import {
-  setBoard,
-  selectOriginalPosition,
-} from "../../../store/slices/gameSlice";
+import { returnToOriginalPosition } from "../../../store/slices/gameSlice";
 import "./boardControlsStyles.css";
 
 const BoardControls = (props) => {
   const { onClearBoard, onResetBoard } = props;
   const dispatch = useDispatch();
-  const originalPosition = useSelector(selectOriginalPosition);
 
   return (
     <div className="board-controls">
@@ -26,7 +22,7 @@ const BoardControls = (props) => {
       </button>
       <button
         className="board-control-button"
-        onClick={() => dispatch(setBoard(originalPosition))}
+        onClick={() => dispatch(returnToOriginalPosition())}
       >
         <FaReply />
         <span>Return</span>

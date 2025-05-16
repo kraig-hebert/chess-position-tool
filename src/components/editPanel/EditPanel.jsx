@@ -8,8 +8,8 @@ import {
 } from "../../store/slices/uiSlice";
 import {
   selectBoard,
-  setBoard,
   resetBoard,
+  clearBoard,
 } from "../../store/slices/gameSlice";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
@@ -40,8 +40,7 @@ const EditPanel = () => {
   };
 
   const handleClearBoard = () => {
-    const emptyBoard = board.map((row) => row.map((col) => null));
-    dispatch(setBoard(emptyBoard));
+    dispatch(clearBoard());
   };
 
   const handleResetBoard = () => {
