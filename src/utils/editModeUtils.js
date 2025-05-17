@@ -35,10 +35,7 @@ export const saveAndExitEditMode = (
   initialBoard,
   originalPosition
 ) => {
-  console.log("originalPosition", originalPosition);
-  console.log("board", board);
   if (isEqual(originalPosition, board)) {
-    console.log("Board matches original position, resetting edit mode");
     dispatch(setGameIsActive(true));
     dispatch(resetEditMode());
     return;

@@ -5,7 +5,9 @@
 - Add isKingInCheck and isCheckmate to promotionPieceSelect after piece is chosen
 - when user is not on the latest move the state gets wonky when you select a piece or move. maybe disable the game
 - right now we are validating for checks on save but not checkmate. add checkmate checks properly
-- Fix arrow drawing when board is flipped - arrows appear on wrong squares due to coordinate mismatch
+- rework how pieceicons are handled
+  - move to common folder
+  - create user customization
 
 ## Architecture & Foundation (Priority)
 
