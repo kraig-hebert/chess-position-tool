@@ -35,11 +35,11 @@ export const saveAndExitEditMode = (
   initialBoard,
   originalPosition
 ) => {
-  if (isEqual(originalPosition, board)) {
-    dispatch(setGameIsActive(true));
-    dispatch(resetEditMode());
-    return;
-  }
+  // if (isEqual(originalPosition, board)) {
+  //   dispatch(setGameIsActive(true));
+  //   dispatch(resetEditMode());
+  //   return;
+  // }
 
   // Calculate and set captured pieces
   const captured = calculateCapturedPieces(board, initialBoard);

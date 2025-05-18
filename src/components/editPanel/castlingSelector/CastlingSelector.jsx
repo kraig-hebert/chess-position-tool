@@ -10,6 +10,7 @@ import "./castlingSelectorStyles.css";
 const CastlingSelector = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved) || initialHasMoved;
+  console.log("tempHasMoved", tempHasMoved);
 
   const handleCastlingChange = (key) => {
     dispatch(
@@ -30,7 +31,9 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={!tempHasMoved.whiteRookKingside}
+                checked={
+                  !tempHasMoved.whiteRookKingside && !tempHasMoved.whiteKing
+                }
                 onChange={() => handleCastlingChange("whiteRookKingside")}
               />
               <span>O-O</span>
@@ -38,7 +41,9 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={!tempHasMoved.whiteRookQueenside}
+                checked={
+                  !tempHasMoved.whiteRookQueenside && !tempHasMoved.whiteKing
+                }
                 onChange={() => handleCastlingChange("whiteRookQueenside")}
               />
               <span>O-O-O</span>
@@ -51,7 +56,9 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={!tempHasMoved.blackRookKingside}
+                checked={
+                  !tempHasMoved.blackRookKingside && !tempHasMoved.blackKing
+                }
                 onChange={() => handleCastlingChange("blackRookKingside")}
               />
               <span>O-O</span>
@@ -59,7 +66,9 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={!tempHasMoved.blackRookQueenside}
+                checked={
+                  !tempHasMoved.blackRookQueenside && !tempHasMoved.blackKing
+                }
                 onChange={() => handleCastlingChange("blackRookQueenside")}
               />
               <span>O-O-O</span>

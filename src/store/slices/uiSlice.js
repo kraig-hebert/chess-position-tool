@@ -8,7 +8,7 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
-import { resetTempHasMoved, setOriginalPosition } from "../slices/gameSlice";
+import { setTempHasMoved, setOriginalPosition } from "../slices/gameSlice";
 import { copyBoard } from "../../logic/chessUtils";
 
 const initialState = {
@@ -217,9 +217,9 @@ export const {
 } = uiSlice.actions;
 
 // Thunk action creator that coordinates multiple actions for entering edit mode
-export const enterEditMode = (board, activeColor) => (dispatch) => {
+export const enterEditMode = (board, activeColor, hasMoved) => (dispatch) => {
   dispatch(setOriginalPosition(copyBoard(board))); // Ensure we have a clean copy
-  dispatch(resetTempHasMoved());
+  dispatch(setTempHasMoved(hasMoved));
   dispatch(setIsEditMode(true));
   dispatch(clearArrows());
   dispatch(setNextMoveColorAfterEdit(activeColor));

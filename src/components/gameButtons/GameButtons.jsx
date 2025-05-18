@@ -4,6 +4,7 @@ import {
   initialBoard,
   resetGame as resetGameAction,
   selectTempHasMoved,
+  selectHasMoved,
   selectActiveMove,
   selectGroupedMovesList,
   selectBoard,
@@ -40,6 +41,7 @@ const GameButtons = () => {
   const dispatch = useDispatch();
   const board = useSelector(selectBoard);
   const tempHasMoved = useSelector(selectTempHasMoved);
+  const hasMoved = useSelector(selectHasMoved);
   const nextMoveColorAfterEdit = useSelector(selectNextMoveColorAfterEdit);
   const enPassantEnabled = useSelector(selectEnPassantEnabled);
   const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
@@ -79,7 +81,7 @@ const GameButtons = () => {
       );
     } else {
       // Enter edit mode using the centralized action
-      dispatch(enterEditMode(board, activeColor));
+      dispatch(enterEditMode(board, activeColor, hasMoved));
     }
   };
 

@@ -22,6 +22,7 @@ import {
   returnToOriginalPosition,
   resetBoard,
   selectOriginalPosition,
+  selectHasMoved,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
 import { saveAndExitEditMode } from "./editModeUtils.js";
@@ -65,7 +66,13 @@ export const SHORTCUTS = {
       const isEditMode = selectIsEditMode(state);
       if (!isEditMode) {
         // Enter edit mode using the centralized action
-        dispatch(enterEditMode(selectBoard(state), selectActiveColor(state)));
+        dispatch(
+          enterEditMode(
+            selectBoard(state),
+            selectActiveColor(state),
+            selectHasMoved(state)
+          )
+        );
       }
     },
   },
