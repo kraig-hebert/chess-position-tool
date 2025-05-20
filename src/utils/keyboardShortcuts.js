@@ -23,6 +23,7 @@ import {
   resetBoard,
   selectOriginalPosition,
   selectHasMoved,
+  selectPositionIsValid,
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
 import { saveAndExitEditMode } from "./editModeUtils.js";
@@ -89,7 +90,8 @@ export const SHORTCUTS = {
       const possibleEnPassantTargets = selectPossibleEnPassantTargets(state);
       const selectedEnPassantTarget = selectSelectedEnPassantTarget(state);
       const originalPosition = selectOriginalPosition(state);
-
+      const positionIsValid = selectPositionIsValid(state);
+      if (!positionIsValid) return;
       saveAndExitEditMode(
         dispatch,
         board,

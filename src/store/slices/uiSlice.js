@@ -113,12 +113,6 @@ export const uiSlice = createSlice({
     setIsEditMode: (state, action) => {
       state.isEditMode = action.payload;
     },
-    // resetEditMode: (state) => {
-    //   const currentPov = state.pov;
-    //   const activeFilters = state.activeFilters;
-    //   const result = { ...initialState, pov: currentPov, activeFilters };
-    //   return result;
-    // },
     setPov: (state, action) => {
       state.pov = action.payload;
     },
