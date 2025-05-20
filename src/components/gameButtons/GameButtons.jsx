@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   initialBoard,
-  resetGame as resetGameAction,
+  resetGame,
   selectTempHasMoved,
   selectHasMoved,
   selectActiveMove,
@@ -53,8 +53,8 @@ const GameButtons = () => {
   const activeColor = useSelector(selectActiveColor);
   const originalPosition = useSelector(selectOriginalPosition);
 
-  const handleReset = () => {
-    dispatch(resetGameAction());
+  const handleFullGameReset = () => {
+    dispatch(resetGame());
     dispatch(resetEditMode());
   };
 
@@ -96,7 +96,7 @@ const GameButtons = () => {
       <GameButton
         title="Reset"
         Icon={FaRecycle}
-        onClick={handleReset}
+        onClick={handleFullGameReset}
         disabled={isEditMode}
       />
       <GameButton

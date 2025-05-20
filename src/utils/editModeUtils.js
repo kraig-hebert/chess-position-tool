@@ -7,7 +7,7 @@ import {
   setActiveColor,
   setEnPassantTarget,
 } from "../store/slices/gameSlice";
-import { resetEditMode } from "../store/slices/uiSlice";
+import { resetEditMode, setIsEditMode } from "../store/slices/uiSlice";
 import { calculateCapturedPieces, copyBoard } from "../logic/chessUtils";
 import { isEqual } from "lodash";
 
@@ -90,4 +90,5 @@ export const saveAndExitEditMode = (
 
   dispatch(setGameIsActive(true));
   dispatch(resetEditMode());
+  dispatch(setIsEditMode(false));
 };

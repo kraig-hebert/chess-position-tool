@@ -5,6 +5,7 @@ import {
   selectSelectedPieceTypeForEdit,
   setActiveEditAction,
   setSelectedPieceTypeForEdit,
+  resetEditMode,
 } from "../../store/slices/uiSlice";
 import {
   selectBoard,
@@ -44,6 +45,7 @@ const EditPanel = () => {
   };
 
   const handleResetBoard = () => {
+    dispatch(resetEditMode());
     dispatch(resetBoard());
   };
 

@@ -8,7 +8,11 @@ import {
   FaChessQueen,
   FaChessKing,
 } from "react-icons/fa6";
-import { setTempHasMoved, setOriginalPosition } from "../slices/gameSlice";
+import {
+  setTempHasMoved,
+  resetTempHasMoved,
+  setOriginalPosition,
+} from "../slices/gameSlice";
 import { copyBoard } from "../../logic/chessUtils";
 
 const initialState = {
@@ -91,6 +95,9 @@ export const uiSlice = createSlice({
     setNextMoveColorAfterEdit: (state, action) => {
       state.nextMoveColorAfterEdit = action.payload;
     },
+    setEnPassantEnabled: (state, action) => {
+      state.enPassantEnabled = action.payload;
+    },
     toggleEnPassant: (state) => {
       state.enPassantEnabled = !state.enPassantEnabled;
     },
@@ -106,12 +113,12 @@ export const uiSlice = createSlice({
     setIsEditMode: (state, action) => {
       state.isEditMode = action.payload;
     },
-    resetEditMode: (state) => {
-      const currentPov = state.pov;
-      const activeFilters = state.activeFilters;
-      const result = { ...initialState, pov: currentPov, activeFilters };
-      return result;
-    },
+    // resetEditMode: (state) => {
+    //   const currentPov = state.pov;
+    //   const activeFilters = state.activeFilters;
+    //   const result = { ...initialState, pov: currentPov, activeFilters };
+    //   return result;
+    // },
     setPov: (state, action) => {
       state.pov = action.payload;
     },
@@ -203,7 +210,6 @@ export const {
   setPossibleEnPassantTargets,
   setSelectedEnPassantTarget,
   setSelectedEditMoveSquare,
-  resetEditMode,
   setPov,
   togglePov,
   setIsEditMode,
@@ -214,6 +220,7 @@ export const {
   clearArrows,
   setAllFiltersToOff,
   setAllFiltersToOn,
+  setEnPassantEnabled,
 } = uiSlice.actions;
 
 // Thunk action creator that coordinates multiple actions for entering edit mode
@@ -223,6 +230,17 @@ export const enterEditMode = (board, activeColor, hasMoved) => (dispatch) => {
   dispatch(setIsEditMode(true));
   dispatch(clearArrows());
   dispatch(setNextMoveColorAfterEdit(activeColor));
+};
+
+export const resetEditMode = () => (dispatch) => {
+  dispatch(setSelectedPieceTypeForEdit(null));
+  dispatch(setActiveEditAction("add"));
+  dispatch(setEnPassantEnabled(true));
+  dispatch(setNextMoveColorAfterEdit("white"));
+  dispatch(setPossibleEnPassantTargets([]));
+  dispatch(setSelectedEnPassantTarget(0));
+  dispatch(setSelectedEditMoveSquare(null));
+  dispatch(resetTempHasMoved());
 };
 
 export default uiSlice.reducer;

@@ -10,7 +10,6 @@ import "./castlingSelectorStyles.css";
 const CastlingSelector = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved) || initialHasMoved;
-  console.log("tempHasMoved", tempHasMoved);
 
   const handleCastlingChange = (key) => {
     dispatch(
