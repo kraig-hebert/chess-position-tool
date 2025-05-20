@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useEditMode } from "../../hooks/useEditMode";
 import {
   selectGameIsActive,
   setGameIsActive,
@@ -87,6 +88,8 @@ const Board = () => {
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
 
+  const { handleEditModeClick, getEnPassantTargetSquare } = useEditMode();
+
   const handleSquareClick = (row, col) => {
     // Clear arrows on left click
     dispatch(clearArrows());
@@ -105,48 +108,7 @@ const Board = () => {
 
     // if in edit mode, don't validate moves
     if (isEditMode) {
-      const clickedPiece = board[row][col];
-
-      if (activeEditAction === "trash" && clickedPiece) {
-        const newBoard = copyBoard(board);
-        newBoard[row][col] = null;
-        dispatch(setBoard(newBoard));
-        return;
-      }
-
-      if (activeEditAction === "move") {
-        if (selectedEditMoveSquare) {
-          // Second click - only move to empty square
-          if (!clickedPiece) {
-            const newBoard = copyBoard(board);
-            newBoard[row][col] = selectedEditMoveSquare.piece;
-            newBoard[selectedEditMoveSquare.row][selectedEditMoveSquare.col] =
-              null;
-            dispatch(setBoard(newBoard));
-            dispatch(setSelectedEditMoveSquare(null));
-          } else if (clickedPiece) {
-            // First click - select the piece
-            dispatch(
-              setSelectedEditMoveSquare({ row, col, piece: clickedPiece })
-            );
-          }
-        } else
-          dispatch(
-            setSelectedEditMoveSquare({ row, col, piece: clickedPiece })
-          );
-        return;
-      }
-
-      if (
-        activeEditAction === "add" &&
-        selectedPieceTypeForEdit &&
-        !clickedPiece
-      ) {
-        const newBoard = copyBoard(board);
-        newBoard[row][col] = selectedPieceTypeForEdit;
-        dispatch(setBoard(newBoard));
-        return;
-      }
+      handleEditModeClick(row, col);
       return;
     }
 
@@ -281,15 +243,7 @@ const Board = () => {
     let blackPressure = board.map((row) => row.map((col) => 0));
 
     // For en passant target highlighting
-    let enPassantTargetSquare = null;
-    if (isEditMode && enPassantEnabled && possibleEnPassantTargets.length > 0) {
-      const target = possibleEnPassantTargets.find(
-        (target) => target.notation === selectedEnPassantTarget
-      );
-      if (target) {
-        enPassantTargetSquare = { row: target.row, col: target.col };
-      }
-    }
+    let enPassantTargetSquare = isEditMode ? getEnPassantTargetSquare() : null;
 
     if (!isEditMode) {
       if (selectedPiece) {
