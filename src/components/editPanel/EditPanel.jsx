@@ -7,11 +7,7 @@ import {
   setSelectedPieceTypeForEdit,
   resetEditMode,
 } from "../../store/slices/uiSlice";
-import {
-  selectBoard,
-  resetBoard,
-  clearBoard,
-} from "../../store/slices/gameSlice";
+import { resetBoard, clearBoard } from "../../store/slices/gameSlice";
 import ActionButtons from "./actionButtons/ActionButtons";
 import PieceButtons from "./pieceButtons/PieceButtons";
 import BoardControls from "./boardControls/BoardControls";
@@ -23,7 +19,6 @@ import "./editPanelStyles.css";
 
 const EditPanel = () => {
   const dispatch = useDispatch();
-  const board = useSelector(selectBoard);
   const activeEditAction = useSelector(selectActiveEditAction);
   const selectedPieceTypeForEdit = useSelector(selectSelectedPieceTypeForEdit);
 

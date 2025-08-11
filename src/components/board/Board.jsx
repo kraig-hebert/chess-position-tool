@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEditMode } from "../../hooks/useEditMode";
+import { useStudyMode } from "../../hooks/useStudyMode";
 import {
   selectGameIsActive,
   setGameIsActive,
@@ -50,6 +51,7 @@ import {
   resetArrowDrawing,
   selectArrowDrawing,
   clearArrows,
+  selectArrows,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -84,16 +86,15 @@ const Board = () => {
   const enPassantTarget = useSelector(selectEnPassantTarget);
   const selectedPiece = useSelector(selectSelectedPiece);
   const arrowDrawing = useSelector(selectArrowDrawing);
+  const arrows = useSelector(selectArrows);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
 
   const { handleEditModeClick, getEnPassantTargetSquare } = useEditMode();
+  const { handleStudyModeClick } = useStudyMode();
 
   const handleSquareClick = (row, col) => {
-    // Clear arrows on left click
-    dispatch(clearArrows());
-
     // ignore clicks when promotion modal is active
     if (promotionSquare) return;
 
@@ -106,132 +107,24 @@ const Board = () => {
       col = Math.abs(col - 7);
     }
 
+    // If currently drawing an arrow, cancel drawing on left click
+    if (arrowDrawing.isDrawing) {
+      dispatch(resetArrowDrawing());
+      return;
+    }
+
+    // If any arrows exist, clear them first (then proceed with normal behavior)
+    if (arrows && arrows.length > 0) {
+      dispatch(clearArrows());
+    }
+
     // if in edit mode, don't validate moves
     if (isEditMode) {
       handleEditModeClick(row, col);
       return;
     }
 
-    // ignore clicks when game isn't active
-    if (!gameIsActive) return;
-
-    const nextMove = board[row][col];
-
-    /* 
-      - if there is a selectedPiece perform moveValidation
-      - else setSelectedPiece
-    */
-    if (selectedPiece) {
-      // check for same square/color blocking moves
-      if (
-        (selectedPiece.row === row && selectedPiece.col === col) ||
-        isSameColor(selectedPiece.piece, nextMove)
-      ) {
-        dispatch(resetSelectedPiece());
-        return; // return and block move
-      }
-
-      const move = makePieceMove(
-        selectedPiece.row,
-        selectedPiece.col,
-        row,
-        col,
-        board,
-        { enPassantTarget, hasMoved, validateCheckAndCastle: true }
-      );
-
-      if (!move || isKingInCheck(move.newBoard, activeColor)) {
-        dispatch(resetSelectedPiece());
-        return;
-      }
-
-      // handle setting enPassantTarget
-      if (move.enPassantTarget)
-        dispatch(setEnPassantTarget(move.enPassantTarget));
-      // store captured pieces temporarily for immediate use
-      if (move.capturedPiece) {
-        tempCapturedPieces[activeColor] = [
-          ...tempCapturedPieces[activeColor],
-          move.capturedPiece,
-        ];
-      }
-      dispatch(setCapturedPieces({ ...tempCapturedPieces }));
-
-      // handle castling
-      if (move.castlingSide) {
-        if (activeColor === "white")
-          dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
-        else dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
-      }
-
-      let moveNotation = createNotation(
-        row,
-        col,
-        selectedPiece,
-        move.capturedPiece,
-        board,
-        move.castlingSide
-      );
-
-      // Update hasMoved state for castling if rook or king moves by itself
-      if (selectedPiece.piece === "R") {
-        if (selectedPiece.row === 7 && selectedPiece.col === 0) {
-          dispatch(setHasMoved({ ...hasMoved, whiteRookQueenside: true }));
-        } else if (selectedPiece.row === 7 && selectedPiece.col === 7) {
-          dispatch(setHasMoved({ ...hasMoved, whiteRookKingside: true }));
-        }
-      } else if (selectedPiece.piece === "r") {
-        if (selectedPiece.row === 0 && selectedPiece.col === 0) {
-          dispatch(setHasMoved({ ...hasMoved, blackRookQueenside: true }));
-        } else if (selectedPiece.row === 0 && selectedPiece.col === 7) {
-          dispatch(setHasMoved({ ...hasMoved, blackRookKingside: true }));
-        }
-      } else if (selectedPiece.piece === "K" && !move.castlingSide) {
-        dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
-      } else if (selectedPiece.piece === "k" && !move.castlingSide) {
-        dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
-      }
-
-      // Check for Pawn Promotion
-      const isWhitePromotion = selectedPiece.piece === "P" && row === 0;
-      const isBlackPromotion = selectedPiece.piece === "p" && row === 7;
-      if (isWhitePromotion || isBlackPromotion) {
-        setPromotionSquare({
-          row,
-          col,
-          piece: selectedPiece.piece,
-          moveNotation,
-        });
-        dispatch(setGameIsActive(false));
-        return; // Stop the move until promotion is chosen
-      }
-
-      dispatch(setBoard(move.newBoard));
-      dispatch(resetSelectedPiece());
-      // Check for Checkmate
-      const opponentColor = activeColor === "white" ? "black" : "white";
-      if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
-      if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
-        console.log("Checkmate!");
-        moveNotation = moveNotation.slice(0, -1); // remove + from initial check
-        moveNotation += "#";
-      }
-      dispatch(setActiveMove(nextIndex));
-      dispatch(
-        setMovesList([
-          ...movesList,
-          {
-            moveNotation,
-            board: move.newBoard,
-            capturedPieces: tempCapturedPieces,
-          },
-        ])
-      );
-
-      dispatch(toggleActiveColor());
-    } else if (nextMove && getPieceColor(nextMove) === activeColor) {
-      dispatch(setSelectedPiece({ row, col, piece: nextMove }));
-    }
+    handleStudyModeClick(row, col, promotionSquare, setPromotionSquare);
   };
 
   const renderBoard = () => {
@@ -457,6 +350,10 @@ const Board = () => {
           if (e.button === 2) {
             e.preventDefault();
             e.stopPropagation();
+          } else if (e.button === 0) {
+            // Left click anywhere: cancel drawing and clear arrows if present
+            if (arrowDrawing.isDrawing) dispatch(resetArrowDrawing());
+            if (arrows && arrows.length > 0) dispatch(clearArrows());
           }
         }}
         onContextMenu={(e) => {
