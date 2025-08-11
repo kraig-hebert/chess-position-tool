@@ -25,9 +25,9 @@ import {
   getPieceColor,
   isSameColor,
   isKingInCheck,
+  updateSanSuffix,
   createBaseSan,
 } from "../logic/chessUtils";
-import { updateSanSuffix, createBaseSan } from "../logic/chessUtils";
 
 export const useStudyMode = () => {
   const dispatch = useDispatch();
