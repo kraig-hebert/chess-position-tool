@@ -31,7 +31,7 @@ export const isSameColor = (firstPiece, secondPiece) => {
 
 export const copyBoard = (board) => board.map((row) => [...row]);
 
-export const createNotation = (
+export const createBaseSan = (
   row,
   col,
   selectedPiece,
@@ -62,8 +62,8 @@ export const createNotation = (
       }x${letter}${number}`;
   } else if (piece === "K") {
     if (castlingSide) {
-      if (castlingSide === "kingside") moveNotation = "0-0";
-      else if (castlingSide === "queenside") moveNotation = "0-0-0";
+      if (castlingSide === "kingside") moveNotation = "O-O";
+      else if (castlingSide === "queenside") moveNotation = "O-O-O";
     } else
       moveNotation = handleMajorPieceNotation(
         piece,
@@ -78,6 +78,29 @@ export const createNotation = (
   }
   return moveNotation;
 };
+
+// Notation helpers (centralized here)
+export function updateSanSuffix({
+  baseSan,
+  boardAfter,
+  opponentColor,
+  hasMoved,
+  promotionPiece,
+}) {
+  let san = baseSan;
+
+  if (promotionPiece) {
+    san += `=${promotionPiece.toUpperCase()}`;
+  }
+
+  const mate = isCheckmate(boardAfter, opponentColor, hasMoved);
+  if (mate) return san + "#";
+
+  const check = isKingInCheck(boardAfter, opponentColor, hasMoved);
+  if (check) return san + "+";
+
+  return san;
+}
 
 // edit notation if two pieces of the same kind can make move
 export const handleMajorPieceNotation = (

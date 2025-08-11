@@ -20,10 +20,9 @@ import {
   resetSelectedPiece,
 } from "../../store/slices/gameSlice";
 import {
-  isKingInCheck,
-  isCheckmate,
   getPossibleMoves,
   copyBoard,
+  updateSanSuffix,
 } from "../../logic/chessUtils";
 import { getSquarePressures } from "../../logic/filterUtils";
 import {
@@ -217,20 +216,17 @@ const Board = () => {
 
     dispatch(setActiveMove(nextIndex));
     const opponentColor = activeColor === "white" ? "black" : "white";
-    let suffix = "";
-    if (isKingInCheck(newBoard, opponentColor)) suffix = "+";
-    if (isCheckmate(newBoard, opponentColor, hasMoved)) suffix = "#";
-
+    const moveNotation = updateSanSuffix({
+      baseSan: promotionSquare.moveNotation,
+      boardAfter: newBoard,
+      opponentColor,
+      hasMoved,
+      promotionPiece: piece,
+    });
     dispatch(
       setMovesList([
         ...movesList,
-        {
-          moveNotation: `${
-            promotionSquare.moveNotation
-          }=${piece.toUpperCase()}${suffix}`,
-          board: newBoard,
-          capturedPieces: tempCapturedPieces,
-        },
+        { moveNotation, board: newBoard, capturedPieces: tempCapturedPieces },
       ])
     );
     dispatch(setBoard(newBoard));

@@ -25,9 +25,9 @@ import {
   getPieceColor,
   isSameColor,
   isKingInCheck,
-  isCheckmate,
-  createNotation,
+  createBaseSan,
 } from "../logic/chessUtils";
+import { updateSanSuffix, createBaseSan } from "../logic/chessUtils";
 
 export const useStudyMode = () => {
   const dispatch = useDispatch();
@@ -103,7 +103,7 @@ export const useStudyMode = () => {
         else dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
       }
 
-      let moveNotation = createNotation(
+      let baseSan = createBaseSan(
         row,
         col,
         selectedPiece,
@@ -139,7 +139,7 @@ export const useStudyMode = () => {
           row,
           col,
           piece: selectedPiece.piece,
-          moveNotation,
+          moveNotation: baseSan,
         });
         dispatch(setGameIsActive(false));
         return; // Stop the move until promotion is chosen
@@ -147,13 +147,13 @@ export const useStudyMode = () => {
 
       dispatch(setBoard(move.newBoard));
       dispatch(resetSelectedPiece());
-      // Check for Checkmate
       const opponentColor = activeColor === "white" ? "black" : "white";
-      if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
-      if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
-        // Replace "+" with "#" when check escalates to checkmate
-        moveNotation = moveNotation.replace(/\+$/, "#");
-      }
+      const moveNotation = updateSanSuffix({
+        baseSan,
+        boardAfter: move.newBoard,
+        opponentColor,
+        hasMoved,
+      });
       dispatch(setActiveMove(nextIndex));
       dispatch(
         setMovesList([
