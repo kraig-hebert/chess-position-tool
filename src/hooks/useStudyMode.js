@@ -82,9 +82,12 @@ export const useStudyMode = () => {
         return;
       }
 
-      // handle setting enPassantTarget
-      if (move.enPassantTarget)
+      // handle setting/clearing enPassantTarget
+      if (move.enPassantTarget) {
         dispatch(setEnPassantTarget(move.enPassantTarget));
+      } else {
+        dispatch(setEnPassantTarget(null));
+      }
       // store captured pieces temporarily for immediate use
       if (move.capturedPiece) {
         tempCapturedPieces[activeColor] = [
