@@ -28,7 +28,6 @@ import {
   isCheckmate,
   createNotation,
 } from "../logic/chessUtils";
-import { clearArrows } from "../store/slices/uiSlice";
 
 export const useStudyMode = () => {
   const dispatch = useDispatch();
@@ -152,9 +151,8 @@ export const useStudyMode = () => {
       const opponentColor = activeColor === "white" ? "black" : "white";
       if (isKingInCheck(move.newBoard, opponentColor)) moveNotation += "+";
       if (isCheckmate(move.newBoard, opponentColor, hasMoved)) {
-        console.log("Checkmate!");
-        moveNotation = moveNotation.slice(0, -1); // remove + from initial check
-        moveNotation += "#";
+        // Replace "+" with "#" when check escalates to checkmate
+        moveNotation = moveNotation.replace(/\+$/, "#");
       }
       dispatch(setActiveMove(nextIndex));
       dispatch(

@@ -6,9 +6,7 @@ import {
   selectGameIsActive,
   setGameIsActive,
   selectHasMoved,
-  setHasMoved,
   selectCapturedPieces,
-  setCapturedPieces,
   setMovesList,
   setActiveMove,
   selectMovesList,
@@ -16,20 +14,14 @@ import {
   selectActiveColor,
   toggleActiveColor,
   selectEnPassantTarget,
-  setEnPassantTarget,
   selectBoard,
   setBoard,
   selectSelectedPiece,
-  setSelectedPiece,
   resetSelectedPiece,
 } from "../../store/slices/gameSlice";
-import { makePieceMove } from "../../logic/moveValidation";
 import {
-  getPieceColor,
-  isSameColor,
   isKingInCheck,
   isCheckmate,
-  createNotation,
   getPossibleMoves,
   copyBoard,
 } from "../../logic/chessUtils";
@@ -75,10 +67,6 @@ const Board = () => {
   const hasMoved = useSelector(selectHasMoved);
   const capturedPieces = useSelector(selectCapturedPieces);
   const activeEditAction = useSelector(selectActiveEditAction);
-  const selectedPieceTypeForEdit = useSelector(selectSelectedPieceTypeForEdit);
-  const enPassantEnabled = useSelector(selectEnPassantEnabled);
-  const possibleEnPassantTargets = useSelector(selectPossibleEnPassantTargets);
-  const selectedEnPassantTarget = useSelector(selectSelectedEnPassantTarget);
   const movesList = useSelector(selectMovesList);
   const nextIndex = useSelector(selectNextGroupedMovesListIndex);
   const selectedEditMoveSquare = useSelector(selectSelectedEditMoveSquare);
@@ -111,11 +99,6 @@ const Board = () => {
     if (arrowDrawing.isDrawing) {
       dispatch(resetArrowDrawing());
       return;
-    }
-
-    // If any arrows exist, clear them first (then proceed with normal behavior)
-    if (arrows && arrows.length > 0) {
-      dispatch(clearArrows());
     }
 
     // if in edit mode, don't validate moves
@@ -160,8 +143,10 @@ const Board = () => {
       if (!isEditMode) {
         whitePressure = whitePressure.reverse().map((inner) => inner.reverse());
         blackPressure = blackPressure.reverse().map((inner) => inner.reverse());
-        tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
-        tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
+        if (selectedPiece) {
+          tempSelectedPiece.row = Math.abs(tempSelectedPiece.row - 7);
+          tempSelectedPiece.col = Math.abs(tempSelectedPiece.col - 7);
+        }
         possibleMoves = possibleMoves.map((move) => {
           return { row: Math.abs(move.row - 7), col: Math.abs(move.col - 7) };
         });
@@ -231,13 +216,18 @@ const Board = () => {
     newBoard[selectedPiece.row][selectedPiece.col] = null;
 
     dispatch(setActiveMove(nextIndex));
+    const opponentColor = activeColor === "white" ? "black" : "white";
+    let suffix = "";
+    if (isKingInCheck(newBoard, opponentColor)) suffix = "+";
+    if (isCheckmate(newBoard, opponentColor, hasMoved)) suffix = "#";
+
     dispatch(
       setMovesList([
         ...movesList,
         {
           moveNotation: `${
             promotionSquare.moveNotation
-          }=${piece.toUpperCase()}`,
+          }=${piece.toUpperCase()}${suffix}`,
           board: newBoard,
           capturedPieces: tempCapturedPieces,
         },
