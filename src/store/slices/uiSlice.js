@@ -14,6 +14,17 @@ import {
   setOriginalPosition,
 } from "../slices/gameSlice";
 import { copyBoard, ensureHasMovedConsistency } from "../../logic/chessUtils";
+import {
+  selectBoard,
+  selectHasMoved,
+  selectActiveColor as selectGameActiveColor,
+  selectEnPassantTarget as selectGameEnPassantTarget,
+  setOriginalHasMoved,
+  setOriginalActiveColor,
+  setOriginalEnPassantTarget,
+  setOriginalMovesList,
+  selectMovesList,
+} from "../slices/gameSlice";
 
 const initialState = {
   activeFilters: {
@@ -218,13 +229,30 @@ export const {
 } = uiSlice.actions;
 
 // Thunk action creator that coordinates multiple actions for entering edit mode
-export const enterEditMode = (board, activeColor, hasMoved) => (dispatch) => {
-  dispatch(setOriginalPosition(copyBoard(board))); // Ensure we have a clean copy
-  dispatch(setTempHasMoved(ensureHasMovedConsistency(board, hasMoved)));
-  dispatch(setIsEditMode(true));
-  dispatch(clearArrows());
-  dispatch(setNextMoveColorAfterEdit(activeColor));
-};
+export const enterEditMode =
+  (board, activeColor, hasMoved) => (dispatch, getState) => {
+    const state = getState();
+    const currentBoard = selectBoard(state);
+    const currentHasMoved = selectHasMoved(state);
+    const currentActiveColor = selectGameActiveColor(state);
+    const currentEnPassantTarget = selectGameEnPassantTarget(state);
+    const currentMovesList = selectMovesList(state);
+
+    dispatch(setOriginalPosition(copyBoard(currentBoard)));
+    const normalizedHasMoved = ensureHasMovedConsistency(
+      currentBoard,
+      currentHasMoved
+    );
+    dispatch(setOriginalHasMoved(normalizedHasMoved));
+    dispatch(setOriginalActiveColor(currentActiveColor));
+    dispatch(setOriginalEnPassantTarget(currentEnPassantTarget));
+    dispatch(setOriginalMovesList(currentMovesList));
+
+    dispatch(setTempHasMoved(normalizedHasMoved));
+    dispatch(setIsEditMode(true));
+    dispatch(clearArrows());
+    dispatch(setNextMoveColorAfterEdit(activeColor));
+  };
 
 export const resetEditMode = () => (dispatch) => {
   dispatch(setSelectedPieceTypeForEdit(null));

@@ -33,12 +33,14 @@ import {
 } from "../../store/slices/uiSlice";
 import { moveForward, moveBackward } from "../../utils/moveNavigation";
 import { saveAndExitEditMode } from "../../utils/editModeUtils.js";
+import { useStore } from "react-redux";
 import GameButton from "./gameButton/GameButton";
 
 import "./gameButtonsStyles.css";
 
 const GameButtons = () => {
   const dispatch = useDispatch();
+  const store = useStore();
   const board = useSelector(selectBoard);
   const tempHasMoved = useSelector(selectTempHasMoved);
   const hasMoved = useSelector(selectHasMoved);
@@ -70,6 +72,7 @@ const GameButtons = () => {
     if (isEditMode) {
       saveAndExitEditMode(
         dispatch,
+        () => store.getState(),
         board,
         tempHasMoved,
         nextMoveColorAfterEdit,

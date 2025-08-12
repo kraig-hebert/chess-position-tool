@@ -30,6 +30,7 @@ const validateCastlingPositions = (board, tempHasMoved) => {
 
 export const saveAndExitEditMode = (
   dispatch,
+  getState,
   board,
   tempHasMoved,
   nextMoveColorAfterEdit,
@@ -50,8 +51,8 @@ export const saveAndExitEditMode = (
   dispatch(setCapturedPieces(captured));
 
   // Validate and update hasMoved based on piece positions
-  const validatedHasMoved = ensureHasMovedConsistency(board, tempHasMoved);
-  dispatch(setHasMoved(validatedHasMoved));
+  const normalizedHasMoved = ensureHasMovedConsistency(board, tempHasMoved);
+  dispatch(setHasMoved(normalizedHasMoved));
 
   // Set the active color based on the nextMoveColorAfterEdit from Redux
   dispatch(setActiveColor(nextMoveColorAfterEdit));
@@ -78,18 +79,56 @@ export const saveAndExitEditMode = (
     dispatch(setEnPassantTarget(null));
   }
 
-  // Handle moves list
-  if (nextMoveColorAfterEdit === "black") {
-    const placeholderMove = {
-      moveNotation: "XXX",
-      board: copyBoard(board),
-      capturedPieces: captured,
-    };
-    dispatch(setMovesList([placeholderMove]));
-    dispatch(setActiveMove({ groupIndex: 0, moveIndex: 1 }));
+  // Handle moves list with snapshots
+  const state = getState();
+  const originalHasMoved = state.game.originalHasMoved;
+  const originalActiveColor = state.game.originalActiveColor;
+  const originalEnPassantTarget = state.game.originalEnPassantTarget;
+  const originalMovesList = state.game.originalMovesList;
+
+  const boardUnchanged = isEqual(originalPosition, board);
+  const hasMovedUnchanged = isEqual(originalHasMoved, normalizedHasMoved);
+  const activeColorUnchanged = originalActiveColor === nextMoveColorAfterEdit;
+  const enPassantUnchanged = isEqual(
+    originalEnPassantTarget,
+    (() => {
+      if (
+        enPassantEnabled &&
+        possibleEnPassantTargets.length > 0 &&
+        selectedEnPassantTarget
+      ) {
+        const target = possibleEnPassantTargets.find(
+          (t) => t.notation === selectedEnPassantTarget
+        );
+        return target
+          ? { row: target.row, col: target.col, color: nextMoveColorAfterEdit }
+          : null;
+      }
+      return null;
+    })()
+  );
+
+  const nothingChanged =
+    boardUnchanged &&
+    hasMovedUnchanged &&
+    activeColorUnchanged &&
+    enPassantUnchanged;
+
+  if (nothingChanged) {
+    dispatch(setMovesList(originalMovesList || []));
   } else {
-    dispatch(setMovesList([]));
-    dispatch(setActiveMove(null));
+    if (nextMoveColorAfterEdit === "black") {
+      const placeholderMove = {
+        moveNotation: "XXX",
+        board: copyBoard(board),
+        capturedPieces: captured,
+      };
+      dispatch(setMovesList([placeholderMove]));
+      dispatch(setActiveMove({ groupIndex: 0, moveIndex: 1 }));
+    } else {
+      dispatch(setMovesList([]));
+      dispatch(setActiveMove(null));
+    }
   }
 
   dispatch(setGameIsActive(true));
