@@ -13,7 +13,7 @@ import {
   resetTempHasMoved,
   setOriginalPosition,
 } from "../slices/gameSlice";
-import { copyBoard } from "../../logic/chessUtils";
+import { copyBoard, ensureHasMovedConsistency } from "../../logic/chessUtils";
 
 const initialState = {
   activeFilters: {
@@ -220,7 +220,7 @@ export const {
 // Thunk action creator that coordinates multiple actions for entering edit mode
 export const enterEditMode = (board, activeColor, hasMoved) => (dispatch) => {
   dispatch(setOriginalPosition(copyBoard(board))); // Ensure we have a clean copy
-  dispatch(setTempHasMoved(hasMoved));
+  dispatch(setTempHasMoved(ensureHasMovedConsistency(board, hasMoved)));
   dispatch(setIsEditMode(true));
   dispatch(clearArrows());
   dispatch(setNextMoveColorAfterEdit(activeColor));

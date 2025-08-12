@@ -27,6 +27,7 @@ import {
   isKingInCheck,
   updateSanSuffix,
   createBaseSan,
+  applyMoveToHasMoved,
 } from "../logic/chessUtils";
 
 export const useStudyMode = () => {
@@ -96,12 +97,13 @@ export const useStudyMode = () => {
       }
       dispatch(setCapturedPieces({ ...tempCapturedPieces }));
 
-      // handle castling
-      if (move.castlingSide) {
-        if (activeColor === "white")
-          dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
-        else dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
-      }
+      // handle castling/hasMoved updates centrally
+      const updatedHasMoved = applyMoveToHasMoved(hasMoved, {
+        piece: selectedPiece.piece,
+        from: { row: selectedPiece.row, col: selectedPiece.col },
+        castlingSide: move.castlingSide || null,
+      });
+      if (updatedHasMoved !== hasMoved) dispatch(setHasMoved(updatedHasMoved));
 
       let baseSan = createBaseSan(
         row,
@@ -112,24 +114,7 @@ export const useStudyMode = () => {
         move.castlingSide
       );
 
-      // Update hasMoved state for castling if rook or king moves by itself
-      if (selectedPiece.piece === "R") {
-        if (selectedPiece.row === 7 && selectedPiece.col === 0) {
-          dispatch(setHasMoved({ ...hasMoved, whiteRookQueenside: true }));
-        } else if (selectedPiece.row === 7 && selectedPiece.col === 7) {
-          dispatch(setHasMoved({ ...hasMoved, whiteRookKingside: true }));
-        }
-      } else if (selectedPiece.piece === "r") {
-        if (selectedPiece.row === 0 && selectedPiece.col === 0) {
-          dispatch(setHasMoved({ ...hasMoved, blackRookQueenside: true }));
-        } else if (selectedPiece.row === 0 && selectedPiece.col === 7) {
-          dispatch(setHasMoved({ ...hasMoved, blackRookKingside: true }));
-        }
-      } else if (selectedPiece.piece === "K" && !move.castlingSide) {
-        dispatch(setHasMoved({ ...hasMoved, whiteKing: true }));
-      } else if (selectedPiece.piece === "k" && !move.castlingSide) {
-        dispatch(setHasMoved({ ...hasMoved, blackKing: true }));
-      }
+      // (per-move rook/king updates are handled by applyMoveToHasMoved)
 
       // Check for Pawn Promotion
       const isWhitePromotion = selectedPiece.piece === "P" && row === 0;

@@ -8,7 +8,11 @@ import {
   setEnPassantTarget,
 } from "../store/slices/gameSlice";
 import { resetEditMode, setIsEditMode } from "../store/slices/uiSlice";
-import { calculateCapturedPieces, copyBoard } from "../logic/chessUtils";
+import {
+  calculateCapturedPieces,
+  copyBoard,
+  ensureHasMovedConsistency,
+} from "../logic/chessUtils";
 import { isEqual } from "lodash";
 
 const validateCastlingPositions = (board, tempHasMoved) => {
@@ -46,7 +50,7 @@ export const saveAndExitEditMode = (
   dispatch(setCapturedPieces(captured));
 
   // Validate and update hasMoved based on piece positions
-  const validatedHasMoved = validateCastlingPositions(board, tempHasMoved);
+  const validatedHasMoved = ensureHasMovedConsistency(board, tempHasMoved);
   dispatch(setHasMoved(validatedHasMoved));
 
   // Set the active color based on the nextMoveColorAfterEdit from Redux

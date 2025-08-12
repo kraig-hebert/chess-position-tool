@@ -102,6 +102,115 @@ export function updateSanSuffix({
   return san;
 }
 
+// =====================
+// Castling helpers (centralized)
+// =====================
+
+/**
+ * Normalize hasMoved flags based on actual pieces on starting squares.
+ */
+export const ensureHasMovedConsistency = (board, hasMoved) => {
+  const normalized = { ...hasMoved };
+  // White
+  if (board[7][4] !== "K") normalized.whiteKing = true;
+  if (board[7][7] !== "R") normalized.whiteRookKingside = true;
+  if (board[7][0] !== "R") normalized.whiteRookQueenside = true;
+  // Black
+  if (board[0][4] !== "k") normalized.blackKing = true;
+  if (board[0][7] !== "r") normalized.blackRookKingside = true;
+  if (board[0][0] !== "r") normalized.blackRookQueenside = true;
+  return normalized;
+};
+
+/**
+ * Compute available castling rights from hasMoved flags and starting-piece presence.
+ */
+export const getCastlingRights = (board, hasMoved) => {
+  const rights = {
+    white: { kingside: false, queenside: false },
+    black: { kingside: false, queenside: false },
+  };
+  // White
+  const whiteKingOnStart = board[7][4] === "K";
+  const whiteKRookOnStart = board[7][7] === "R";
+  const whiteQRookOnStart = board[7][0] === "R";
+  rights.white.kingside =
+    whiteKingOnStart &&
+    whiteKRookOnStart &&
+    !hasMoved.whiteKing &&
+    !hasMoved.whiteRookKingside;
+  rights.white.queenside =
+    whiteKingOnStart &&
+    whiteQRookOnStart &&
+    !hasMoved.whiteKing &&
+    !hasMoved.whiteRookQueenside;
+  // Black
+  const blackKingOnStart = board[0][4] === "k";
+  const blackKRookOnStart = board[0][7] === "r";
+  const blackQRookOnStart = board[0][0] === "r";
+  rights.black.kingside =
+    blackKingOnStart &&
+    blackKRookOnStart &&
+    !hasMoved.blackKing &&
+    !hasMoved.blackRookKingside;
+  rights.black.queenside =
+    blackKingOnStart &&
+    blackQRookOnStart &&
+    !hasMoved.blackKing &&
+    !hasMoved.blackRookQueenside;
+  return rights;
+};
+
+/**
+ * Update hasMoved flags when a move is made.
+ * Provide piece, from, and castlingSide if applicable.
+ */
+export const applyMoveToHasMoved = (
+  hasMoved,
+  { piece, from, castlingSide }
+) => {
+  const updated = { ...hasMoved };
+  if (piece === "K") {
+    updated.whiteKing = true;
+  } else if (piece === "k") {
+    updated.blackKing = true;
+  } else if (piece === "R") {
+    if (from?.row === 7 && from?.col === 7) updated.whiteRookKingside = true;
+    if (from?.row === 7 && from?.col === 0) updated.whiteRookQueenside = true;
+  } else if (piece === "r") {
+    if (from?.row === 0 && from?.col === 7) updated.blackRookKingside = true;
+    if (from?.row === 0 && from?.col === 0) updated.blackRookQueenside = true;
+  }
+  if (castlingSide) {
+    if (piece === "K") updated.whiteKing = true;
+    if (piece === "k") updated.blackKing = true;
+  }
+  return updated;
+};
+
+/**
+ * Enable/disable a particular castling side by manipulating hasMoved flags.
+ */
+export const setCastlingAllowed = (hasMoved, color, side, allowed) => {
+  const updated = { ...hasMoved };
+  const kingKey = color === "white" ? "whiteKing" : "blackKing";
+  const rookKey =
+    color === "white"
+      ? side === "kingside"
+        ? "whiteRookKingside"
+        : "whiteRookQueenside"
+      : side === "kingside"
+      ? "blackRookKingside"
+      : "blackRookQueenside";
+  if (allowed) {
+    updated[kingKey] = false;
+    updated[rookKey] = false;
+  } else {
+    updated[rookKey] = true;
+  }
+  return updated;
+};
+
 // edit notation if two pieces of the same kind can make move
 export const handleMajorPieceNotation = (
   piece,

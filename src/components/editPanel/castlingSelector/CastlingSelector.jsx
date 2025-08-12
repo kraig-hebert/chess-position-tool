@@ -4,12 +4,19 @@ import {
   selectTempHasMoved,
   setTempHasMoved,
   initialHasMoved,
+  selectBoard,
 } from "../../../store/slices/gameSlice";
+import {
+  getCastlingRights,
+  setCastlingAllowed,
+} from "../../../logic/chessUtils";
 import "./castlingSelectorStyles.css";
 
 const CastlingSelector = () => {
   const dispatch = useDispatch();
   const tempHasMoved = useSelector(selectTempHasMoved) || initialHasMoved;
+  const board = useSelector(selectBoard);
+  const rights = getCastlingRights(board, tempHasMoved);
 
   const handleCastlingChange = (key) => {
     dispatch(
@@ -30,20 +37,40 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={
-                  !tempHasMoved.whiteRookKingside && !tempHasMoved.whiteKing
+                checked={rights.white.kingside}
+                disabled={!(board[7][4] === "K" && board[7][7] === "R")}
+                onChange={(e) =>
+                  dispatch(
+                    setTempHasMoved(
+                      setCastlingAllowed(
+                        tempHasMoved,
+                        "white",
+                        "kingside",
+                        e.target.checked
+                      )
+                    )
+                  )
                 }
-                onChange={() => handleCastlingChange("whiteRookKingside")}
               />
               <span>O-O</span>
             </label>
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={
-                  !tempHasMoved.whiteRookQueenside && !tempHasMoved.whiteKing
+                checked={rights.white.queenside}
+                disabled={!(board[7][4] === "K" && board[7][0] === "R")}
+                onChange={(e) =>
+                  dispatch(
+                    setTempHasMoved(
+                      setCastlingAllowed(
+                        tempHasMoved,
+                        "white",
+                        "queenside",
+                        e.target.checked
+                      )
+                    )
+                  )
                 }
-                onChange={() => handleCastlingChange("whiteRookQueenside")}
               />
               <span>O-O-O</span>
             </label>
@@ -55,20 +82,40 @@ const CastlingSelector = () => {
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={
-                  !tempHasMoved.blackRookKingside && !tempHasMoved.blackKing
+                checked={rights.black.kingside}
+                disabled={!(board[0][4] === "k" && board[0][7] === "r")}
+                onChange={(e) =>
+                  dispatch(
+                    setTempHasMoved(
+                      setCastlingAllowed(
+                        tempHasMoved,
+                        "black",
+                        "kingside",
+                        e.target.checked
+                      )
+                    )
+                  )
                 }
-                onChange={() => handleCastlingChange("blackRookKingside")}
               />
               <span>O-O</span>
             </label>
             <label className="castling-option">
               <input
                 type="checkbox"
-                checked={
-                  !tempHasMoved.blackRookQueenside && !tempHasMoved.blackKing
+                checked={rights.black.queenside}
+                disabled={!(board[0][4] === "k" && board[0][0] === "r")}
+                onChange={(e) =>
+                  dispatch(
+                    setTempHasMoved(
+                      setCastlingAllowed(
+                        tempHasMoved,
+                        "black",
+                        "queenside",
+                        e.target.checked
+                      )
+                    )
+                  )
                 }
-                onChange={() => handleCastlingChange("blackRookQueenside")}
               />
               <span>O-O-O</span>
             </label>
