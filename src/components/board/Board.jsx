@@ -43,6 +43,9 @@ import {
   selectArrowDrawing,
   clearArrows,
   selectArrows,
+  selectAttackerInspectEnabled,
+  selectInspectedSquare,
+  setInspectedSquare,
 } from "../../store/slices/uiSlice";
 import "./boardStyles.css";
 
@@ -74,6 +77,8 @@ const Board = () => {
   const selectedPiece = useSelector(selectSelectedPiece);
   const arrowDrawing = useSelector(selectArrowDrawing);
   const arrows = useSelector(selectArrows);
+  const attackerInspectEnabled = useSelector(selectAttackerInspectEnabled);
+  const inspectedSquare = useSelector(selectInspectedSquare);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
   const tempCapturedPieces = { ...capturedPieces };
@@ -97,6 +102,18 @@ const Board = () => {
     // If currently drawing an arrow, cancel drawing on left click
     if (arrowDrawing.isDrawing) {
       dispatch(resetArrowDrawing());
+      return;
+    }
+
+    // If attacker inspect mode is enabled (and not in edit mode), set/clear inspected square
+    if (!isEditMode && attackerInspectEnabled) {
+      if (
+        inspectedSquare &&
+        inspectedSquare.row === row &&
+        inspectedSquare.col === col
+      )
+        dispatch(setInspectedSquare(null));
+      else dispatch(setInspectedSquare({ row, col }));
       return;
     }
 
@@ -135,6 +152,11 @@ const Board = () => {
       blackPressure = getSquarePressures(board, "black");
     }
 
+    // Prepare inspected square for render coordinates
+    let inspectedSquareForRender = inspectedSquare
+      ? { ...inspectedSquare }
+      : null;
+
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
 
@@ -155,6 +177,16 @@ const Board = () => {
       if (enPassantTargetSquare) {
         enPassantTargetSquare.row = Math.abs(enPassantTargetSquare.row - 7);
         enPassantTargetSquare.col = Math.abs(enPassantTargetSquare.col - 7);
+      }
+
+      // Adjust inspected square if board is flipped
+      if (inspectedSquareForRender) {
+        inspectedSquareForRender.row = Math.abs(
+          inspectedSquareForRender.row - 7
+        );
+        inspectedSquareForRender.col = Math.abs(
+          inspectedSquareForRender.col - 7
+        );
       }
     }
 
@@ -182,6 +214,13 @@ const Board = () => {
           enPassantTargetSquare.row === rowIndex &&
           enPassantTargetSquare.col === colIndex;
 
+        const isInspectedTarget =
+          !isEditMode &&
+          attackerInspectEnabled &&
+          inspectedSquareForRender &&
+          inspectedSquareForRender.row === rowIndex &&
+          inspectedSquareForRender.col === colIndex;
+
         return (
           <Square
             key={`${rowIndex}-${colIndex}`}
@@ -195,6 +234,7 @@ const Board = () => {
             }
             isSelected={isSelected}
             isEnPassantTarget={isEnPassantTarget}
+            isInspectedTarget={isInspectedTarget}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             onContextMenu={(e) => handleRightMouseDown(e, rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}

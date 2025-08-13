@@ -12,6 +12,7 @@ const Square = (props) => {
     isDark,
     isLegal,
     isSelected,
+    isInspectedTarget,
     isEnPassantTarget,
     onClick,
     onContextMenu,
@@ -100,7 +101,9 @@ const Square = (props) => {
     <div
       className={`square ${isDark ? "dark" : "light"} ${
         isSelected ? "selected" : ""
-      } ${isEnPassantTarget ? "en-passant-target" : ""}`}
+      } ${isEnPassantTarget ? "en-passant-target" : ""} ${
+        isInspectedTarget ? "inspected-target" : ""
+      }`}
       onClick={onClick}
       onMouseDown={(e) => {
         if (e.button === 2) {

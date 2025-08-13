@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   selectAttackerInspectEnabled,
   toggleAttackerInspect,
+  setInspectedSquare,
 } from "../../../store/slices/uiSlice";
 import "./attackerInspectToggleStyles.css";
 
@@ -10,7 +11,11 @@ const AttackerInspectToggle = () => {
   const dispatch = useDispatch();
   const enabled = useSelector(selectAttackerInspectEnabled);
 
-  const handleToggle = () => dispatch(toggleAttackerInspect());
+  const handleToggle = () => {
+    dispatch(toggleAttackerInspect());
+    // When turning off, clear the inspected square so UI updates immediately
+    if (enabled) dispatch(setInspectedSquare(null));
+  };
 
   return (
     <div className="attacker-toggle">

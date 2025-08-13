@@ -48,6 +48,23 @@
   z-index: 5; /* Lower than selected to ensure selected takes precedence */
 }
 
+/* Attacker inspect target (red outline) */
+.inspected-target {
+  position: relative;
+}
+
+.inspected-target::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 5px solid #ff4444; /* Red highlight */
+  pointer-events: none;
+  z-index: 6; /* Above en passant, below selected's visual precedence if needed */
+}
+
 .possible-move {
   position: absolute;
   display: flex;
