@@ -13,7 +13,7 @@ import {
   FaPaintbrush,
   FaCrown,
 } from "react-icons/fa6";
-import FilterTypeToggle from "./filterTypeToggle/FilterTypeToggle";
+import FiltersToggle from "./filtersToggle/FiltersToggle";
 import GameFiltersButton from "./gameFiltersButton/GameFiltersButton";
 import "./gameFiltersStyles.css";
 
@@ -29,7 +29,7 @@ const GameFilters = () => {
   return (
     <div className="game-filters-container">
       <div className="game-filters-content">
-        <FilterTypeToggle />
+        <FiltersToggle />
 
         {/* Color Filters Section */}
         <div className="color-filters-section">

@@ -1,4 +1,4 @@
-.filter-type {
+.filters-toggle {
   display: flex;
   width: 95%;
   flex-direction: column;
@@ -9,7 +9,7 @@
   border-radius: 4px;
 }
 
-.filter-type__header {
+.filters-toggle__header {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -19,12 +19,12 @@
   gap: 10px;
 }
 
-.filter-type__title {
+.filters-toggle__title {
   font-size: 1.1em;
   color: #ffd700;
 }
 
-.filter-type__toggle {
+.filters-toggle__toggle {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,7 +32,7 @@
   padding: 8px;
 }
 
-.filter-type__label {
+.filters-toggle__label {
   font-size: 0.9em;
   color: rgba(255, 255, 255, 0.7);
   transition: all 0.2s ease;
@@ -40,11 +40,11 @@
   text-align: center;
 }
 
-.filter-type__label--active {
+.filters-toggle__label--active {
   color: #ffd700;
 }
 
-.filter-type__switch {
+.filters-toggle__switch {
   position: relative;
   width: 60px;
   height: 30px;
@@ -55,11 +55,11 @@
   transition: all 0.2s ease;
 }
 
-.filter-type__switch:hover {
+.filters-toggle__switch:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.filter-type__slider {
+.filters-toggle__slider {
   position: absolute;
   top: 2px;
   left: 2px;
@@ -70,11 +70,11 @@
   transition: all 0.2s ease;
 }
 
-.filter-type__slider--active {
+.filters-toggle__slider--active {
   transform: translateX(30px);
 }
 
-.filter-type__checkbox {
+.filters-toggle__checkbox {
   width: 20px;
   height: 20px;
   border: 2px solid #ffd700;
@@ -86,15 +86,15 @@
   transition: all 0.2s ease;
 }
 
-.filter-type__checkbox:hover {
+.filters-toggle__checkbox:hover {
   background-color: rgba(255, 215, 0, 0.1);
 }
 
-.filter-type__checkbox--active {
+.filters-toggle__checkbox--active {
   background-color: rgba(255, 215, 0, 0.15);
 }
 
-.filter-type__check-icon {
+.filters-toggle__check-icon {
   width: 12px;
   height: 12px;
   color: #ffd700;

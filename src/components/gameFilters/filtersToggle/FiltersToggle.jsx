@@ -8,9 +8,9 @@ import {
   setAllFiltersToOff,
 } from "../../../store/slices/uiSlice";
 import { FaCheck } from "react-icons/fa6";
-import "./filterTypeToggleStyles.css";
+import "./filtersToggleStyles.css";
 
-const FilterTypeToggle = () => {
+const FiltersToggle = () => {
   const dispatch = useDispatch();
   const activeFilterType = useSelector(selectActiveFilterType);
   const filterColors = useSelector(selectFilterColors);
@@ -30,38 +30,44 @@ const FilterTypeToggle = () => {
   const allFiltersActive = filterColors.white || filterColors.black;
 
   return (
-    <div className="filter-type">
-      <div className="filter-type__header">
+    <div className="filters-toggle">
+      <div className="filters-toggle__header">
         <div
-          className={`filter-type__checkbox ${
-            allFiltersActive ? "filter-type__checkbox--active" : ""
+          className={`filters-toggle__checkbox ${
+            allFiltersActive ? "filters-toggle__checkbox--active" : ""
           }`}
           onClick={handleAllFiltersToggle}
         >
-          {allFiltersActive && <FaCheck className="filter-type__check-icon" />}
+          {allFiltersActive && (
+            <FaCheck className="filters-toggle__check-icon" />
+          )}
         </div>
-        <div className="filter-type__title">Filter Type</div>
+        <div className="filters-toggle__title">Filters</div>
       </div>
-      <div className="filter-type__toggle">
+      <div className="filters-toggle__toggle">
         <div
-          className={`filter-type__label ${
-            activeFilterType === "pressure" ? "filter-type__label--active" : ""
+          className={`filters-toggle__label ${
+            activeFilterType === "pressure"
+              ? "filters-toggle__label--active"
+              : ""
           }`}
         >
           Pressure
         </div>
-        <div className="filter-type__switch" onClick={handleToggle}>
+        <div className="filters-toggle__switch" onClick={handleToggle}>
           <div
-            className={`filter-type__slider ${
+            className={`filters-toggle__slider ${
               activeFilterType === "control"
-                ? "filter-type__slider--active"
+                ? "filters-toggle__slider--active"
                 : ""
             }`}
           ></div>
         </div>
         <div
-          className={`filter-type__label ${
-            activeFilterType === "control" ? "filter-type__label--active" : ""
+          className={`filters-toggle__label ${
+            activeFilterType === "control"
+              ? "filters-toggle__label--active"
+              : ""
           }`}
         >
           Control
@@ -71,4 +77,4 @@ const FilterTypeToggle = () => {
   );
 };
 
-export default FilterTypeToggle;
+export default FiltersToggle;
