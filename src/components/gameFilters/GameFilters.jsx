@@ -14,6 +14,7 @@ import {
   FaCrown,
 } from "react-icons/fa6";
 import FiltersToggle from "./filtersToggle/FiltersToggle";
+import AttackerInspectToggle from "./AttackerInspectToggle/AttackerInspectToggle";
 import GameFiltersButton from "./gameFiltersButton/GameFiltersButton";
 import "./gameFiltersStyles.css";
 
@@ -30,6 +31,7 @@ const GameFilters = () => {
     <div className="game-filters-container">
       <div className="game-filters-content">
         <FiltersToggle />
+        <AttackerInspectToggle />
 
         {/* Color Filters Section */}
         <div className="color-filters-section">

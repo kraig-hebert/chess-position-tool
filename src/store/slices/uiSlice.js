@@ -31,6 +31,10 @@ const initialState = {
     colors: { white: true, black: true },
     activeFilterType: "control", // pressure or control
   },
+  attackerInspect: {
+    enabled: false,
+    inspectedSquare: null, // { row, col } | null
+  },
   pieceIcons: {
     p: { iconName: "pawn", className: "piece black" },
     r: { iconName: "rook", className: "piece black" },
@@ -151,6 +155,15 @@ export const uiSlice = createSlice({
     clearArrows: (state) => {
       state.arrows = [];
     },
+    setAttackerInspectEnabled: (state, action) => {
+      state.attackerInspect.enabled = action.payload;
+    },
+    toggleAttackerInspect: (state) => {
+      state.attackerInspect.enabled = !state.attackerInspect.enabled;
+    },
+    setInspectedSquare: (state, action) => {
+      state.attackerInspect.inspectedSquare = action.payload;
+    },
   },
 });
 
@@ -159,6 +172,10 @@ export const selectActiveFilters = (state) => state.ui.activeFilters;
 export const selectActiveFilterType = (state) =>
   state.ui.activeFilters.activeFilterType;
 export const selectFilterColors = (state) => state.ui.activeFilters.colors;
+export const selectAttackerInspectEnabled = (state) =>
+  state.ui.attackerInspect.enabled;
+export const selectInspectedSquare = (state) =>
+  state.ui.attackerInspect.inspectedSquare;
 const selectPieceIconsData = (state) => state.ui.pieceIcons;
 
 // Memoized selector that combines the icon data with actual components
@@ -226,6 +243,9 @@ export const {
   setAllFiltersToOff,
   setAllFiltersToOn,
   setEnPassantEnabled,
+  setAttackerInspectEnabled,
+  toggleAttackerInspect,
+  setInspectedSquare,
 } = uiSlice.actions;
 
 // Thunk action creator that coordinates multiple actions for entering edit mode

@@ -1,0 +1,77 @@
+.attacker-toggle {
+  display: flex;
+  width: 95%;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.attacker-toggle__header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  font-size: 1.1em;
+  color: #ffd700;
+  gap: 10px;
+}
+
+.attacker-toggle__title {
+  font-size: 1.1em;
+  color: #ffd700;
+}
+
+.attacker-toggle__toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 8px;
+}
+
+.attacker-toggle__label {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  min-width: 30px;
+  text-align: center;
+}
+
+.attacker-toggle__label--active {
+  color: #ffd700;
+}
+
+.attacker-toggle__switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid #ffd700;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.attacker-toggle__switch:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.attacker-toggle__slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background-color: #ffd700;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.attacker-toggle__slider--active {
+  transform: translateX(30px);
+}
+
+/* Checkbox removed per design simplification */
