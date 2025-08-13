@@ -5,6 +5,7 @@ import {
   toggleAttackerInspect,
   setInspectedSquare,
 } from "../../../store/slices/uiSlice";
+import { resetSelectedPiece } from "../../../store/slices/gameSlice";
 import "./attackerInspectToggleStyles.css";
 
 const AttackerInspectToggle = () => {
@@ -13,8 +14,13 @@ const AttackerInspectToggle = () => {
 
   const handleToggle = () => {
     dispatch(toggleAttackerInspect());
-    // When turning off, clear the inspected square so UI updates immediately
-    if (enabled) dispatch(setInspectedSquare(null));
+    if (enabled) {
+      // Toggling OFF: clear inspected red square
+      dispatch(setInspectedSquare(null));
+    } else {
+      // Toggling ON: clear selected yellow square and any legal move dots
+      dispatch(resetSelectedPiece());
+    }
   };
 
   return (

@@ -30,6 +30,7 @@ import {
   togglePov,
   selectIsEditMode,
   enterEditMode,
+  setInspectedSquare,
 } from "../../store/slices/uiSlice";
 import { moveForward, moveBackward } from "../../utils/moveNavigation";
 import { saveAndExitEditMode } from "../../utils/editModeUtils.js";
@@ -58,6 +59,8 @@ const GameButtons = () => {
   const handleFullGameReset = () => {
     dispatch(resetGame());
     dispatch(resetEditMode());
+    // Clear any inspected target square (red outline)
+    dispatch(setInspectedSquare(null));
   };
 
   const handleMoveBackwards = () => {
