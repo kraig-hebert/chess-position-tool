@@ -10,6 +10,8 @@ import {
   selectNextMoveColorAfterEdit,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
+  setAttackerInspectEnabled,
+  setInspectedSquare,
 } from "../store/slices/uiSlice";
 import {
   selectBoard,
@@ -27,6 +29,7 @@ import {
 } from "../store/slices/gameSlice";
 import { moveForward, moveBackward } from "./moveNavigation";
 import { saveAndExitEditMode } from "./editModeUtils.js";
+import { resetSelectedPiece } from "../store/slices/gameSlice";
 
 // Keyboard shortcut mapping
 export const SHORTCUTS = {
@@ -59,6 +62,14 @@ export const SHORTCUTS = {
     description: "Toggle between pressure and control view",
     action: (dispatch) => {
       dispatch(toggleActiveFilterType());
+    },
+  },
+  alt: {
+    description: "Hold to enable Attacker Inspect",
+    action: (dispatch) => {
+      // Enable attacker inspect while holding Alt; clear current selection
+      dispatch(resetSelectedPiece());
+      dispatch(setAttackerInspectEnabled(true));
     },
   },
   e: {
@@ -157,6 +168,13 @@ export const matchesShortcut = (event, shortcut) => {
   const key = parts.pop();
   const modifiers = new Set(parts);
 
+  const isModifierKey = ["alt", "control", "shift", "meta"].includes(key);
+
+  if (isModifierKey) {
+    // For pure modifier shortcuts (e.g., 'alt'), match on the key only
+    return event.key.toLowerCase() === key;
+  }
+
   return (
     event.key.toLowerCase() === key &&
     modifiers.has("control") === event.ctrlKey &&
@@ -182,4 +200,40 @@ export const handleKeyboardShortcut = (event, dispatch, state) => {
       break;
     }
   }
+};
+
+// Separate keyup shortcuts for releasing actions (e.g., Alt release)
+export const SHORTCUTS_KEYUP = {
+  alt: {
+    description: "Release to disable Attacker Inspect",
+    action: (dispatch) => {
+      dispatch(setInspectedSquare(null));
+      dispatch(setAttackerInspectEnabled(false));
+    },
+  },
+};
+
+export const handleKeyboardShortcutKeyUp = (event, dispatch, state) => {
+  // Ignore inputs
+  if (event.target.tagName === "INPUT" || event.target.tagName === "TEXTAREA") {
+    return;
+  }
+
+  for (const [shortcut, { action }] of Object.entries(SHORTCUTS_KEYUP)) {
+    if (matchesShortcut(event, shortcut)) {
+      event.preventDefault();
+      event.stopPropagation();
+      action(dispatch, state);
+      break;
+    }
+  }
+};
+
+// Wrappers used by App to route to the unified shortcut pipeline
+export const handleKeyboardKeyDown = (event, dispatch, state) => {
+  handleKeyboardShortcut(event, dispatch, state);
+};
+
+export const handleKeyboardKeyUp = (event, dispatch, state) => {
+  handleKeyboardShortcutKeyUp(event, dispatch, state);
 };

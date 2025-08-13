@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useStore } from "react-redux";
 import Board from "./components/board/Board";
-import { handleKeyboardShortcut } from "./utils/keyboardShortcuts";
+import {
+  handleKeyboardKeyDown,
+  handleKeyboardKeyUp,
+} from "./utils/keyboardShortcuts";
 import "./appStyles.css";
 
 function App() {
@@ -10,12 +13,20 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      handleKeyboardShortcut(event, dispatch, store.getState());
+      handleKeyboardKeyDown(event, dispatch, store.getState());
+    };
+
+    const handleKeyUp = (event) => {
+      handleKeyboardKeyUp(event, dispatch, store.getState());
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [dispatch]);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [dispatch, store]);
 
   return (
     <div id="app">
