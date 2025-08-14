@@ -47,6 +47,7 @@ import {
   clearArrows,
   selectArrows,
   selectAttackerInspectEnabled,
+  selectShowDefenders,
   selectInspectedSquare,
   setInspectedSquare,
 } from "../../store/slices/uiSlice";
@@ -81,6 +82,7 @@ const Board = () => {
   const arrowDrawing = useSelector(selectArrowDrawing);
   const arrows = useSelector(selectArrows);
   const attackerInspectEnabled = useSelector(selectAttackerInspectEnabled);
+  const showDefenders = useSelector(selectShowDefenders);
   const inspectedSquare = useSelector(selectInspectedSquare);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
@@ -204,7 +206,10 @@ const Board = () => {
     if (!isEditMode && attackerInspectEnabled && inspectedSquare) {
       const targetPiece = board[inspectedSquare.row][inspectedSquare.col];
       let colors = { white: true, black: true };
-      if (targetPiece) {
+
+      // If there's a piece on the square and we're not showing defenders,
+      // only show attackers of the opposite color
+      if (targetPiece && !showDefenders) {
         const targetColor =
           targetPiece === targetPiece.toUpperCase() ? "white" : "black";
         colors =

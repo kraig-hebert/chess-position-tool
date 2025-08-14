@@ -33,6 +33,7 @@ const initialState = {
   },
   attackerInspect: {
     enabled: false,
+    showDefenders: false,
     inspectedSquare: null, // { row, col } | null
   },
   pieceIcons: {
@@ -161,6 +162,13 @@ export const uiSlice = createSlice({
     toggleAttackerInspect: (state) => {
       state.attackerInspect.enabled = !state.attackerInspect.enabled;
     },
+    toggleShowDefenders: (state) => {
+      state.attackerInspect.showDefenders =
+        !state.attackerInspect.showDefenders;
+    },
+    setShowDefenders: (state, action) => {
+      state.attackerInspect.showDefenders = action.payload;
+    },
     setInspectedSquare: (state, action) => {
       state.attackerInspect.inspectedSquare = action.payload;
       // Clear arrows when inspected square changes
@@ -176,6 +184,8 @@ export const selectActiveFilterType = (state) =>
 export const selectFilterColors = (state) => state.ui.activeFilters.colors;
 export const selectAttackerInspectEnabled = (state) =>
   state.ui.attackerInspect.enabled;
+export const selectShowDefenders = (state) =>
+  state.ui.attackerInspect.showDefenders;
 export const selectInspectedSquare = (state) =>
   state.ui.attackerInspect.inspectedSquare;
 const selectPieceIconsData = (state) => state.ui.pieceIcons;
@@ -247,6 +257,8 @@ export const {
   setEnPassantEnabled,
   setAttackerInspectEnabled,
   toggleAttackerInspect,
+  toggleShowDefenders,
+  setShowDefenders,
   setInspectedSquare,
 } = uiSlice.actions;
 
