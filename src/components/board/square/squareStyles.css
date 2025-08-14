@@ -140,13 +140,17 @@
 
 /* Attacker inspect visuals */
 .attacker-immediate .piece {
-  box-shadow: 0 0 10px 3px rgba(0, 200, 0, 0.7);
-  border-radius: 6px;
+  transform: scale(1.2);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+  z-index: 10; /* Ensure it appears above other elements */
 }
 
 .attacker-chained .piece {
-  box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.6);
-  border-radius: 6px;
+  transform: scale(1.2);
+  transform-origin: center;
+  transition: transform 0.2s ease;
+  z-index: 9; /* Slightly lower than immediate attackers but still above normal pieces */
 }
 
 /* Control mode - centered circle with number at top */

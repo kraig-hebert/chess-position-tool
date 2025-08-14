@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEditMode } from "../../hooks/useEditMode";
 import { useStudyMode } from "../../hooks/useStudyMode";
@@ -84,10 +84,46 @@ const Board = () => {
   const inspectedSquare = useSelector(selectInspectedSquare);
   // { row, col, piece }
   const [promotionSquare, setPromotionSquare] = useState(null);
+  const [currentInspectedAttackers, setCurrentInspectedAttackers] = useState(
+    []
+  );
   const tempCapturedPieces = { ...capturedPieces };
+  // Ref to store attackers during render without triggering state updates
+  const latestAttackersRef = useRef([]);
 
   const { handleEditModeClick, getEnPassantTargetSquare } = useEditMode();
   const { handleStudyModeClick } = useStudyMode();
+
+  // Update attackers state from ref after render
+  useEffect(() => {
+    if (
+      inspectedSquare &&
+      JSON.stringify(latestAttackersRef.current) !==
+        JSON.stringify(currentInspectedAttackers)
+    ) {
+      setCurrentInspectedAttackers(latestAttackersRef.current);
+    }
+  }, [inspectedSquare, currentInspectedAttackers]);
+
+  // Handle arrow generation when inspected square changes
+  useEffect(() => {
+    // Clear existing arrows when inspected square changes
+    dispatch(clearArrows());
+
+    // If there's an inspected square and we have attackers, generate arrows
+    if (inspectedSquare && currentInspectedAttackers.length > 0) {
+      // Generate attack arrows using the regular arrows array
+      const newArrows = currentInspectedAttackers.map((attacker) => ({
+        start: { row: attacker.row, col: attacker.col },
+        end: { row: inspectedSquare.row, col: inspectedSquare.col },
+      }));
+
+      // Add each arrow to the store
+      newArrows.forEach((arrow) => {
+        dispatch(addArrow(arrow));
+      });
+    }
+  }, [inspectedSquare, currentInspectedAttackers, dispatch]);
 
   const handleSquareClick = (row, col) => {
     // ignore clicks when promotion modal is active
@@ -114,9 +150,13 @@ const Board = () => {
         inspectedSquare &&
         inspectedSquare.row === row &&
         inspectedSquare.col === col
-      )
+      ) {
         dispatch(setInspectedSquare(null));
-      else dispatch(setInspectedSquare({ row, col }));
+        dispatch(clearArrows());
+      } else {
+        dispatch(setInspectedSquare({ row, col }));
+        // We'll generate the attack arrows in the renderBoard function
+      }
       return;
     }
 
@@ -178,6 +218,9 @@ const Board = () => {
         inspectedSquare.col,
         { colors, includeChained: true }
       );
+
+      // Store the attackers in ref instead of setting state during render
+      latestAttackersRef.current = inspectedAttackers;
     }
 
     if (pov === "black") {

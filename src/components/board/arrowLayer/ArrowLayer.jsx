@@ -19,7 +19,7 @@ const drawArrow = (ctx, start, end, pov) => {
   const endY = (end.row + 0.5) * SQUARE_SIZE;
 
   // Arrow styling
-  ctx.strokeStyle = "rgba(255, 255, 0, 0.5)";
+  ctx.strokeStyle = "rgba(255, 255, 0, 0.5)"; // Yellow for all arrows
   ctx.fillStyle = ctx.strokeStyle;
   ctx.lineWidth = 20;
 
@@ -86,7 +86,7 @@ const ArrowLayer = () => {
         pov
       );
     }
-  }, [arrows, arrowDrawing, pov]);
+  }, [arrows, arrowDrawing, pov, isEditMode]);
 
   return (
     <canvas

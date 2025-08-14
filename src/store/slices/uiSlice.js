@@ -63,7 +63,7 @@ const initialState = {
     startSquare: null, // {row, col}
     currentEndSquare: null, // {row, col}
   },
-  arrows: [], // [{start: {row, col}, end: {row, col}, color: 'white'/'black'}]
+  arrows: [], // [{start: {row, col}, end: {row, col}, color: string, type: string}]
 };
 
 const iconMap = {
@@ -163,6 +163,8 @@ export const uiSlice = createSlice({
     },
     setInspectedSquare: (state, action) => {
       state.attackerInspect.inspectedSquare = action.payload;
+      // Clear arrows when inspected square changes
+      state.arrows = [];
     },
   },
 });
