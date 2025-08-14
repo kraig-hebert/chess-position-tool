@@ -24,7 +24,10 @@ import {
   copyBoard,
   updateSanSuffix,
 } from "../../logic/chessUtils";
-import { getSquarePressures } from "../../logic/filterUtils";
+import {
+  getSquarePressures,
+  getAttackersOfSquareInspect,
+} from "../../logic/filterUtils";
 import {
   selectPieceIcons,
   selectActiveEditAction,
@@ -156,6 +159,26 @@ const Board = () => {
     let inspectedSquareForRender = inspectedSquare
       ? { ...inspectedSquare }
       : null;
+    // Compute attackers of inspected square (board coordinates)
+    let inspectedAttackers = [];
+    if (!isEditMode && attackerInspectEnabled && inspectedSquare) {
+      const targetPiece = board[inspectedSquare.row][inspectedSquare.col];
+      let colors = { white: true, black: true };
+      if (targetPiece) {
+        const targetColor =
+          targetPiece === targetPiece.toUpperCase() ? "white" : "black";
+        colors =
+          targetColor === "white"
+            ? { white: false, black: true }
+            : { white: true, black: false };
+      }
+      inspectedAttackers = getAttackersOfSquareInspect(
+        board,
+        inspectedSquare.row,
+        inspectedSquare.col,
+        { colors, includeChained: true }
+      );
+    }
 
     if (pov === "black") {
       boardForRender = boardForRender.reverse().map((inner) => inner.reverse());
@@ -221,6 +244,17 @@ const Board = () => {
           inspectedSquareForRender.row === rowIndex &&
           inspectedSquareForRender.col === colIndex;
 
+        // Determine if this square holds an attacker of the inspected square
+        const attackerAtThisSquare =
+          !isEditMode &&
+          attackerInspectEnabled &&
+          inspectedSquare &&
+          inspectedAttackers.find(
+            (a) =>
+              a.row === (pov === "black" ? Math.abs(rowIndex - 7) : rowIndex) &&
+              a.col === (pov === "black" ? Math.abs(colIndex - 7) : colIndex)
+          );
+
         return (
           <Square
             key={`${rowIndex}-${colIndex}`}
@@ -235,6 +269,7 @@ const Board = () => {
             isSelected={isSelected}
             isEnPassantTarget={isEnPassantTarget}
             isInspectedTarget={isInspectedTarget}
+            attackerKind={attackerAtThisSquare?.kind || null}
             onClick={() => handleSquareClick(rowIndex, colIndex)}
             onContextMenu={(e) => handleRightMouseDown(e, rowIndex, colIndex)}
             piece={piece && pieceIcons[piece]}

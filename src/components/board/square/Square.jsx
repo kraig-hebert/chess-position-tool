@@ -14,6 +14,7 @@ const Square = (props) => {
     isSelected,
     isInspectedTarget,
     isEnPassantTarget,
+    attackerKind,
     onClick,
     onContextMenu,
     piece,
@@ -103,6 +104,8 @@ const Square = (props) => {
         isSelected ? "selected" : ""
       } ${isEnPassantTarget ? "en-passant-target" : ""} ${
         isInspectedTarget ? "inspected-target" : ""
+      } ${attackerKind === "immediate" ? "attacker-immediate" : ""} ${
+        attackerKind === "chained" ? "attacker-chained" : ""
       }`}
       onClick={onClick}
       onMouseDown={(e) => {
