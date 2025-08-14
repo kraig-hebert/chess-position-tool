@@ -112,7 +112,7 @@
   z-index: 1;
   font-weight: bold;
   font-size: 1rem;
-  opacity: 0.6;
+  opacity: 1;
 }
 
 /* Add z-index for pieces to ensure they're on top */
