@@ -140,14 +140,14 @@
 
 /* Attacker inspect visuals */
 .attacker-immediate .piece {
-  transform: scale(1.2);
+  transform: scale(1.3);
   transform-origin: center;
   transition: transform 0.2s ease;
   z-index: 10; /* Ensure it appears above other elements */
 }
 
 .attacker-chained .piece {
-  transform: scale(1.2);
+  transform: scale(1.3);
   transform-origin: center;
   transition: transform 0.2s ease;
   z-index: 9; /* Slightly lower than immediate attackers but still above normal pieces */
