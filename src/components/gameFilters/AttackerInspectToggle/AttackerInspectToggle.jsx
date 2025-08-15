@@ -33,10 +33,7 @@ const AttackerInspectToggle = () => {
     // Refresh the view by clearing and re-setting the inspected square
     if (enabled && inspectedSquare) {
       const tempSquare = { ...inspectedSquare };
-      dispatch(setInspectedSquare(null));
-      setTimeout(() => {
-        dispatch(setInspectedSquare(tempSquare));
-      }, 0);
+      dispatch(setInspectedSquare(tempSquare));
     }
   };
 
@@ -75,6 +72,7 @@ const AttackerInspectToggle = () => {
             checked={showDefenders}
             onChange={handleDefenderToggle}
             className="attacker-toggle__checkbox"
+            onFocus={(e) => e.target.blur()}
             disabled={!enabled}
           />
           <span>Show Defenders</span>

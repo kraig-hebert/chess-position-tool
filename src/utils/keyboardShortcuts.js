@@ -10,7 +10,7 @@ import {
   selectNextMoveColorAfterEdit,
   selectPossibleEnPassantTargets,
   selectSelectedEnPassantTarget,
-  setAttackerInspectEnabled,
+  toggleAttackerInspect,
   setInspectedSquare,
 } from "../store/slices/uiSlice";
 import {
@@ -64,12 +64,12 @@ export const SHORTCUTS = {
       dispatch(toggleActiveFilterType());
     },
   },
-  alt: {
-    description: "Hold to enable Attacker Inspect",
+  a: {
+    description: "Toggle Attacker Inspect mode",
     action: (dispatch) => {
-      // Enable attacker inspect while holding Alt; clear current selection
+      // Toggle attacker inspect mode; clear current selection
       dispatch(resetSelectedPiece());
-      dispatch(setAttackerInspectEnabled(true));
+      dispatch(toggleAttackerInspect());
     },
   },
   e: {
@@ -202,15 +202,9 @@ export const handleKeyboardShortcut = (event, dispatch, state) => {
   }
 };
 
-// Separate keyup shortcuts for releasing actions (e.g., Alt release)
+// Separate keyup shortcuts for releasing actions
 export const SHORTCUTS_KEYUP = {
-  alt: {
-    description: "Release to disable Attacker Inspect",
-    action: (dispatch) => {
-      dispatch(setInspectedSquare(null));
-      dispatch(setAttackerInspectEnabled(false));
-    },
-  },
+  // No keyup shortcuts needed currently
 };
 
 export const handleKeyboardShortcutKeyUp = (event, dispatch, state) => {
